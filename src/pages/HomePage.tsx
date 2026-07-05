@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
+import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
 import { getCategoryCode } from "@/lib/catalog"
 import {
@@ -68,13 +69,16 @@ export default function HomePage() {
 
       {/* Why choose us */}
       <Section id="por-que-labmaremi" className="bg-background">
-        <Eyebrow>Por qué LABMAREMI</Eyebrow>
-        <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-          Un proveedor pensado para la operación de su negocio
-        </h2>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <Reveal>
+          <Eyebrow>Por qué LABMAREMI</Eyebrow>
+          <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            Un proveedor pensado para la operación de su negocio
+          </h2>
+        </Reveal>
+        <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {reasons.map((reason) => (
-            <Card key={reason.title} className="p-6">
+            <RevealItem key={reason.title}>
+            <Card className="h-full p-6">
               <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-secondary text-primary">
                 <reason.icon className="h-5 w-5" aria-hidden="true" />
               </span>
@@ -85,13 +89,14 @@ export default function HomePage() {
                 {reason.description}
               </p>
             </Card>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </Section>
 
       {/* Product category preview */}
       <Section id="categorias" className="border-y bg-secondary/40">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <Reveal className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <Eyebrow>Catálogo / Categorías</Eyebrow>
             <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
@@ -105,17 +110,17 @@ export default function HomePage() {
             Ver catálogo completo
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
-        </div>
+        </Reveal>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => {
             const Icon = getCategoryIcon(category.id)
             const code = getCategoryCode(category.id)
             return (
+              <RevealItem key={category.id} className="flex">
               <Link
-                key={category.id}
                 to={`/catalogo?categoria=${category.id}`}
-                className="group relative flex flex-col rounded-xl border bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md"
+                className="group relative flex w-full flex-col rounded-xl border bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md"
               >
                 <div className="flex items-center justify-between">
                   <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
@@ -136,13 +141,15 @@ export default function HomePage() {
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                 </span>
               </Link>
+              </RevealItem>
             )
           })}
-        </div>
+        </RevealGroup>
       </Section>
 
       {/* Business customer types */}
       <Section id="sectores" className="bg-background">
+        <Reveal>
         <Eyebrow>Sectores que atendemos</Eyebrow>
         <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
           Diseñado para su tipo de negocio
@@ -169,11 +176,12 @@ export default function HomePage() {
             )
           })}
         </div>
+        </Reveal>
       </Section>
 
       {/* Service area + map */}
       <Section id="cobertura" className="border-y bg-secondary/40">
-        <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+        <Reveal className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <Eyebrow>Cobertura / Quito-EC</Eyebrow>
             <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
@@ -203,12 +211,12 @@ export default function HomePage() {
               className="h-[320px] w-full border-0 md:h-[400px]"
             />
           </div>
-        </div>
+        </Reveal>
       </Section>
 
       {/* Contact / WhatsApp CTA — closing conversion band */}
       <Section id="contacto-cta" className="bg-primary text-primary-foreground">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+        <Reveal className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <div>
             <Eyebrow className="text-primary-foreground/70">
               Solicite su cotización
@@ -279,7 +287,7 @@ export default function HomePage() {
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
-        </div>
+        </Reveal>
       </Section>
     </>
   )
