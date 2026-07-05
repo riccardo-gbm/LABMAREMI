@@ -9,7 +9,7 @@ The full Phase 1 specification lives in [`docs/00-phase-1-scope.md`](docs/00-pha
 - [React](https://react.dev/) + [Vite](https://vite.dev/) + [TypeScript](https://www.typescriptlang.org/) (strict)
 - [Tailwind CSS v4](https://tailwindcss.com/) (CSS-first config) + [shadcn/ui](https://ui.shadcn.com/)-style primitives
 - [React Router](https://reactrouter.com/) v7
-- [framer-motion](https://motion.dev/) — Home hero floating-image canvas
+- [framer-motion](https://motion.dev/) — Home hero floating-image canvas and reveal helpers
 - [lucide-react](https://lucide.dev/) icons · Manrope + IBM Plex Mono via Google Fonts
 
 ## Run locally
@@ -41,9 +41,9 @@ npm run preview    # serve the production build
 ```
 src/
   components/
-    ui/         # shared primitives (Button, Card, Badge, Section, Eyebrow, …)
+    ui/         # shared primitives and the glassmorphism trust hero
     layout/     # Header, Footer, Layout shell
-    hero/       # Home hero (HeroSection, HeroFloatingCanvas)
+    hero/       # Home hero wrapper and animated background
     catalog/    # ProductCard
     quote/      # ProductPicker, QuoteSuccess
     admin/      # StatusBadge
@@ -64,7 +64,7 @@ Everything you see runs entirely in the browser — **there is no backend in Pha
 - **The quote form** validates and shows a polished success state, but nothing is persisted — the reference number is cosmetic.
 - **The admin dashboard** is a visual preview: every metric is derived at render time from the mock leads.
 - **Contact details** (WhatsApp, phone, email) and the map location are placeholders.
-- **Hero imagery** is verified Unsplash stock, to be swapped for real product photography.
+- **Hero imagery** is verified Unsplash stock, to be swapped for real LABMAREMI product photography.
 
 ## Phase 2 (planned)
 
