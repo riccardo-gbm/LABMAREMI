@@ -48,19 +48,20 @@
         "source_file": "docs/00-phase-1-scope.md"
       },
       {
-        "id": "index_google_fonts_loading_pattern",
-        "label": "Google Fonts Preconnect + Stylesheet Loading Pattern",
+        "id": "hyper_google_fonts_typography_pipeline",
+        "label": "Google Fonts typography pipeline (preconnect -> stylesheet -> Manrope + IBM Plex Mono, documented in README tech stack)",
         "nodes": [
           "index_google_fonts_preconnect",
           "index_google_fonts_stylesheet_link",
-          "index_font_space_grotesk",
-          "index_font_ibm_plex_sans",
-          "index_font_ibm_plex_mono"
+          "index_font_manrope",
+          "index_font_ibm_plex_mono",
+          "readme_tech_stack"
         ],
-        "relation": "form",
+        "relation": "conceptually_related_to",
         "confidence": "EXTRACTED",
         "confidence_score": 1.0,
-        "source_file": "index.html"
+        "source_file": "index.html",
+        "weight": 1.0
       }
     ]
   },
@@ -72,7 +73,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components",
-      "community": 5,
+      "community": 7,
       "norm_label": "components.json"
     },
     {
@@ -82,7 +83,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "components_schema",
-      "community": 5,
+      "community": 7,
       "norm_label": "$schema"
     },
     {
@@ -92,7 +93,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "components_style",
-      "community": 5,
+      "community": 7,
       "norm_label": "style"
     },
     {
@@ -102,7 +103,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "components_rsc",
-      "community": 5,
+      "community": 7,
       "norm_label": "rsc"
     },
     {
@@ -112,7 +113,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "components_tsx",
-      "community": 5,
+      "community": 7,
       "norm_label": "tsx"
     },
     {
@@ -122,7 +123,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_tailwind",
-      "community": 5,
+      "community": 7,
       "norm_label": "tailwind"
     },
     {
@@ -132,7 +133,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "components_tailwind_config",
-      "community": 5,
+      "community": 7,
       "norm_label": "config"
     },
     {
@@ -142,7 +143,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_tailwind_css",
-      "community": 5,
+      "community": 7,
       "norm_label": "css"
     },
     {
@@ -152,7 +153,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_tailwind_basecolor",
-      "community": 5,
+      "community": 7,
       "norm_label": "basecolor"
     },
     {
@@ -162,7 +163,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "components_tailwind_cssvariables",
-      "community": 5,
+      "community": 7,
       "norm_label": "cssvariables"
     },
     {
@@ -172,7 +173,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "components_tailwind_prefix",
-      "community": 5,
+      "community": 7,
       "norm_label": "prefix"
     },
     {
@@ -182,7 +183,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "components_aliases",
-      "community": 5,
+      "community": 7,
       "norm_label": "aliases"
     },
     {
@@ -192,7 +193,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_aliases_components",
-      "community": 5,
+      "community": 7,
       "norm_label": "components"
     },
     {
@@ -202,7 +203,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_aliases_utils",
-      "community": 5,
+      "community": 7,
       "norm_label": "utils"
     },
     {
@@ -212,7 +213,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_aliases_ui",
-      "community": 5,
+      "community": 7,
       "norm_label": "ui"
     },
     {
@@ -222,7 +223,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "components_aliases_lib",
-      "community": 5,
+      "community": 7,
       "norm_label": "lib"
     },
     {
@@ -232,7 +233,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "components_aliases_hooks",
-      "community": 5,
+      "community": 7,
       "norm_label": "hooks"
     },
     {
@@ -242,7 +243,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "components_iconlibrary",
-      "community": 5,
+      "community": 7,
       "norm_label": "iconlibrary"
     },
     {
@@ -252,7 +253,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "package",
-      "community": 2,
+      "community": 4,
       "norm_label": "package.json"
     },
     {
@@ -262,7 +263,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "package_name",
-      "community": 2,
+      "community": 4,
       "norm_label": "name"
     },
     {
@@ -272,7 +273,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "package_private",
-      "community": 2,
+      "community": 4,
       "norm_label": "private"
     },
     {
@@ -282,7 +283,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "package_version",
-      "community": 2,
+      "community": 4,
       "norm_label": "version"
     },
     {
@@ -292,7 +293,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "package_type",
-      "community": 2,
+      "community": 4,
       "norm_label": "type"
     },
     {
@@ -302,7 +303,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "package_scripts",
-      "community": 2,
+      "community": 4,
       "norm_label": "scripts"
     },
     {
@@ -312,7 +313,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "package_scripts_dev",
-      "community": 2,
+      "community": 4,
       "norm_label": "dev"
     },
     {
@@ -322,7 +323,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "package_scripts_build",
-      "community": 2,
+      "community": 4,
       "norm_label": "build"
     },
     {
@@ -332,7 +333,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "package_scripts_preview",
-      "community": 2,
+      "community": 4,
       "norm_label": "preview"
     },
     {
@@ -342,7 +343,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "package_dependencies",
-      "community": 2,
+      "community": 4,
       "norm_label": "dependencies"
     },
     {
@@ -352,7 +353,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "package_dependencies_class_variance_authority",
-      "community": 2,
+      "community": 4,
       "norm_label": "class-variance-authority"
     },
     {
@@ -362,157 +363,167 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "package_dependencies_clsx",
-      "community": 2,
+      "community": 4,
       "norm_label": "clsx"
+    },
+    {
+      "label": "framer-motion",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "package_dependencies_framer_motion",
+      "community": 4,
+      "norm_label": "framer-motion"
     },
     {
       "label": "lucide-react",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L14",
+      "source_location": "L15",
       "_origin": "ast",
       "id": "package_dependencies_lucide_react",
-      "community": 2,
+      "community": 4,
       "norm_label": "lucide-react"
     },
     {
       "label": "react",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L15",
+      "source_location": "L16",
       "_origin": "ast",
       "id": "package_dependencies_react",
-      "community": 2,
+      "community": 4,
       "norm_label": "react"
     },
     {
       "label": "react-dom",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L16",
+      "source_location": "L17",
       "_origin": "ast",
       "id": "package_dependencies_react_dom",
-      "community": 2,
+      "community": 4,
       "norm_label": "react-dom"
     },
     {
       "label": "react-router-dom",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L17",
+      "source_location": "L18",
       "_origin": "ast",
       "id": "package_dependencies_react_router_dom",
-      "community": 2,
+      "community": 4,
       "norm_label": "react-router-dom"
     },
     {
       "label": "tailwind-merge",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L18",
+      "source_location": "L19",
       "_origin": "ast",
       "id": "package_dependencies_tailwind_merge",
-      "community": 2,
+      "community": 4,
       "norm_label": "tailwind-merge"
     },
     {
       "label": "devDependencies",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L20",
+      "source_location": "L21",
       "_origin": "ast",
       "id": "package_devdependencies",
-      "community": 2,
+      "community": 4,
       "norm_label": "devdependencies"
     },
     {
       "label": "@tailwindcss/vite",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L21",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "package_devdependencies_tailwindcss_vite",
-      "community": 2,
+      "community": 4,
       "norm_label": "@tailwindcss/vite"
     },
     {
       "label": "@types/node",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L22",
+      "source_location": "L23",
       "_origin": "ast",
       "id": "package_devdependencies_types_node",
-      "community": 2,
+      "community": 4,
       "norm_label": "@types/node"
     },
     {
       "label": "@types/react",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L23",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "package_devdependencies_types_react",
-      "community": 2,
+      "community": 4,
       "norm_label": "@types/react"
     },
     {
       "label": "@types/react-dom",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L24",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "package_devdependencies_types_react_dom",
-      "community": 2,
+      "community": 4,
       "norm_label": "@types/react-dom"
     },
     {
       "label": "@vitejs/plugin-react",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L25",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "package_devdependencies_vitejs_plugin_react",
-      "community": 2,
+      "community": 4,
       "norm_label": "@vitejs/plugin-react"
     },
     {
       "label": "tailwindcss",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L26",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "package_devdependencies_tailwindcss",
-      "community": 2,
+      "community": 4,
       "norm_label": "tailwindcss"
     },
     {
       "label": "tw-animate-css",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L27",
+      "source_location": "L28",
       "_origin": "ast",
       "id": "package_devdependencies_tw_animate_css",
-      "community": 2,
+      "community": 4,
       "norm_label": "tw-animate-css"
     },
     {
       "label": "typescript",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L28",
+      "source_location": "L29",
       "_origin": "ast",
       "id": "package_devdependencies_typescript",
-      "community": 2,
+      "community": 4,
       "norm_label": "typescript"
     },
     {
       "label": "vite",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L29",
+      "source_location": "L30",
       "_origin": "ast",
       "id": "package_devdependencies_vite",
-      "community": 2,
+      "community": 4,
       "norm_label": "vite"
     },
     {
@@ -522,7 +533,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app",
-      "community": 9,
+      "community": 2,
       "norm_label": "app.tsx"
     },
     {
@@ -532,7 +543,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_app_app",
-      "community": 9,
+      "community": 2,
       "norm_label": "app()"
     },
     {
@@ -542,7 +553,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_about_timeline",
-      "community": 8,
+      "community": 2,
       "norm_label": "timeline.tsx"
     },
     {
@@ -552,7 +563,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_components_about_timeline_timelineentry",
-      "community": 8,
+      "community": 2,
       "norm_label": "timelineentry"
     },
     {
@@ -562,7 +573,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_components_about_timeline_timelineprops",
-      "community": 8,
+      "community": 2,
       "norm_label": "timelineprops"
     },
     {
@@ -572,7 +583,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_components_about_timeline_timeline",
-      "community": 8,
+      "community": 2,
       "norm_label": "timeline()"
     },
     {
@@ -622,7 +633,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_catalog_productcard",
-      "community": 1,
+      "community": 0,
       "norm_label": "productcard.tsx"
     },
     {
@@ -632,7 +643,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_components_catalog_productcard_productcardprops",
-      "community": 1,
+      "community": 3,
       "norm_label": "productcardprops"
     },
     {
@@ -642,8 +653,48 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_components_catalog_productcard_productcard",
-      "community": 1,
+      "community": 0,
       "norm_label": "productcard()"
+    },
+    {
+      "label": "HeroFloatingCanvas.tsx",
+      "file_type": "code",
+      "source_file": "src/components/hero/HeroFloatingCanvas.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_hero_herofloatingcanvas",
+      "community": 14,
+      "norm_label": "herofloatingcanvas.tsx"
+    },
+    {
+      "label": "random()",
+      "file_type": "code",
+      "source_file": "src/components/hero/HeroFloatingCanvas.tsx",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "src_components_hero_herofloatingcanvas_random",
+      "community": 14,
+      "norm_label": "random()"
+    },
+    {
+      "label": "images",
+      "file_type": "code",
+      "source_file": "src/components/hero/HeroFloatingCanvas.tsx",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "src_components_hero_herofloatingcanvas_images",
+      "community": 14,
+      "norm_label": "images"
+    },
+    {
+      "label": "HeroFloatingCanvas()",
+      "file_type": "code",
+      "source_file": "src/components/hero/HeroFloatingCanvas.tsx",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "src_components_hero_herofloatingcanvas_herofloatingcanvas",
+      "community": 14,
+      "norm_label": "herofloatingcanvas()"
     },
     {
       "label": "HeroSection.tsx",
@@ -659,7 +710,7 @@
       "label": "trustPoints",
       "file_type": "code",
       "source_file": "src/components/hero/HeroSection.tsx",
-      "source_location": "L9",
+      "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_hero_herosection_trustpoints",
       "community": 0,
@@ -669,31 +720,11 @@
       "label": "HeroSection()",
       "file_type": "code",
       "source_file": "src/components/hero/HeroSection.tsx",
-      "source_location": "L15",
+      "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_hero_herosection_herosection",
       "community": 0,
       "norm_label": "herosection()"
-    },
-    {
-      "label": "HeroVisual.tsx",
-      "file_type": "code",
-      "source_file": "src/components/hero/HeroVisual.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_components_hero_herovisual",
-      "community": 0,
-      "norm_label": "herovisual.tsx"
-    },
-    {
-      "label": "HeroVisual()",
-      "file_type": "code",
-      "source_file": "src/components/hero/HeroVisual.tsx",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "src_components_hero_herovisual_herovisual",
-      "community": 0,
-      "norm_label": "herovisual()"
     },
     {
       "label": "Footer.tsx",
@@ -702,7 +733,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_layout_footer",
-      "community": 9,
+      "community": 11,
       "norm_label": "footer.tsx"
     },
     {
@@ -712,7 +743,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_components_layout_footer_publiclinks",
-      "community": 9,
+      "community": 11,
       "norm_label": "publiclinks"
     },
     {
@@ -722,7 +753,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_components_layout_footer_demolinks",
-      "community": 9,
+      "community": 11,
       "norm_label": "demolinks"
     },
     {
@@ -732,7 +763,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_components_layout_footer_footer",
-      "community": 9,
+      "community": 11,
       "norm_label": "footer()"
     },
     {
@@ -742,7 +773,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_layout_header",
-      "community": 0,
+      "community": 11,
       "norm_label": "header.tsx"
     },
     {
@@ -752,7 +783,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_layout_header_navitems",
-      "community": 0,
+      "community": 11,
       "norm_label": "navitems"
     },
     {
@@ -762,7 +793,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_components_layout_header_header",
-      "community": 9,
+      "community": 11,
       "norm_label": "header()"
     },
     {
@@ -772,7 +803,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_layout_layout",
-      "community": 9,
+      "community": 11,
       "norm_label": "layout.tsx"
     },
     {
@@ -782,7 +813,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_components_layout_layout_layout",
-      "community": 9,
+      "community": 11,
       "norm_label": "layout()"
     },
     {
@@ -792,7 +823,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_quote_productpicker",
-      "community": 1,
+      "community": 0,
       "norm_label": "productpicker.tsx"
     },
     {
@@ -802,7 +833,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_components_quote_productpicker_productpickerprops",
-      "community": 1,
+      "community": 0,
       "norm_label": "productpickerprops"
     },
     {
@@ -812,7 +843,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_components_quote_productpicker_productpicker",
-      "community": 1,
+      "community": 0,
       "norm_label": "productpicker()"
     },
     {
@@ -822,7 +853,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_quote_quotesuccess",
-      "community": 0,
+      "community": 1,
       "norm_label": "quotesuccess.tsx"
     },
     {
@@ -832,7 +863,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_quote_quotesuccess_quotesuccessprops",
-      "community": 0,
+      "community": 1,
       "norm_label": "quotesuccessprops"
     },
     {
@@ -842,7 +873,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_components_quote_quotesuccess_quotesuccess",
-      "community": 0,
+      "community": 1,
       "norm_label": "quotesuccess()"
     },
     {
@@ -852,7 +883,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_avatar",
-      "community": 8,
+      "community": 2,
       "norm_label": "avatar.tsx"
     },
     {
@@ -862,7 +893,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_ui_avatar_avatarprops",
-      "community": 8,
+      "community": 2,
       "norm_label": "avatarprops"
     },
     {
@@ -872,7 +903,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_components_ui_avatar_sizeclasses",
-      "community": 8,
+      "community": 2,
       "norm_label": "sizeclasses"
     },
     {
@@ -882,7 +913,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_components_ui_avatar_getinitials",
-      "community": 8,
+      "community": 2,
       "norm_label": "getinitials()"
     },
     {
@@ -892,7 +923,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_components_ui_avatar_avatar",
-      "community": 8,
+      "community": 2,
       "norm_label": "avatar()"
     },
     {
@@ -942,7 +973,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_button",
-      "community": 0,
+      "community": 1,
       "norm_label": "button.tsx"
     },
     {
@@ -962,7 +993,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "src_components_ui_button_buttonprops",
-      "community": 0,
+      "community": 1,
       "norm_label": "buttonprops"
     },
     {
@@ -972,7 +1003,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_components_ui_button_button",
-      "community": 0,
+      "community": 1,
       "norm_label": "button()"
     },
     {
@@ -982,7 +1013,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_card",
-      "community": 0,
+      "community": 1,
       "norm_label": "card.tsx"
     },
     {
@@ -992,7 +1023,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_ui_card_card",
-      "community": 0,
+      "community": 1,
       "norm_label": "card()"
     },
     {
@@ -1002,7 +1033,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_components_ui_card_cardheader",
-      "community": 0,
+      "community": 1,
       "norm_label": "cardheader()"
     },
     {
@@ -1012,7 +1043,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_components_ui_card_cardtitle",
-      "community": 0,
+      "community": 1,
       "norm_label": "cardtitle()"
     },
     {
@@ -1022,7 +1053,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_components_ui_card_carddescription",
-      "community": 0,
+      "community": 1,
       "norm_label": "carddescription()"
     },
     {
@@ -1032,7 +1063,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "src_components_ui_card_cardcontent",
-      "community": 0,
+      "community": 1,
       "norm_label": "cardcontent()"
     },
     {
@@ -1042,7 +1073,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "src_components_ui_card_cardfooter",
-      "community": 0,
+      "community": 1,
       "norm_label": "cardfooter()"
     },
     {
@@ -1052,7 +1083,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_eyebrow",
-      "community": 0,
+      "community": 1,
       "norm_label": "eyebrow.tsx"
     },
     {
@@ -1062,7 +1093,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_components_ui_eyebrow_eyebrow",
-      "community": 0,
+      "community": 1,
       "norm_label": "eyebrow()"
     },
     {
@@ -1102,7 +1133,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_label",
-      "community": 0,
+      "community": 1,
       "norm_label": "label.tsx"
     },
     {
@@ -1112,7 +1143,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_ui_label_label",
-      "community": 0,
+      "community": 1,
       "norm_label": "label()"
     },
     {
@@ -1122,7 +1153,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_page_header",
-      "community": 0,
+      "community": 2,
       "norm_label": "page-header.tsx"
     },
     {
@@ -1132,7 +1163,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_ui_page_header_pageheaderprops",
-      "community": 0,
+      "community": 2,
       "norm_label": "pageheaderprops"
     },
     {
@@ -1142,7 +1173,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_ui_page_header_pageheader",
-      "community": 0,
+      "community": 2,
       "norm_label": "pageheader()"
     },
     {
@@ -1152,7 +1183,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_section",
-      "community": 0,
+      "community": 2,
       "norm_label": "section.tsx"
     },
     {
@@ -1162,7 +1193,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_ui_section_sectionprops",
-      "community": 0,
+      "community": 2,
       "norm_label": "sectionprops"
     },
     {
@@ -1172,7 +1203,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_ui_section_section",
-      "community": 0,
+      "community": 2,
       "norm_label": "section()"
     },
     {
@@ -1182,7 +1213,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_select",
-      "community": 0,
+      "community": 1,
       "norm_label": "select.tsx"
     },
     {
@@ -1192,7 +1223,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_components_ui_select_selectprops",
-      "community": 0,
+      "community": 1,
       "norm_label": "selectprops"
     },
     {
@@ -1202,7 +1233,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_ui_select_select",
-      "community": 0,
+      "community": 1,
       "norm_label": "select()"
     },
     {
@@ -1212,7 +1243,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_textarea",
-      "community": 0,
+      "community": 1,
       "norm_label": "textarea.tsx"
     },
     {
@@ -1222,7 +1253,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_ui_textarea_textareaprops",
-      "community": 0,
+      "community": 1,
       "norm_label": "textareaprops"
     },
     {
@@ -1232,7 +1263,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_ui_textarea_textarea",
-      "community": 0,
+      "community": 1,
       "norm_label": "textarea()"
     },
     {
@@ -1262,7 +1293,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_data_categories",
-      "community": 1,
+      "community": 0,
       "norm_label": "categories.ts"
     },
     {
@@ -1272,7 +1303,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_data_categories_categories",
-      "community": 1,
+      "community": 0,
       "norm_label": "categories"
     },
     {
@@ -1302,7 +1333,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_data_products",
-      "community": 1,
+      "community": 0,
       "norm_label": "products.ts"
     },
     {
@@ -1312,7 +1343,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_data_products_products",
-      "community": 1,
+      "community": 0,
       "norm_label": "products"
     },
     {
@@ -1382,7 +1413,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "src_lib_adminstats_productcount",
-      "community": 1,
+      "community": 3,
       "norm_label": "productcount"
     },
     {
@@ -1412,7 +1443,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_catalog",
-      "community": 1,
+      "community": 0,
       "norm_label": "catalog.ts"
     },
     {
@@ -1422,7 +1453,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_lib_catalog_categorycodes",
-      "community": 1,
+      "community": 0,
       "norm_label": "categorycodes"
     },
     {
@@ -1432,7 +1463,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_lib_catalog_getcategorycode",
-      "community": 1,
+      "community": 0,
       "norm_label": "getcategorycode()"
     },
     {
@@ -1442,7 +1473,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "src_lib_catalog_getproductcode",
-      "community": 1,
+      "community": 0,
       "norm_label": "getproductcode()"
     },
     {
@@ -1452,7 +1483,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_lib_catalog_getproductbyid",
-      "community": 1,
+      "community": 0,
       "norm_label": "getproductbyid()"
     },
     {
@@ -1462,7 +1493,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "src_lib_catalog_getcategorybyid",
-      "community": 1,
+      "community": 0,
       "norm_label": "getcategorybyid()"
     },
     {
@@ -1472,7 +1503,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "src_lib_catalog_getrelatedproducts",
-      "community": 1,
+      "community": 0,
       "norm_label": "getrelatedproducts()"
     },
     {
@@ -1482,7 +1513,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "src_lib_catalog_normalizetext",
-      "community": 1,
+      "community": 0,
       "norm_label": "normalizetext()"
     },
     {
@@ -1492,7 +1523,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "src_lib_catalog_matchesquery",
-      "community": 1,
+      "community": 0,
       "norm_label": "matchesquery()"
     },
     {
@@ -1502,7 +1533,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_contact",
-      "community": 0,
+      "community": 1,
       "norm_label": "contact.ts"
     },
     {
@@ -1512,7 +1543,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_lib_contact_coveragesectors",
-      "community": 0,
+      "community": 1,
       "norm_label": "coveragesectors"
     },
     {
@@ -1522,7 +1553,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_icons",
-      "community": 1,
+      "community": 0,
       "norm_label": "icons.ts"
     },
     {
@@ -1532,7 +1563,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_lib_icons_categoryicons",
-      "community": 1,
+      "community": 0,
       "norm_label": "categoryicons"
     },
     {
@@ -1542,7 +1573,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_lib_icons_businesstypeicons",
-      "community": 1,
+      "community": 0,
       "norm_label": "businesstypeicons"
     },
     {
@@ -1552,7 +1583,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_lib_icons_getcategoryicon",
-      "community": 1,
+      "community": 0,
       "norm_label": "getcategoryicon()"
     },
     {
@@ -1562,7 +1593,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "src_lib_icons_getbusinesstypeicon",
-      "community": 3,
+      "community": 0,
       "norm_label": "getbusinesstypeicon()"
     },
     {
@@ -1582,7 +1613,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_lib_utils_cn",
-      "community": 0,
+      "community": 1,
       "norm_label": "cn()"
     },
     {
@@ -1592,7 +1623,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_main",
-      "community": 9,
+      "community": 2,
       "norm_label": "main.tsx"
     },
     {
@@ -1602,7 +1633,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_aboutpage",
-      "community": 8,
+      "community": 2,
       "norm_label": "aboutpage.tsx"
     },
     {
@@ -1612,7 +1643,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_pages_aboutpage_timelineentries",
-      "community": 8,
+      "community": 2,
       "norm_label": "timelineentries"
     },
     {
@@ -1622,7 +1653,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "src_pages_aboutpage_owners",
-      "community": 8,
+      "community": 2,
       "norm_label": "owners"
     },
     {
@@ -1632,7 +1663,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "src_pages_aboutpage_teammembers",
-      "community": 8,
+      "community": 2,
       "norm_label": "teammembers"
     },
     {
@@ -1642,7 +1673,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "src_pages_aboutpage_aboutpage",
-      "community": 8,
+      "community": 2,
       "norm_label": "aboutpage()"
     },
     {
@@ -1692,7 +1723,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_catalogpage",
-      "community": 1,
+      "community": 0,
       "norm_label": "catalogpage.tsx"
     },
     {
@@ -1702,7 +1733,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_pages_catalogpage_catalogpage",
-      "community": 1,
+      "community": 0,
       "norm_label": "catalogpage()"
     },
     {
@@ -1712,7 +1743,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_contactpage",
-      "community": 0,
+      "community": 1,
       "norm_label": "contactpage.tsx"
     },
     {
@@ -1722,7 +1753,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_pages_contactpage_contactpage",
-      "community": 0,
+      "community": 1,
       "norm_label": "contactpage()"
     },
     {
@@ -1762,7 +1793,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_notfoundpage",
-      "community": 9,
+      "community": 2,
       "norm_label": "notfoundpage.tsx"
     },
     {
@@ -1772,7 +1803,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_pages_notfoundpage_notfoundpage",
-      "community": 9,
+      "community": 2,
       "norm_label": "notfoundpage()"
     },
     {
@@ -1782,7 +1813,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_platformpage",
-      "community": 0,
+      "community": 2,
       "norm_label": "platformpage.tsx"
     },
     {
@@ -1792,7 +1823,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_pages_platformpage_flowstep",
-      "community": 0,
+      "community": 2,
       "norm_label": "flowstep"
     },
     {
@@ -1802,7 +1833,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_pages_platformpage_flowsteps",
-      "community": 0,
+      "community": 2,
       "norm_label": "flowsteps"
     },
     {
@@ -1812,7 +1843,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_pages_platformpage_platformpage",
-      "community": 0,
+      "community": 2,
       "norm_label": "platformpage()"
     },
     {
@@ -1822,7 +1853,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_productdetailpage",
-      "community": 1,
+      "community": 0,
       "norm_label": "productdetailpage.tsx"
     },
     {
@@ -1832,7 +1863,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_pages_productdetailpage_productdetailpage",
-      "community": 1,
+      "community": 0,
       "norm_label": "productdetailpage()"
     },
     {
@@ -1842,7 +1873,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_quotepage",
-      "community": 0,
+      "community": 1,
       "norm_label": "quotepage.tsx"
     },
     {
@@ -1852,7 +1883,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_pages_quotepage_generatereferencecode",
-      "community": 0,
+      "community": 1,
       "norm_label": "generatereferencecode()"
     },
     {
@@ -1862,7 +1893,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_pages_quotepage_parseinitialproducts",
-      "community": 0,
+      "community": 1,
       "norm_label": "parseinitialproducts()"
     },
     {
@@ -1872,7 +1903,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_pages_quotepage_quotepage",
-      "community": 0,
+      "community": 1,
       "norm_label": "quotepage()"
     },
     {
@@ -1902,7 +1933,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_types_index_product",
-      "community": 1,
+      "community": 3,
       "norm_label": "product"
     },
     {
@@ -1952,7 +1983,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_vite_env_d",
-      "community": 19,
+      "community": 20,
       "norm_label": "vite-env.d.ts"
     },
     {
@@ -1962,7 +1993,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tsconfig_app",
-      "community": 4,
+      "community": 5,
       "norm_label": "tsconfig.app.json"
     },
     {
@@ -1972,7 +2003,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions",
-      "community": 4,
+      "community": 5,
       "norm_label": "compileroptions"
     },
     {
@@ -1982,7 +2013,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_tsbuildinfofile",
-      "community": 4,
+      "community": 5,
       "norm_label": "tsbuildinfofile"
     },
     {
@@ -1992,7 +2023,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_target",
-      "community": 4,
+      "community": 5,
       "norm_label": "target"
     },
     {
@@ -2002,7 +2033,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_usedefineforclassfields",
-      "community": 4,
+      "community": 5,
       "norm_label": "usedefineforclassfields"
     },
     {
@@ -2012,7 +2043,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_lib",
-      "community": 4,
+      "community": 5,
       "norm_label": "lib"
     },
     {
@@ -2022,7 +2053,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_module",
-      "community": 4,
+      "community": 5,
       "norm_label": "module"
     },
     {
@@ -2032,7 +2063,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_skiplibcheck",
-      "community": 4,
+      "community": 5,
       "norm_label": "skiplibcheck"
     },
     {
@@ -2042,7 +2073,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_moduleresolution",
-      "community": 4,
+      "community": 5,
       "norm_label": "moduleresolution"
     },
     {
@@ -2052,7 +2083,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_allowimportingtsextensions",
-      "community": 4,
+      "community": 5,
       "norm_label": "allowimportingtsextensions"
     },
     {
@@ -2062,7 +2093,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_verbatimmodulesyntax",
-      "community": 4,
+      "community": 5,
       "norm_label": "verbatimmodulesyntax"
     },
     {
@@ -2072,7 +2103,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_moduledetection",
-      "community": 4,
+      "community": 5,
       "norm_label": "moduledetection"
     },
     {
@@ -2082,7 +2113,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_noemit",
-      "community": 4,
+      "community": 5,
       "norm_label": "noemit"
     },
     {
@@ -2092,7 +2123,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_jsx",
-      "community": 4,
+      "community": 5,
       "norm_label": "jsx"
     },
     {
@@ -2102,7 +2133,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_strict",
-      "community": 4,
+      "community": 5,
       "norm_label": "strict"
     },
     {
@@ -2112,7 +2143,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_nounusedlocals",
-      "community": 4,
+      "community": 5,
       "norm_label": "nounusedlocals"
     },
     {
@@ -2122,7 +2153,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_nounusedparameters",
-      "community": 4,
+      "community": 5,
       "norm_label": "nounusedparameters"
     },
     {
@@ -2132,7 +2163,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_nofallthroughcasesinswitch",
-      "community": 4,
+      "community": 5,
       "norm_label": "nofallthroughcasesinswitch"
     },
     {
@@ -2142,7 +2173,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_nouncheckedsideeffectimports",
-      "community": 4,
+      "community": 5,
       "norm_label": "nouncheckedsideeffectimports"
     },
     {
@@ -2152,7 +2183,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_baseurl",
-      "community": 4,
+      "community": 5,
       "norm_label": "baseurl"
     },
     {
@@ -2162,7 +2193,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "tsconfig_app_compileroptions_paths",
-      "community": 4,
+      "community": 5,
       "norm_label": "paths"
     },
     {
@@ -2172,7 +2203,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tsconfig_app_paths",
-      "community": 4,
+      "community": 5,
       "norm_label": "@/*"
     },
     {
@@ -2182,7 +2213,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tsconfig_app_include",
-      "community": 4,
+      "community": 5,
       "norm_label": "include"
     },
     {
@@ -2262,7 +2293,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tsconfig_node",
-      "community": 7,
+      "community": 8,
       "norm_label": "tsconfig.node.json"
     },
     {
@@ -2272,7 +2303,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions",
-      "community": 7,
+      "community": 8,
       "norm_label": "compileroptions"
     },
     {
@@ -2282,7 +2313,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_tsbuildinfofile",
-      "community": 7,
+      "community": 8,
       "norm_label": "tsbuildinfofile"
     },
     {
@@ -2292,7 +2323,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_target",
-      "community": 7,
+      "community": 8,
       "norm_label": "target"
     },
     {
@@ -2302,7 +2333,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_lib",
-      "community": 7,
+      "community": 8,
       "norm_label": "lib"
     },
     {
@@ -2312,7 +2343,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_module",
-      "community": 7,
+      "community": 8,
       "norm_label": "module"
     },
     {
@@ -2322,7 +2353,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_skiplibcheck",
-      "community": 7,
+      "community": 8,
       "norm_label": "skiplibcheck"
     },
     {
@@ -2332,7 +2363,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_moduleresolution",
-      "community": 7,
+      "community": 8,
       "norm_label": "moduleresolution"
     },
     {
@@ -2342,7 +2373,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_allowimportingtsextensions",
-      "community": 7,
+      "community": 8,
       "norm_label": "allowimportingtsextensions"
     },
     {
@@ -2352,7 +2383,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_verbatimmodulesyntax",
-      "community": 7,
+      "community": 8,
       "norm_label": "verbatimmodulesyntax"
     },
     {
@@ -2362,7 +2393,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_moduledetection",
-      "community": 7,
+      "community": 8,
       "norm_label": "moduledetection"
     },
     {
@@ -2372,7 +2403,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_noemit",
-      "community": 7,
+      "community": 8,
       "norm_label": "noemit"
     },
     {
@@ -2382,7 +2413,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_strict",
-      "community": 7,
+      "community": 8,
       "norm_label": "strict"
     },
     {
@@ -2392,7 +2423,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tsconfig_node_compileroptions_types",
-      "community": 7,
+      "community": 8,
       "norm_label": "types"
     },
     {
@@ -2402,7 +2433,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tsconfig_node_include",
-      "community": 7,
+      "community": 8,
       "norm_label": "include"
     },
     {
@@ -2412,7 +2443,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vite_config",
-      "community": 15,
+      "community": 16,
       "norm_label": "vite.config.ts"
     },
     {
@@ -2422,7 +2453,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "vite_config_dirname",
-      "community": 15,
+      "community": 16,
       "norm_label": "dirname"
     },
     {
@@ -2435,7 +2466,7 @@
       "author": null,
       "contributor": null,
       "id": "claude_projectinstructions",
-      "community": 6,
+      "community": 9,
       "norm_label": "claude.md project instructions"
     },
     {
@@ -2448,7 +2479,7 @@
       "author": null,
       "contributor": null,
       "id": "claude_visualidentity",
-      "community": 6,
+      "community": 9,
       "norm_label": "visual identity guidelines (blue/white/cyan, clean & clinical, not generic-saas-gradient)"
     },
     {
@@ -2461,7 +2492,7 @@
       "author": null,
       "contributor": null,
       "id": "claude_workingstyle",
-      "community": 6,
+      "community": 9,
       "norm_label": "working style: one milestone at a time, report and stop, don't chain unprompted"
     },
     {
@@ -2474,7 +2505,7 @@
       "author": null,
       "contributor": null,
       "id": "claude_definitionofdone",
-      "community": 6,
+      "community": 9,
       "norm_label": "definition of done (runs locally, responsive, all main pages implemented, clean readme, deployed link)"
     },
     {
@@ -2487,60 +2518,8 @@
       "author": null,
       "contributor": null,
       "id": "claude_uiprimitives",
-      "community": 6,
+      "community": 9,
       "norm_label": "shared ui primitives in src/components/ui (button, card, section, badge, pageheader)"
-    },
-    {
-      "label": "README.md",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "readme_readme",
-      "community": 6,
-      "norm_label": "readme.md"
-    },
-    {
-      "label": "README Stack Summary (React, Vite, TS, Tailwind v4, shadcn/ui, React Router)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "readme_stack",
-      "community": 6,
-      "norm_label": "readme stack summary (react, vite, ts, tailwind v4, shadcn/ui, react router)"
-    },
-    {
-      "label": "Setup / Run / Build Instructions (npm install, npm run dev/build/preview)",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "readme_setup",
-      "community": 6,
-      "norm_label": "setup / run / build instructions (npm install, npm run dev/build/preview)"
-    },
-    {
-      "label": "Milestone M8 (full documentation pending: pages, architecture, deployment)",
-      "file_type": "concept",
-      "source_file": "README.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "readme_milestonem8",
-      "community": 6,
-      "norm_label": "milestone m8 (full documentation pending: pages, architecture, deployment)"
     },
     {
       "label": "Phase 1 Scope Document",
@@ -2552,7 +2531,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_phase1scope",
-      "community": 6,
+      "community": 9,
       "norm_label": "phase 1 scope document"
     },
     {
@@ -2565,7 +2544,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_labmaremi",
-      "community": 18,
+      "community": 19,
       "norm_label": "labmaremi (b2b cleaning-supplies distributor, quito, ecuador)"
     },
     {
@@ -2578,7 +2557,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_techstack",
-      "community": 6,
+      "community": 9,
       "norm_label": "phase 1 tech stack (react, vite, ts, tailwind, shadcn/ui, react router, spline, github, claude code, graphify)"
     },
     {
@@ -2643,7 +2622,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_productcatalogpage",
-      "community": 11,
+      "community": 10,
       "norm_label": "product catalog page"
     },
     {
@@ -2656,7 +2635,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_productdetail",
-      "community": 11,
+      "community": 10,
       "norm_label": "product detail modal/page"
     },
     {
@@ -2669,7 +2648,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_quoterequestpage",
-      "community": 11,
+      "community": 10,
       "norm_label": "quote request page"
     },
     {
@@ -2682,7 +2661,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_contactpage",
-      "community": 17,
+      "community": 18,
       "norm_label": "contact page"
     },
     {
@@ -2695,7 +2674,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_aboutuspage",
-      "community": 16,
+      "community": 17,
       "norm_label": "about us page (family business, 5-year roadmap)"
     },
     {
@@ -2708,7 +2687,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_admindashboard",
-      "community": 11,
+      "community": 10,
       "norm_label": "admin dashboard preview"
     },
     {
@@ -2721,7 +2700,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_businessflowvisualizer",
-      "community": 11,
+      "community": 10,
       "norm_label": "business flow visualizer (/platform)"
     },
     {
@@ -2734,7 +2713,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_productsts",
-      "community": 11,
+      "community": 10,
       "norm_label": "src/data/products.ts (mock product data)"
     },
     {
@@ -2747,7 +2726,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_categoriests",
-      "community": 11,
+      "community": 10,
       "norm_label": "src/data/categories.ts (mock category data)"
     },
     {
@@ -2760,7 +2739,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_leadsts",
-      "community": 11,
+      "community": 10,
       "norm_label": "src/data/leads.ts (mock lead data)"
     },
     {
@@ -2773,7 +2752,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_businesstypests",
-      "community": 11,
+      "community": 10,
       "norm_label": "src/data/businesstypes.ts (mock business-type data)"
     },
     {
@@ -2786,7 +2765,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_graphifyrole",
-      "community": 14,
+      "community": 15,
       "norm_label": "role of graphify (project-understanding layer, not the builder)"
     },
     {
@@ -2799,7 +2778,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_claudecoderole",
-      "community": 14,
+      "community": 15,
       "norm_label": "role of claude code (the builder, small controlled steps)"
     },
     {
@@ -2812,7 +2791,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_outofscope",
-      "community": 6,
+      "community": 9,
       "norm_label": "out of scope for phase 1 (db, supabase, auth, payments, cart, etc.)"
     },
     {
@@ -2825,7 +2804,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_acceptancecriteria",
-      "community": 6,
+      "community": 9,
       "norm_label": "phase 1 acceptance criteria"
     },
     {
@@ -2838,7 +2817,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_portfoliogoal",
-      "community": 6,
+      "community": 9,
       "norm_label": "portfolio goal / elevator pitch (rationale for polish level)"
     },
     {
@@ -2851,7 +2830,7 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_supabase",
-      "community": 6,
+      "community": 9,
       "norm_label": "supabase (deferred to phase 2 backend)"
     },
     {
@@ -2864,8 +2843,157 @@
       "author": null,
       "contributor": null,
       "id": "docs_00_phase_1_scope_qualityreqs",
-      "community": 6,
+      "community": 9,
       "norm_label": "professional quality requirements (responsive, clean palette, no lorem ipsum, no console errors)"
+    },
+    {
+      "label": "README.md (LABMAREMI Phase 1 Frontend Demo)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_readme",
+      "community": 6,
+      "norm_label": "readme.md (labmaremi phase 1 frontend demo)"
+    },
+    {
+      "label": "LABMAREMI C\u00eda. Ltda. (B2B Cleaning Supplies Distributor, Quito)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "README.md intro paragraph",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_labmaremi_company",
+      "community": 6,
+      "norm_label": "labmaremi cia. ltda. (b2b cleaning supplies distributor, quito)"
+    },
+    {
+      "label": "Phase 1 Scope Document (docs/00-phase-1-scope.md)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "README.md link to docs/00-phase-1-scope.md",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_00_phase_1_scope_document",
+      "community": 6,
+      "norm_label": "phase 1 scope document (docs/00-phase-1-scope.md)"
+    },
+    {
+      "label": "Phase 1 Tech Stack (React + Vite + TypeScript, Tailwind v4, shadcn/ui-style, React Router v7, framer-motion, lucide-react)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "README.md 'Tech stack' section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Stack fixed for Phase 1 to keep the demo entirely frontend-only: strict TypeScript, CSS-first Tailwind v4 config, shadcn/ui-style primitives, framer-motion for the Home hero floating-image canvas, Manrope + IBM Plex Mono via Google Fonts.",
+      "id": "readme_tech_stack",
+      "community": 6,
+      "norm_label": "phase 1 tech stack (react + vite + typescript, tailwind v4, shadcn/ui-style, react router v7, framer-motion, lucide-react)"
+    },
+    {
+      "label": "Page/Route Map (/, /catalogo, /producto/:id, /cotizacion, /contacto, /nosotros, /admin, /platform)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "README.md 'Pages' table",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_pages_routes",
+      "community": 6,
+      "norm_label": "page/route map (/, /catalogo, /producto/:id, /cotizacion, /contacto, /nosotros, /admin, /platform)"
+    },
+    {
+      "label": "Project Structure (src/components, pages, data, types, lib; docs/; graphify-out/)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "README.md 'Project structure' section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_project_structure",
+      "community": 6,
+      "norm_label": "project structure (src/components, pages, data, types, lib; docs/; graphify-out/)"
+    },
+    {
+      "label": "Mock Data (static TypeScript files in src/data: products, categories, businessTypes, leads)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "README.md 'What's mocked vs. real' section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "All lead company names, contacts, phones, and emails are fictional to avoid real customer data; the mock data files were deliberately shaped to match the future Supabase database schema so the Phase 2 migration is straightforward.",
+      "id": "readme_mock_data",
+      "community": 6,
+      "norm_label": "mock data (static typescript files in src/data: products, categories, businesstypes, leads)"
+    },
+    {
+      "label": "Quote Request Flow (non-persistent, cosmetic reference number)",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "README.md 'What's mocked vs. real' section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The quote form validates and shows a polished success state without persisting anything because Phase 1 has no backend; the reference number is intentionally cosmetic. Supports ?productos=<ids> pre-selection from the catalog.",
+      "id": "readme_quote_flow",
+      "community": 6,
+      "norm_label": "quote request flow (non-persistent, cosmetic reference number)"
+    },
+    {
+      "label": "Admin Dashboard Preview (/admin, footer link)",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "README.md 'Pages' and 'What's mocked vs. real' sections",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "A visual preview only: every metric is derived at render time from the mock leads, so no persistence layer is needed in Phase 1; in Phase 2 it becomes a live internal tool for the sales team.",
+      "id": "readme_admin_dashboard_preview",
+      "community": 6,
+      "norm_label": "admin dashboard preview (/admin, footer link)"
+    },
+    {
+      "label": "Phase 2 Plan (Supabase backend, auth, quote persistence, real photos)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": "README.md 'Phase 2 (planned)' section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Supabase brings real product management, quote persistence, and authentication; hero Unsplash stock imagery gets swapped for real product photography, optionally with a Spline 3D hero scene, plus deployment hardening.",
+      "id": "readme_phase2_supabase",
+      "community": 6,
+      "norm_label": "phase 2 plan (supabase backend, auth, quote persistence, real photos)"
+    },
+    {
+      "label": "No-Backend Constraint (everything runs in the browser)",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": "README.md 'What's mocked vs. real' section",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Phase 1 is a clickable demo: products/categories/leads are static TS files, contact details and the map location are placeholders, and nothing is persisted \u2014 the backend arrives only in Phase 2.",
+      "id": "readme_no_backend_phase1",
+      "community": 6,
+      "norm_label": "no-backend constraint (everything runs in the browser)"
     },
     {
       "label": "index.html (App HTML Entry)",
@@ -2877,125 +3005,113 @@
       "author": null,
       "contributor": null,
       "id": "index_html_document",
-      "community": 10,
+      "community": 6,
       "norm_label": "index.html (app html entry)"
     },
     {
-      "label": "Page Title: LABMAREMI \u2014 Suministros de limpieza e higiene para empresas",
-      "file_type": "code",
+      "label": "Page Title (LABMAREMI \u2014 Suministros de limpieza e higiene para empresas)",
+      "file_type": "concept",
       "source_file": "index.html",
-      "source_location": "line 10",
+      "source_location": "index.html line 10",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "id": "index_title",
-      "community": 10,
-      "norm_label": "page title: labmaremi \u2014 suministros de limpieza e higiene para empresas"
+      "community": 6,
+      "norm_label": "page title (labmaremi \u2014 suministros de limpieza e higiene para empresas)"
     },
     {
-      "label": "Meta Description (LABMAREMI B2B distributor summary)",
-      "file_type": "code",
+      "label": "Meta Description (Distribuidor B2B de productos de limpieza, Quito, Ecuador)",
+      "file_type": "concept",
       "source_file": "index.html",
-      "source_location": "lines 6-9",
+      "source_location": "index.html lines 6-9",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "id": "index_meta_description",
-      "community": 10,
-      "norm_label": "meta description (labmaremi b2b distributor summary)"
+      "community": 6,
+      "norm_label": "meta description (distribuidor b2b de productos de limpieza, quito, ecuador)"
     },
     {
       "label": "Google Fonts Preconnect Links",
       "file_type": "code",
       "source_file": "index.html",
-      "source_location": "lines 11-12",
-      "source_url": null,
+      "source_location": "index.html lines 11-12",
+      "source_url": "https://fonts.googleapis.com",
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "rationale": "Preconnect to fonts.googleapis.com and fonts.gstatic.com warms up connections before the font stylesheet request, reducing font load latency.",
       "id": "index_google_fonts_preconnect",
-      "community": 10,
+      "community": 6,
       "norm_label": "google fonts preconnect links"
     },
     {
-      "label": "Google Fonts Stylesheet Link",
+      "label": "Google Fonts Stylesheet Link (Manrope 400-800 + IBM Plex Mono 400-500)",
       "file_type": "code",
       "source_file": "index.html",
-      "source_location": "lines 13-16",
-      "source_url": null,
+      "source_location": "index.html lines 13-16",
+      "source_url": "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap",
       "captured_at": null,
       "author": null,
       "contributor": null,
       "id": "index_google_fonts_stylesheet_link",
-      "community": 10,
-      "norm_label": "google fonts stylesheet link"
+      "community": 6,
+      "norm_label": "google fonts stylesheet link (manrope 400-800 + ibm plex mono 400-500)"
     },
     {
-      "label": "Font: Space Grotesk (400;500;600;700)",
-      "file_type": "code",
+      "label": "Manrope Font (weights 400-800)",
+      "file_type": "concept",
       "source_file": "index.html",
-      "source_location": "line 14",
+      "source_location": "index.html line 14",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "index_font_space_grotesk",
-      "community": 10,
-      "norm_label": "font: space grotesk (400;500;600;700)"
+      "id": "index_font_manrope",
+      "community": 6,
+      "norm_label": "manrope font (weights 400-800)"
     },
     {
-      "label": "Font: IBM Plex Sans (400;500;600)",
-      "file_type": "code",
+      "label": "IBM Plex Mono Font (weights 400-500)",
+      "file_type": "concept",
       "source_file": "index.html",
-      "source_location": "line 14",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "index_font_ibm_plex_sans",
-      "community": 10,
-      "norm_label": "font: ibm plex sans (400;500;600)"
-    },
-    {
-      "label": "Font: IBM Plex Mono (400;500)",
-      "file_type": "code",
-      "source_file": "index.html",
-      "source_location": "line 14",
+      "source_location": "index.html line 14",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "id": "index_font_ibm_plex_mono",
-      "community": 10,
-      "norm_label": "font: ibm plex mono (400;500)"
+      "community": 6,
+      "norm_label": "ibm plex mono font (weights 400-500)"
     },
     {
-      "label": "#root Mount Div",
+      "label": "Root Mount Div (#root)",
       "file_type": "code",
       "source_file": "index.html",
-      "source_location": "line 19",
+      "source_location": "index.html line 19",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "id": "index_root_div",
-      "community": 10,
-      "norm_label": "#root mount div"
+      "community": 6,
+      "norm_label": "root mount div (#root)"
     },
     {
-      "label": "Module Script Tag: /src/main.tsx",
+      "label": "Module Script Entry (/src/main.tsx)",
       "file_type": "code",
       "source_file": "index.html",
-      "source_location": "line 20",
+      "source_location": "index.html line 20",
       "source_url": null,
       "captured_at": null,
       "author": null,
       "contributor": null,
       "id": "index_main_tsx_script",
-      "community": 10,
-      "norm_label": "module script tag: /src/main.tsx"
+      "community": 6,
+      "norm_label": "module script entry (/src/main.tsx)"
     }
   ],
   "links": [
@@ -3183,7 +3299,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "package",
       "target": "package_devdependencies",
@@ -3296,7 +3412,7 @@
       "source_location": "L14",
       "weight": 1.0,
       "source": "package_dependencies",
-      "target": "package_dependencies_lucide_react",
+      "target": "package_dependencies_framer_motion",
       "confidence_score": 1.0
     },
     {
@@ -3306,7 +3422,7 @@
       "source_location": "L15",
       "weight": 1.0,
       "source": "package_dependencies",
-      "target": "package_dependencies_react",
+      "target": "package_dependencies_lucide_react",
       "confidence_score": 1.0
     },
     {
@@ -3316,7 +3432,7 @@
       "source_location": "L16",
       "weight": 1.0,
       "source": "package_dependencies",
-      "target": "package_dependencies_react_dom",
+      "target": "package_dependencies_react",
       "confidence_score": 1.0
     },
     {
@@ -3326,7 +3442,7 @@
       "source_location": "L17",
       "weight": 1.0,
       "source": "package_dependencies",
-      "target": "package_dependencies_react_router_dom",
+      "target": "package_dependencies_react_dom",
       "confidence_score": 1.0
     },
     {
@@ -3336,27 +3452,17 @@
       "source_location": "L18",
       "weight": 1.0,
       "source": "package_dependencies",
+      "target": "package_dependencies_react_router_dom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "package_dependencies",
       "target": "package_dependencies_tailwind_merge",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "package.json",
-      "source_location": "L26",
-      "weight": 1.0,
-      "source": "package_devdependencies",
-      "target": "package_devdependencies_tailwindcss",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "package.json",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "package_devdependencies",
-      "target": "package_devdependencies_tailwindcss_vite",
       "confidence_score": 1.0
     },
     {
@@ -3366,7 +3472,7 @@
       "source_location": "L27",
       "weight": 1.0,
       "source": "package_devdependencies",
-      "target": "package_devdependencies_tw_animate_css",
+      "target": "package_devdependencies_tailwindcss",
       "confidence_score": 1.0
     },
     {
@@ -3376,27 +3482,7 @@
       "source_location": "L22",
       "weight": 1.0,
       "source": "package_devdependencies",
-      "target": "package_devdependencies_types_node",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "package.json",
-      "source_location": "L23",
-      "weight": 1.0,
-      "source": "package_devdependencies",
-      "target": "package_devdependencies_types_react",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "package.json",
-      "source_location": "L24",
-      "weight": 1.0,
-      "source": "package_devdependencies",
-      "target": "package_devdependencies_types_react_dom",
+      "target": "package_devdependencies_tailwindcss_vite",
       "confidence_score": 1.0
     },
     {
@@ -3406,7 +3492,37 @@
       "source_location": "L28",
       "weight": 1.0,
       "source": "package_devdependencies",
-      "target": "package_devdependencies_typescript",
+      "target": "package_devdependencies_tw_animate_css",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_types_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_types_react",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_types_react_dom",
       "confidence_score": 1.0
     },
     {
@@ -3416,6 +3532,16 @@
       "source_location": "L29",
       "weight": 1.0,
       "source": "package_devdependencies",
+      "target": "package_devdependencies_typescript",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "package_devdependencies",
       "target": "package_devdependencies_vite",
       "confidence_score": 1.0
     },
@@ -3423,7 +3549,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0,
       "source": "package_devdependencies",
       "target": "package_devdependencies_vitejs_plugin_react",
@@ -4061,8 +4187,60 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/components/hero/HeroFloatingCanvas.tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "src_components_hero_herofloatingcanvas",
+      "target": "src_components_hero_herofloatingcanvas_herofloatingcanvas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/hero/HeroFloatingCanvas.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "src_components_hero_herofloatingcanvas",
+      "target": "src_components_hero_herofloatingcanvas_images",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/hero/HeroFloatingCanvas.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_components_hero_herofloatingcanvas",
+      "target": "src_components_hero_herofloatingcanvas_random",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/components/hero/HeroSection.tsx",
-      "source_location": "L15",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_components_hero_herosection",
+      "target": "src_components_hero_herofloatingcanvas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/hero/HeroFloatingCanvas.tsx",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "src_components_hero_herofloatingcanvas_herofloatingcanvas",
+      "target": "src_components_hero_herofloatingcanvas_random",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/hero/HeroSection.tsx",
+      "source_location": "L14",
       "weight": 1.0,
       "source": "src_components_hero_herosection",
       "target": "src_components_hero_herosection_herosection",
@@ -4072,32 +4250,10 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/hero/HeroSection.tsx",
-      "source_location": "L9",
+      "source_location": "L8",
       "weight": 1.0,
       "source": "src_components_hero_herosection",
       "target": "src_components_hero_herosection_trustpoints",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/hero/HeroSection.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "src_components_hero_herosection",
-      "target": "src_components_hero_herovisual",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/hero/HeroSection.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "src_components_hero_herosection",
-      "target": "src_components_hero_herovisual_herovisual",
       "confidence_score": 1.0
     },
     {
@@ -4130,28 +4286,6 @@
       "source_location": "L5",
       "weight": 1.0,
       "source": "src_components_hero_herosection",
-      "target": "src_components_ui_eyebrow",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/hero/HeroSection.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "src_components_hero_herosection",
-      "target": "src_components_ui_eyebrow_eyebrow",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/hero/HeroSection.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "src_components_hero_herosection",
       "target": "src_lib_utils",
       "confidence_score": 1.0
     },
@@ -4160,7 +4294,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/hero/HeroSection.tsx",
-      "source_location": "L6",
+      "source_location": "L5",
       "weight": 1.0,
       "source": "src_components_hero_herosection",
       "target": "src_lib_utils_cn",
@@ -4208,16 +4342,6 @@
       "weight": 1.0,
       "source": "src_pages_homepage",
       "target": "src_components_hero_herosection_herosection",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/hero/HeroVisual.tsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "source": "src_components_hero_herovisual",
-      "target": "src_components_hero_herovisual_herovisual",
       "confidence_score": 1.0
     },
     {
@@ -7672,7 +7796,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/pages/AdminPage.tsx",
-      "source_location": "L234",
+      "source_location": "L257",
       "weight": 1.0,
       "source": "src_pages_adminpage_adminpage",
       "target": "src_lib_icons_getcategoryicon"
@@ -7738,7 +7862,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/pages/AdminPage.tsx",
-      "source_location": "L161",
+      "source_location": "L172",
       "weight": 1.0,
       "source": "src_pages_adminpage_adminpage",
       "target": "src_lib_icons_getbusinesstypeicon"
@@ -7982,7 +8106,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/AdminPage.tsx",
-      "source_location": "L186",
+      "source_location": "L197",
       "weight": 1.0,
       "source": "src_pages_adminpage_adminpage",
       "target": "src_pages_adminpage_formatdate",
@@ -7993,7 +8117,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/AdminPage.tsx",
-      "source_location": "L176",
+      "source_location": "L187",
       "weight": 1.0,
       "source": "src_pages_adminpage_adminpage",
       "target": "src_pages_adminpage_getbusinesstypename",
@@ -8712,16 +8836,6 @@
       "target": "docs_00_phase_1_scope_techstack"
     },
     {
-      "relation": "semantically_similar_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme_readme",
-      "target": "claude_projectinstructions"
-    },
-    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -8760,66 +8874,6 @@
       "weight": 1.0,
       "source": "claude_definitionofdone",
       "target": "docs_00_phase_1_scope_phase1scope"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "AMBIGUOUS",
-      "confidence_score": 0.2,
-      "source_file": "README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme_milestonem8",
-      "target": "claude_definitionofdone"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme_readme",
-      "target": "docs_00_phase_1_scope_phase1scope"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme_readme",
-      "target": "readme_milestonem8"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme_readme",
-      "target": "readme_setup"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme_readme",
-      "target": "readme_stack"
-    },
-    {
-      "relation": "references",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "README.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme_stack",
-      "target": "docs_00_phase_1_scope_techstack"
     },
     {
       "relation": "references",
@@ -8992,6 +9046,186 @@
       "target": "docs_00_phase_1_scope_supabase"
     },
     {
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "link: docs/00-phase-1-scope.md",
+      "weight": 1.0,
+      "source": "readme_readme",
+      "target": "docs_00_phase_1_scope_document"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "intro paragraph",
+      "weight": 1.0,
+      "source": "readme_readme",
+      "target": "readme_labmaremi_company"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "'What's mocked vs. real' section",
+      "weight": 1.0,
+      "source": "readme_readme",
+      "target": "readme_no_backend_phase1"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "'Pages' table",
+      "weight": 1.0,
+      "source": "readme_readme",
+      "target": "readme_pages_routes"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "'Phase 2 (planned)' section",
+      "weight": 1.0,
+      "source": "readme_readme",
+      "target": "readme_phase2_supabase"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "'Project structure' section",
+      "weight": 1.0,
+      "source": "readme_readme",
+      "target": "readme_project_structure"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "'Tech stack' section",
+      "weight": 1.0,
+      "source": "readme_readme",
+      "target": "readme_tech_stack"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "index.html",
+      "source_location": "meta description names LABMAREMI and the same B2B distributor positioning as README",
+      "weight": 1.0,
+      "source": "index_meta_description",
+      "target": "readme_labmaremi_company"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "index.html",
+      "source_location": "title names LABMAREMI",
+      "weight": 1.0,
+      "source": "index_title",
+      "target": "readme_labmaremi_company"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "README.md",
+      "source_location": "'Manrope + IBM Plex Mono via Google Fonts' matches fonts loaded in index.html",
+      "weight": 1.0,
+      "source": "readme_tech_stack",
+      "target": "index_font_ibm_plex_mono"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "README.md",
+      "source_location": "'Manrope + IBM Plex Mono via Google Fonts' matches fonts loaded in index.html",
+      "weight": 1.0,
+      "source": "readme_tech_stack",
+      "target": "index_font_manrope"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "'Pages' table: /admin row",
+      "weight": 1.0,
+      "source": "readme_pages_routes",
+      "target": "readme_admin_dashboard_preview"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "'Pages' table: /cotizacion row",
+      "weight": 1.0,
+      "source": "readme_pages_routes",
+      "target": "readme_quote_flow"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "README.md",
+      "source_location": "src/ tree in README corresponds to the /src/main.tsx entry loaded by index.html",
+      "weight": 1.0,
+      "source": "readme_project_structure",
+      "target": "index_main_tsx_script"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "'every metric is derived at render time from the mock leads'",
+      "weight": 1.0,
+      "source": "readme_admin_dashboard_preview",
+      "target": "readme_mock_data"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "'mock data files were shaped to match the future database schema'",
+      "weight": 1.0,
+      "source": "readme_mock_data",
+      "target": "readme_phase2_supabase"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "'What's mocked vs. real' section",
+      "weight": 1.0,
+      "source": "readme_no_backend_phase1",
+      "target": "readme_mock_data"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "'What's mocked vs. real' section: quote form persists nothing",
+      "weight": 1.0,
+      "source": "readme_no_backend_phase1",
+      "target": "readme_quote_flow"
+    },
+    {
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -9000,6 +9234,16 @@
       "weight": 1.0,
       "source": "index_html_document",
       "target": "index_google_fonts_preconnect"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 13-16",
+      "weight": 1.0,
+      "source": "index_html_document",
+      "target": "index_google_fonts_stylesheet_link"
     },
     {
       "relation": "references",
@@ -9042,9 +9286,9 @@
       "target": "index_title"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
       "source_file": "index.html",
       "source_location": "lines 11-16",
       "weight": 1.0,
@@ -9056,7 +9300,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "index.html",
-      "source_location": "line 14",
+      "source_location": "line 14: family=IBM+Plex+Mono:wght@400;500",
       "weight": 1.0,
       "source": "index_google_fonts_stylesheet_link",
       "target": "index_font_ibm_plex_mono"
@@ -9066,30 +9310,10 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "index.html",
-      "source_location": "line 14",
+      "source_location": "line 14: family=Manrope:wght@400;500;600;700;800",
       "weight": 1.0,
       "source": "index_google_fonts_stylesheet_link",
-      "target": "index_font_ibm_plex_sans"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "index.html",
-      "source_location": "line 14",
-      "weight": 1.0,
-      "source": "index_google_fonts_stylesheet_link",
-      "target": "index_font_space_grotesk"
-    },
-    {
-      "relation": "shares_data_with",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "index.html",
-      "source_location": "lines 19-20",
-      "weight": 1.0,
-      "source": "index_main_tsx_script",
-      "target": "index_root_div"
+      "target": "index_font_manrope"
     }
   ],
   "hyperedges": [
@@ -9138,20 +9362,21 @@
       "source_file": "docs/00-phase-1-scope.md"
     },
     {
-      "id": "index_google_fonts_loading_pattern",
-      "label": "Google Fonts Preconnect + Stylesheet Loading Pattern",
+      "id": "hyper_google_fonts_typography_pipeline",
+      "label": "Google Fonts typography pipeline (preconnect -> stylesheet -> Manrope + IBM Plex Mono, documented in README tech stack)",
       "nodes": [
         "index_google_fonts_preconnect",
         "index_google_fonts_stylesheet_link",
-        "index_font_space_grotesk",
-        "index_font_ibm_plex_sans",
-        "index_font_ibm_plex_mono"
+        "index_font_manrope",
+        "index_font_ibm_plex_mono",
+        "readme_tech_stack"
       ],
-      "relation": "form",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "index.html"
+      "source_file": "index.html",
+      "weight": 1.0
     }
   ],
-  "built_at_commit": "379e91d5ee6223fd5d23bacad90936e5e35b3d04"
+  "built_at_commit": "f9746d1b0653a5d7996c91e77f901e47d17fc56f"
 }
