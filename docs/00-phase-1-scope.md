@@ -391,7 +391,7 @@ Claude Code will be used to:
 
 Claude Code should work in small controlled steps, not one huge autonomous build.
 
-## 13. Phase 1 Acceptance Criteria
+## 14. Phase 1 Acceptance Criteria
 
 Phase 1 is complete when:
 
@@ -407,13 +407,13 @@ Phase 1 is complete when:
 * The project is committed to GitHub.
 * The code is clean enough to continue into Supabase integration in Phase 2.
 
-## 14. Portfolio Goal
+## 15. Portfolio Goal
 
 This phase should already be presentable as:
 
 “A professional frontend prototype for a B2B cleaning-supplies platform, designed for a real distribution business. The demo includes a public website, product catalog, quote request flow, admin dashboard preview, and business workflow visualization. Built with React, TypeScript, Tailwind, and shadcn/ui, with a planned Supabase backend for Phase 2.”
 
-## 15. Phase 1 Summary
+## 16. Phase 1 Summary
 
 Phase 1 is not the final product.
 
