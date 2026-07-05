@@ -18,6 +18,12 @@ import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { Section } from "@/components/ui/section"
 import { getCategoryCode } from "@/lib/catalog"
+import {
+  coverageSectors,
+  EMAIL_DISPLAY,
+  PHONE_DISPLAY,
+  WHATSAPP_HREF,
+} from "@/lib/contact"
 import { getBusinessTypeIcon, getCategoryIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { HeroSection } from "@/components/hero/HeroSection"
@@ -51,26 +57,9 @@ const reasons = [
   },
 ]
 
-// Sample coverage sectors — realistic Quito-area geography, no client data.
-const coverageSectors = [
-  "Norte de Quito",
-  "Centro Histórico",
-  "Sur de Quito",
-  "Cumbayá",
-  "Tumbaco",
-  "Valle de los Chillos",
-  "Calderón",
-  "Sangolquí",
-]
-
 // Placeholder office location — generic Quito coordinates for the demo.
 const OFFICE_MAP_SRC =
   "https://www.google.com/maps?q=-0.180653,-78.467834&z=13&output=embed"
-
-// Placeholder contact details (Phase 1 demo — not real).
-const WHATSAPP_HREF = "https://wa.me/593999999999"
-const PHONE_DISPLAY = "+593 99 999 9999"
-const EMAIL_DISPLAY = "ventas@labmaremi.ec"
 
 export default function HomePage() {
   return (
