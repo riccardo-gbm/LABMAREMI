@@ -157,6 +157,17 @@ export default function AdminPage() {
                 </tr>
               </thead>
               <tbody>
+                {recentLeads.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="px-5 py-12 text-center text-sm text-muted-foreground"
+                    >
+                      Aún no hay solicitudes registradas. Las nuevas
+                      cotizaciones aparecerán aquí.
+                    </td>
+                  </tr>
+                ) : null}
                 {recentLeads.map((lead) => {
                   const TypeIcon = getBusinessTypeIcon(lead.businessTypeId)
                   return (
@@ -200,6 +211,12 @@ export default function AdminPage() {
         <div className="mt-4 grid gap-4 lg:grid-cols-[3fr_2fr]">
           <Card className="p-5">
             <Eyebrow>Productos más solicitados</Eyebrow>
+            {productRanking.length === 0 ? (
+              <p className="mt-5 text-sm text-muted-foreground">
+                Sin datos todavía — el interés por producto se calculará a
+                partir de las solicitudes recibidas.
+              </p>
+            ) : null}
             <ul className="mt-5 space-y-4">
               {productRanking.map(({ product, count }) => (
                 <li key={product.id}>
@@ -229,6 +246,12 @@ export default function AdminPage() {
 
           <Card className="p-5">
             <Eyebrow>Categorías más solicitadas</Eyebrow>
+            {topCategories.length === 0 ? (
+              <p className="mt-5 text-sm text-muted-foreground">
+                Sin datos todavía — las categorías se ordenarán según las
+                solicitudes recibidas.
+              </p>
+            ) : null}
             <ul className="mt-5 space-y-3">
               {topCategories.map(({ category, count }, index) => {
                 const Icon = getCategoryIcon(category.id)

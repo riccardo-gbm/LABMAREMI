@@ -36,8 +36,11 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", "IBM Plex Sans", ui-sans-serif, sans-serif;
+  /* Manrope is the single site-wide family (sans + headings alike);
+     --font-display stays defined only as an alias so existing `font-display`
+     usages keep working. IBM Plex Mono remains for spec/eyebrow labels. */
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
