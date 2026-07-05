@@ -2,31 +2,14 @@ import { Link } from "react-router-dom"
 import {
   ArrowRight,
   ArrowUpRight,
-  Bath,
-  BedDouble,
-  Brush,
-  Building2,
-  Droplets,
-  Factory,
-  GraduationCap,
-  HandHeart,
   Handshake,
-  type LucideIcon,
   Mail,
   MapPin,
   MessageCircle,
-  Package,
   PackageCheck,
   Phone,
-  ScrollText,
   ShieldCheck,
-  Sparkles,
-  SprayCan,
-  Stethoscope,
-  Store,
-  Trash2,
   Truck,
-  UtensilsCrossed,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -34,32 +17,12 @@ import { buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { Section } from "@/components/ui/section"
+import { getCategoryCode } from "@/lib/catalog"
+import { getBusinessTypeIcon, getCategoryIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { HeroSection } from "@/components/hero/HeroSection"
 import { categories } from "@/data/categories"
 import { businessTypes } from "@/data/businessTypes"
-
-const categoryIcons: Record<string, LucideIcon> = {
-  desinfectantes: Droplets,
-  desengrasantes: SprayCan,
-  papel: ScrollText,
-  "herramientas-limpieza": Brush,
-  "fundas-basura": Trash2,
-  "insumos-bano": Bath,
-  "limpieza-industrial": Factory,
-  "higiene-personal": HandHeart,
-  "equipos-proteccion": ShieldCheck,
-}
-
-const businessTypeIcons: Record<string, LucideIcon> = {
-  restaurantes: UtensilsCrossed,
-  hoteles: BedDouble,
-  oficinas: Building2,
-  "instituciones-educativas": GraduationCap,
-  clinicas: Stethoscope,
-  "empresas-limpieza": Sparkles,
-  "tiendas-locales": Store,
-}
 
 const reasons = [
   {
@@ -157,12 +120,12 @@ export default function HomePage() {
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => {
-            const Icon = categoryIcons[category.id] ?? Package
-            const code = category.id.slice(0, 3).toUpperCase()
+            const Icon = getCategoryIcon(category.id)
+            const code = getCategoryCode(category.id)
             return (
               <Link
                 key={category.id}
-                to="/catalogo"
+                to={`/catalogo?categoria=${category.id}`}
                 className="group relative flex flex-col rounded-xl border bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md"
               >
                 <div className="flex items-center justify-between">
@@ -201,7 +164,7 @@ export default function HomePage() {
         </p>
         <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {businessTypes.map((type) => {
-            const Icon = businessTypeIcons[type.id] ?? Building2
+            const Icon = getBusinessTypeIcon(type.id)
             return (
               <div
                 key={type.id}
