@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { motion } from "framer-motion"
 import {
   ArrowUpRight,
   BadgeCheck,
@@ -13,6 +14,7 @@ import {
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { PageHeader } from "@/components/ui/page-header"
+import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
 
 interface FlowStep {
@@ -20,6 +22,7 @@ interface FlowStep {
   description: string
   icon: LucideIcon
   href?: string
+  preview: string
 }
 
 const flowSteps: FlowStep[] = [
@@ -28,39 +31,45 @@ const flowSteps: FlowStep[] = [
     description:
       "Un negocio de Quito llega al sitio buscando un proveedor confiable de insumos de limpieza.",
     icon: UserRound,
+    preview: "Necesito abastecer mi local",
   },
   {
-    title: "Catálogo de productos",
+    title: "Catálogo",
     description:
-      "Explora las categorías y encuentra los productos que su operación necesita.",
+      "Explora categorías, presentaciones y productos para su operación.",
     icon: PackageSearch,
     href: "/catalogo",
+    preview: "DSF · DGR · PAP · EPP",
   },
   {
-    title: "Solicitud de cotización",
+    title: "Cotización",
     description:
-      "Envía sus datos, su tipo de negocio y sus productos de interés en el formulario.",
+      "Envía sus datos, sector y productos de interés en el formulario.",
     icon: FileText,
     href: "/cotizacion",
+    preview: "3 productos seleccionados",
   },
   {
     title: "Panel de leads",
     description:
-      "La solicitud llega como lead al panel interno del equipo comercial.",
+      "La solicitud aparece como lead en el panel interno del equipo comercial.",
     icon: LayoutDashboard,
     href: "/admin",
+    preview: "Nuevo · Contactado · Cliente",
   },
   {
     title: "Seguimiento",
     description:
-      "El equipo contacta al negocio, resuelve dudas y prepara la propuesta.",
+      "El equipo confirma cantidades, frecuencia y condiciones de entrega.",
     icon: PhoneCall,
+    preview: "WhatsApp + correo",
   },
   {
     title: "Cliente",
     description:
-      "El negocio se convierte en cliente, con abastecimiento recurrente y atención continua.",
+      "El negocio pasa a abastecimiento recurrente con atención continua.",
     icon: BadgeCheck,
+    preview: "Reposición programada",
   },
 ]
 
@@ -73,57 +82,82 @@ export default function PlatformPage() {
       />
 
       <Section className="pt-8 md:pt-10">
-        <Eyebrow>Recorrido del cliente</Eyebrow>
-        <h2 className="mt-4 max-w-2xl font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-          De la primera visita al abastecimiento recurrente
-        </h2>
+        <Reveal className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:items-start">
+          <div>
+            <Eyebrow>Recorrido del cliente</Eyebrow>
+            <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+              De la primera visita al abastecimiento recurrente
+            </h2>
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
+              Esta vista explica la lógica comercial que después se conectará a
+              Supabase: catálogo, solicitud, lead interno, seguimiento y cliente.
+            </p>
+          </div>
+
+          <Card className="bg-secondary/40 p-5">
+            <Eyebrow>Fase 1 · Demo</Eyebrow>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              En esta fase, el catálogo y el formulario funcionan con datos de
+              ejemplo. En la Fase 2, las solicitudes se almacenarán en una base
+              real y el panel será una herramienta operativa.
+            </p>
+          </Card>
+        </Reveal>
 
         <div className="relative mt-12">
-          {/* Connecting line across the icon row (desktop only) */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-0 top-6 hidden h-px bg-border lg:block"
-          />
-          <ol className="relative space-y-10 border-l border-border pl-8 lg:grid lg:grid-cols-6 lg:gap-5 lg:space-y-0 lg:border-l-0 lg:pl-0">
-            {flowSteps.map((step, index) => (
-              <li key={step.title} className="relative">
-                <span className="absolute -left-[2.6rem] flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-primary text-primary-foreground shadow-sm lg:static lg:h-12 lg:w-12 lg:border-4">
-                  <step.icon className="h-4 w-4 lg:h-5 lg:w-5" aria-hidden="true" />
+        <motion.div
+          aria-hidden="true"
+          className="absolute left-8 right-8 top-[4.2rem] hidden h-px origin-left bg-gradient-to-r from-primary/10 via-ring/50 to-primary/10 xl:block"
+          initial={{ scaleX: 0, opacity: 0 }}
+          whileInView={{ scaleX: 1, opacity: 1 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.75, ease: "easeOut" }}
+        />
+        <RevealGroup className="relative grid gap-4 md:grid-cols-2 xl:grid-cols-3" stagger={0.08}>
+          {flowSteps.map((step, index) => (
+            <RevealItem key={step.title} className="flex">
+            <Card className="h-full w-full overflow-hidden transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
+              <div className="flex items-center gap-4 border-b bg-secondary/40 p-5">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                  <step.icon className="h-5 w-5" aria-hidden="true" />
                 </span>
-                <p className="font-mono text-xs tracking-widest text-muted-foreground lg:mt-4">
-                  {String(index + 1).padStart(2, "0")}
-                </p>
-                <h3 className="mt-1 font-display text-base font-semibold leading-snug tracking-tight text-foreground">
-                  {step.title}
-                </h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                    Paso {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="font-display text-lg font-semibold tracking-tight text-foreground">
+                    {step.title}
+                  </h3>
+                </div>
+              </div>
+
+              <div className="p-5">
+                <div className="rounded-lg border bg-background p-4 shadow-sm">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ring">
+                    Vista previa
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-foreground">
+                    {step.preview}
+                  </p>
+                </div>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                   {step.description}
                 </p>
                 {step.href ? (
                   <Link
                     to={step.href}
-                    className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                    className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                   >
                     Ver página
                     <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
                   </Link>
                 ) : null}
-              </li>
-            ))}
-          </ol>
+              </div>
+            </Card>
+            </RevealItem>
+          ))}
+        </RevealGroup>
         </div>
-
-        {/* Phase honesty note */}
-        <Card className="mt-14 bg-secondary/40 p-6">
-          <Eyebrow>Fase 1 · Demo</Eyebrow>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            En esta fase, el catálogo y el formulario de cotización funcionan
-            con datos de ejemplo, y el panel de leads es una vista previa
-            visual. En la Fase 2, las solicitudes se almacenarán en una base de
-            datos real y el panel se convertirá en la herramienta de trabajo
-            del equipo comercial.
-          </p>
-        </Card>
       </Section>
     </>
   )

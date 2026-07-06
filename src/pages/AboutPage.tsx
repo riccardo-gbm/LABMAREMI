@@ -1,10 +1,21 @@
-import { Rocket, Store, Truck, Users, Warehouse } from "lucide-react"
+import {
+  Camera,
+  Rocket,
+  Store,
+  Truck,
+  UserRound,
+  Users,
+  Warehouse,
+} from "lucide-react"
 
-import { Avatar } from "@/components/ui/avatar"
+import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
+import { MediaFrame } from "@/components/ui/media-frame"
 import { PageHeader } from "@/components/ui/page-header"
+import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
 import { Timeline, type TimelineEntry } from "@/components/about/Timeline"
+import AboutHeroMorph from "@/components/about/AboutHeroMorph"
 
 const timelineEntries: TimelineEntry[] = [
   {
@@ -32,7 +43,7 @@ const timelineEntries: TimelineEntry[] = [
     year: "2024",
     title: "Equipo de atención B2B",
     description:
-      "Formamos un equipo dedicado a clientes institucionales — hoteles, clínicas y unidades educativas — con seguimiento personalizado.",
+      "Formamos un equipo dedicado a clientes institucionales, hoteles, clínicas y unidades educativas, con seguimiento personalizado.",
     icon: Users,
   },
   {
@@ -44,7 +55,14 @@ const timelineEntries: TimelineEntry[] = [
   },
 ]
 
-const owners = [
+interface TeamPerson {
+  name: string
+  role: string
+  photoUrl?: string
+  photoAlt?: string
+}
+
+const owners: TeamPerson[] = [
   {
     name: "Marco Andrade",
     role: "Fundador",
@@ -55,7 +73,7 @@ const owners = [
   },
 ]
 
-const teamMembers = [
+const teamMembers: TeamPerson[] = [
   {
     name: "Patricio Salazar",
     role: "Coordinador de Logística",
@@ -70,98 +88,125 @@ const teamMembers = [
   },
 ]
 
+function TeamCard({ person }: { person: TeamPerson }) {
+  return (
+    <Card className="overflow-hidden">
+      <MediaFrame
+        src={person.photoUrl}
+        alt={person.photoAlt ?? person.name}
+        fallbackLabel="Foto temporal pendiente"
+        fallbackIcon={UserRound}
+        badge="Equipo"
+        className="aspect-[4/3] rounded-b-none border-0 border-b"
+      />
+      <div className="p-5">
+        <p className="font-display text-lg font-semibold tracking-tight text-foreground">
+          {person.name}
+        </p>
+        <p className="mt-1 text-sm text-muted-foreground">{person.role}</p>
+      </div>
+    </Card>
+  )
+}
+
 export default function AboutPage() {
   return (
     <>
+      <AboutHeroMorph />
+
       <PageHeader
         title="Nosotros"
         description="Una empresa familiar quiteña, construida entrega tras entrega durante los últimos cinco años."
       />
 
-      {/* Intro / family framing */}
       <Section className="pt-8 md:pt-10">
-        <div className="max-w-2xl">
-          <Eyebrow>Quiénes somos</Eyebrow>
-          <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Un negocio familiar que abastece a otros negocios
-          </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-            LABMAREMI nació en 2021 como el proyecto de una familia quiteña que
-            vio la necesidad de un proveedor confiable de insumos de limpieza,
-            desinfección e higiene para pequeños y medianos negocios. Cinco
-            años después, seguimos siendo una empresa familiar — ahora con un
-            equipo que comparte el mismo compromiso con el que empezamos: que
-            ningún cliente se quede sin lo que necesita para operar limpio.
-          </p>
-        </div>
+        <Reveal className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:items-center">
+          <div>
+            <Eyebrow>Quiénes somos</Eyebrow>
+            <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+              Un negocio familiar que abastece a otros negocios
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+              LABMAREMI nació en 2021 como el proyecto de una familia quiteña que
+              vio la necesidad de un proveedor confiable de insumos de limpieza,
+              desinfección e higiene para pequeños y medianos negocios. Cinco
+              años después, seguimos siendo una empresa familiar, ahora con un
+              equipo que comparte el mismo compromiso con el que empezamos.
+            </p>
+          </div>
+          <MediaFrame
+            src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1000&auto=format&fit=crop"
+            alt="Trabajo operativo de limpieza profesional"
+            fallbackLabel="Espacio para foto familiar de LABMAREMI"
+            fallbackIcon={Camera}
+            badge="Foto referencial"
+            className="aspect-[4/3] shadow-sm"
+          />
+        </Reveal>
       </Section>
 
-      {/* Timeline */}
       <Section className="border-y bg-secondary/40">
-        <Eyebrow>Nuestra historia</Eyebrow>
-        <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-          Cinco años de crecimiento, un paso a la vez
-        </h2>
-        <div className="mt-12 max-w-2xl">
-          <Timeline entries={timelineEntries} />
-        </div>
+        <Reveal className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:items-start">
+          <div>
+            <Eyebrow>Nuestra historia</Eyebrow>
+            <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+              Cinco años de crecimiento, un paso a la vez
+            </h2>
+            <MediaFrame
+              src="https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?q=80&w=1000&auto=format&fit=crop"
+              alt="Productos de limpieza organizados para abastecimiento"
+              fallbackLabel="Espacio para foto de bodega y productos"
+              fallbackIcon={Warehouse}
+              badge="Bodega"
+              className="mt-8 aspect-[4/3] shadow-sm"
+            />
+          </div>
+          <div className="max-w-2xl">
+            <Timeline entries={timelineEntries} />
+          </div>
+        </Reveal>
       </Section>
 
-      {/* Team */}
       <Section>
-        <Eyebrow>Nuestro equipo</Eyebrow>
-        <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-          Las personas detrás de cada entrega
-        </h2>
+        <Reveal>
+          <Eyebrow>Nuestro equipo</Eyebrow>
+          <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            Las personas detrás de cada entrega
+          </h2>
+        </Reveal>
 
-        <div className="mt-10">
+        <Reveal className="mt-10" delay={0.05}>
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Dirección
           </p>
-          <div className="mt-4 grid gap-6 sm:grid-cols-2">
+          <RevealGroup className="mt-4 grid gap-6 sm:grid-cols-2">
             {owners.map((person) => (
-              <div
-                key={person.name}
-                className="flex items-center gap-4 rounded-xl border bg-card p-5 shadow-sm"
-              >
-                <Avatar name={person.name} size="lg" />
-                <div>
-                  <p className="font-display text-lg font-semibold tracking-tight text-foreground">
-                    {person.name}
-                  </p>
-                  <p className="text-sm text-muted-foreground">{person.role}</p>
-                </div>
-              </div>
+              <RevealItem key={person.name}>
+                <TeamCard person={person} />
+              </RevealItem>
             ))}
-          </div>
-        </div>
+          </RevealGroup>
+        </Reveal>
 
-        <div className="mt-10">
+        <Reveal className="mt-10" delay={0.08}>
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Equipo operativo
           </p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {teamMembers.map((person) => (
-              <div
-                key={person.name}
-                className="flex items-center gap-3 rounded-xl border bg-card p-4 shadow-sm"
-              >
-                <Avatar name={person.name} size="md" />
-                <div>
-                  <p className="font-display text-sm font-semibold tracking-tight text-foreground">
-                    {person.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{person.role}</p>
-                </div>
-              </div>
+              <RevealItem key={person.name}>
+                <TeamCard person={person} />
+              </RevealItem>
             ))}
-          </div>
-        </div>
+          </RevealGroup>
+        </Reveal>
 
+        <Reveal>
         <p className="mt-8 text-xs text-muted-foreground">
-          Fotos del equipo próximamente — por ahora, cada persona se identifica
-          con sus iniciales.
+          Las imágenes de equipo son espacios temporales hasta cargar fotos
+          reales de propietarios y colaboradores.
         </p>
+        </Reveal>
       </Section>
     </>
   )

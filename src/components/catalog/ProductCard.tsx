@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { MediaFrame } from "@/components/ui/media-frame"
 import { getProductCode, getCategoryById } from "@/lib/catalog"
 import { getCategoryIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -21,19 +22,34 @@ interface ProductCardProps {
 function ProductCard({ product }: ProductCardProps) {
   const category = getCategoryById(product.categoryId)
   const Icon = getCategoryIcon(product.categoryId)
+  const productCode = getProductCode(product)
 
   return (
-    <Card className="flex flex-col p-6 transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
-      <div className="flex items-center justify-between">
-        <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-secondary text-primary">
-          <Icon className="h-5 w-5" aria-hidden="true" />
-        </span>
-        <span className="font-mono text-xs tracking-widest text-muted-foreground">
-          {getProductCode(product)}
+    <Card className="group flex w-full flex-col overflow-hidden transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
+      <MediaFrame
+        src={product.imageUrl ?? category?.imageUrl}
+        alt={product.imageAlt ?? category?.imageAlt ?? product.name}
+        fallbackLabel="Imagen referencial del producto"
+        fallbackIcon={Icon}
+        badge={productCode}
+        className="aspect-[4/3] rounded-b-none border-0 border-b"
+      />
+
+      <div className="flex flex-1 flex-col p-5">
+      <div className="flex items-center justify-between gap-3">
+        {category ? (
+          <Badge variant="secondary" className="w-fit">
+            {category.name}
+          </Badge>
+        ) : (
+          <span />
+        )}
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ring">
+          {product.presentation}
         </span>
       </div>
 
-      <h3 className="mt-5 font-display text-lg font-semibold leading-snug tracking-tight text-foreground">
+      <h3 className="mt-4 font-display text-lg font-semibold leading-snug tracking-tight text-foreground">
         <Link
           to={`/producto/${product.id}`}
           className="rounded-sm outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
@@ -42,23 +58,11 @@ function ProductCard({ product }: ProductCardProps) {
         </Link>
       </h3>
 
-      {category ? (
-        <Badge variant="secondary" className="mt-2 w-fit">
-          {category.name}
-        </Badge>
-      ) : null}
-
       <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
         {product.description}
       </p>
 
-      <p className="mt-4 border-t pt-3 font-mono text-xs text-muted-foreground">
-        <span className="uppercase tracking-[0.14em]">Presentación</span>
-        <span className="mx-2 text-border">·</span>
-        <span className="text-foreground">{product.presentation}</span>
-      </p>
-
-      <div className="mt-5 flex items-center justify-between gap-3 pt-1">
+      <div className="mt-auto flex items-center justify-between gap-3 pt-5">
         <Link
           to={`/cotizacion?productos=${product.id}`}
           className={cn(buttonVariants({ size: "sm" }))}
@@ -72,6 +76,7 @@ function ProductCard({ product }: ProductCardProps) {
           Ver detalle
           <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
         </Link>
+      </div>
       </div>
     </Card>
   )

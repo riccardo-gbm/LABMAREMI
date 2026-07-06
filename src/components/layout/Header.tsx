@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Link, NavLink, useNavigate } from "react-router-dom"
+import { AnimatePresence, motion } from "framer-motion"
 import { Droplets, Menu, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -32,7 +33,7 @@ function Header() {
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-ring text-primary-foreground">
             <Droplets className="h-5 w-5" aria-hidden="true" />
           </span>
-          <span className="text-lg font-bold tracking-tight text-foreground">
+          <span className="font-display text-lg font-bold tracking-tight text-foreground">
             LABMAREMI
           </span>
         </Link>
@@ -45,14 +46,25 @@ function Header() {
               end={item.to === "/"}
               className={({ isActive }) =>
                 cn(
-                  "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  "relative overflow-hidden rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-secondary text-secondary-foreground"
+                    ? "text-secondary-foreground"
                     : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                 )
               }
             >
-              {item.label}
+              {({ isActive }) => (
+                <>
+                  {isActive ? (
+                    <motion.span
+                      layoutId="desktop-nav-active"
+                      className="absolute inset-0 rounded-md bg-secondary"
+                      transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                    />
+                  ) : null}
+                  <span className="relative z-10">{item.label}</span>
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
@@ -72,37 +84,48 @@ function Header() {
         </button>
       </div>
 
-      {mobileOpen ? (
-        <nav
-          className="border-t bg-background px-4 py-4 md:hidden"
-          aria-label="Principal móvil"
-        >
-          <ul className="flex flex-col gap-1">
-            {navItems.map((item) => (
-              <li key={item.to}>
-                <NavLink
-                  to={item.to}
-                  end={item.to === "/"}
-                  onClick={() => setMobileOpen(false)}
-                  className={({ isActive }) =>
-                    cn(
-                      "block rounded-md px-3 py-2 text-sm font-medium",
-                      isActive
-                        ? "bg-secondary text-secondary-foreground"
-                        : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                    )
-                  }
+      <AnimatePresence initial={false}>
+        {mobileOpen ? (
+          <motion.nav
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="overflow-hidden border-t bg-background px-4 py-4 md:hidden"
+            aria-label="Principal móvil"
+          >
+            <ul className="flex flex-col gap-1">
+              {navItems.map((item, index) => (
+                <motion.li
+                  key={item.to}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, delay: index * 0.04 }}
                 >
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-          <Button className="mt-3 w-full" onClick={goToQuote}>
-            Solicitar cotización
-          </Button>
-        </nav>
-      ) : null}
+                  <NavLink
+                    to={item.to}
+                    end={item.to === "/"}
+                    onClick={() => setMobileOpen(false)}
+                    className={({ isActive }) =>
+                      cn(
+                        "block rounded-md px-3 py-2 text-sm font-medium",
+                        isActive
+                          ? "bg-secondary text-secondary-foreground"
+                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                      )
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                </motion.li>
+              ))}
+            </ul>
+            <Button className="mt-3 w-full" onClick={goToQuote}>
+              Solicitar cotización
+            </Button>
+          </motion.nav>
+        ) : null}
+      </AnimatePresence>
     </header>
   )
 }

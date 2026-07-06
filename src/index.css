@@ -36,12 +36,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* Manrope is the single site-wide family (sans + headings alike);
-     --font-display stays defined only as an alias so existing `font-display`
-     usages keep working. IBM Plex Mono remains for spec/eyebrow labels. */
+  /* Manrope carries body/UI text. Playfair is reserved for brand moments,
+     page titles, and large metrics. IBM Plex Mono remains for codes/labels. */
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", monospace;
+  --font-playfair: "Playfair Display", Georgia, serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -79,6 +79,28 @@
   .animate-float-slow {
     animation: labmaremi-float 11s ease-in-out infinite;
   }
+  .labmaremi-hero-fade-in {
+    animation: labmaremi-hero-fade-slide-in 0.8s ease-out forwards;
+    opacity: 0;
+  }
+  .labmaremi-hero-marquee {
+    animation: labmaremi-hero-marquee 42s linear infinite;
+  }
+  .labmaremi-hero-delay-100 {
+    animation-delay: 0.1s;
+  }
+  .labmaremi-hero-delay-200 {
+    animation-delay: 0.2s;
+  }
+  .labmaremi-hero-delay-300 {
+    animation-delay: 0.3s;
+  }
+  .labmaremi-hero-delay-400 {
+    animation-delay: 0.4s;
+  }
+  .labmaremi-hero-delay-500 {
+    animation-delay: 0.5s;
+  }
 }
 
 @keyframes labmaremi-float {
@@ -91,9 +113,33 @@
   }
 }
 
+@keyframes labmaremi-hero-fade-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes labmaremi-hero-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
-  .animate-float-slow {
+  .animate-float-slow,
+  .labmaremi-hero-fade-in,
+  .labmaremi-hero-marquee {
     animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

@@ -2,6 +2,8 @@ export interface Category {
   id: string
   name: string
   description: string
+  imageUrl?: string
+  imageAlt?: string
 }
 
 export interface Product {
@@ -11,6 +13,8 @@ export interface Product {
   description: string
   presentation: string
   recommendedUse: string
+  imageUrl?: string
+  imageAlt?: string
 }
 
 export interface BusinessType {

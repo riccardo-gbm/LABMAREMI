@@ -35,8 +35,8 @@ export default function HeroFloatingCanvas() {
   const mouseY = useMotionValue(0);
   const smoothX = useSpring(mouseX, { damping: 30, stiffness: 200, mass: 0.6 });
   const smoothY = useSpring(mouseY, { damping: 30, stiffness: 200, mass: 0.6 });
-  const translateX = useTransform(smoothX, [-1, 1], [-30, 30]);
-  const translateY = useTransform(smoothY, [-1, 1], [-30, 30]);
+  const translateX = useTransform(smoothX, [-1, 1], [-65, 65]);
+  const translateY = useTransform(smoothY, [-1, 1], [-65, 65]);
   const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   useEffect(() => {
@@ -68,18 +68,18 @@ export default function HeroFloatingCanvas() {
       {/* Cyan/white diffusion background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <motion.div
-          animate={prefersReducedMotion ? {} : { scale: [1, 1.15, 1], rotate: [0, 60, 0] }}
-          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+          animate={prefersReducedMotion ? {} : { scale: [1, 1.25, 0.95, 1.2, 1], x: [0, 50, -40, 20, 0], y: [0, -40, 50, -20, 0], rotate: [0, 120, 240, 360] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
           className="absolute -top-[10%] -left-[10%] w-[70%] h-[70%] bg-cyan-200 rounded-full blur-[100px] opacity-50"
         />
         <motion.div
-          animate={prefersReducedMotion ? {} : { scale: [1.1, 0.95, 1.1], rotate: [0, -50, 0] }}
-          transition={{ duration: 26, repeat: Infinity, ease: "linear" }}
+          animate={prefersReducedMotion ? {} : { scale: [1.1, 0.9, 1.2, 0.95, 1.1], x: [0, -60, 40, -30, 0], y: [0, 50, -40, 20, 0], rotate: [0, -120, -240, -360] }}
+          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-[20%] -right-[15%] w-[60%] h-[60%] bg-sky-100 rounded-full blur-[100px] opacity-60"
         />
         <motion.div
-          animate={prefersReducedMotion ? {} : { scale: [1, 1.2, 1], rotate: [0, 40, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          animate={prefersReducedMotion ? {} : { scale: [1, 1.25, 0.9, 1.15, 1], x: [0, 40, -50, 30, 0], y: [0, -50, 40, -10, 0], rotate: [0, 90, 180, 270] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
           className="absolute -bottom-[15%] left-[10%] w-[55%] h-[55%] bg-white rounded-full blur-[90px] opacity-70"
         />
       </div>

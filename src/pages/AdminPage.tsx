@@ -1,8 +1,16 @@
 import { FlaskConical, Inbox, Trophy, UserPlus, Users } from "lucide-react"
+import { motion } from "framer-motion"
 
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { PageHeader } from "@/components/ui/page-header"
+import {
+  AnimatedMetric,
+  AnimatedProgress,
+  Reveal,
+  RevealGroup,
+  RevealItem,
+} from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
 import { StatusBadge } from "@/components/admin/StatusBadge"
 import { businessTypes } from "@/data/businessTypes"
@@ -29,6 +37,7 @@ function getBusinessTypeName(businessTypeId: string): string {
 export default function AdminPage() {
   const totalRequests = getTotalRequests()
   const statusCounts = getStatusCounts()
+  const pipelineTotal = Math.max(totalRequests, 1)
   const topCategories = getTopCategories(5)
   const productRanking = getProductInterestRanking(8)
   const recentLeads = getRecentLeads(8)
@@ -41,24 +50,28 @@ export default function AdminPage() {
       icon: Inbox,
       label: "Solicitudes totales",
       value: String(totalRequests),
+      numericValue: totalRequests,
       detail: "cotizaciones recibidas",
     },
     {
       icon: UserPlus,
       label: "Leads nuevos",
       value: String(statusCounts.Nuevo),
+      numericValue: statusCounts.Nuevo,
       detail: "pendientes de contacto",
     },
     {
       icon: Users,
       label: "Clientes ganados",
       value: String(statusCounts.Cliente),
+      numericValue: statusCounts.Cliente,
       detail: "compran con regularidad",
     },
     {
       icon: Trophy,
       label: "Categoría más solicitada",
       value: topCategory ? getCategoryCode(topCategory.category.id) : "—",
+      numericValue: undefined,
       detail: topCategory?.category.name ?? "sin datos",
     },
   ]
@@ -72,6 +85,7 @@ export default function AdminPage() {
 
       <Section className="pt-8 md:pt-10">
         {/* Preview notice — this is a demo, not a live system */}
+        <Reveal>
         <div
           role="note"
           className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3"
@@ -90,11 +104,13 @@ export default function AdminPage() {
             clientes reales.
           </p>
         </div>
+        </Reveal>
 
         {/* Summary cards */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <RevealGroup className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {statCards.map((stat) => (
-            <Card key={stat.label} className="p-5">
+            <RevealItem key={stat.label}>
+            <Card className="h-full p-4">
               <div className="flex items-center justify-between">
                 <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
                   {stat.label}
@@ -104,13 +120,18 @@ export default function AdminPage() {
                   aria-hidden="true"
                 />
               </div>
-              <p className="mt-3 font-display text-3xl font-bold tracking-tight text-foreground">
-                {stat.value}
+              <p className="mt-3 font-playfair text-4xl font-bold tracking-tight text-foreground">
+                {typeof stat.numericValue === "number" ? (
+                  <AnimatedMetric value={stat.numericValue} />
+                ) : (
+                  stat.value
+                )}
               </p>
               <p className="mt-1 text-xs text-muted-foreground">{stat.detail}</p>
             </Card>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
 
         {/* Status distribution */}
         <Card className="mt-4 p-5">
@@ -124,6 +145,40 @@ export default function AdminPage() {
                 </span>
               </span>
             ))}
+          </div>
+        </Card>
+
+        <Card className="mt-4 p-5">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <Eyebrow>Pipeline comercial</Eyebrow>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Distribución visual de solicitudes simuladas por estado.
+              </p>
+            </div>
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+              {totalRequests} solicitudes
+            </p>
+          </div>
+          <div className="mt-5 grid gap-3 md:grid-cols-5">
+            {LEAD_STATUSES.map((status) => {
+              const count = statusCounts[status]
+              const width = Math.max((count / pipelineTotal) * 100, count > 0 ? 12 : 4)
+              return (
+                <div key={status} className="rounded-lg border bg-background p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <StatusBadge status={status} />
+                    <span className="font-mono text-sm text-foreground">{count}</span>
+                  </div>
+                  <AnimatedProgress
+                    value={width}
+                    className="mt-3 h-2 rounded-full bg-secondary"
+                    barClassName="h-2 rounded-full bg-primary"
+                    ariaLabel={`${status}: ${count} ${count === 1 ? "solicitud" : "solicitudes"}`}
+                  />
+                </div>
+              )
+            })}
           </div>
         </Card>
 
@@ -168,11 +223,19 @@ export default function AdminPage() {
                     </td>
                   </tr>
                 ) : null}
-                {recentLeads.map((lead) => {
+                {recentLeads.map((lead, index) => {
                   const TypeIcon = getBusinessTypeIcon(lead.businessTypeId)
                   return (
-                    <tr
+                    <motion.tr
                       key={lead.id}
+                      initial={{ opacity: 0, y: 8 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.4 }}
+                      transition={{
+                        duration: 0.24,
+                        ease: "easeOut",
+                        delay: index * 0.035,
+                      }}
                       className="border-b transition-colors last:border-b-0 hover:bg-secondary/30"
                     >
                       <td className="px-5 py-3.5 font-medium text-foreground">
@@ -199,7 +262,7 @@ export default function AdminPage() {
                       <td className="px-5 py-3.5">
                         <StatusBadge status={lead.status} />
                       </td>
-                    </tr>
+                    </motion.tr>
                   )
                 })}
               </tbody>
@@ -229,16 +292,12 @@ export default function AdminPage() {
                     </p>
                     <p className="font-mono text-sm text-foreground">{count}</p>
                   </div>
-                  <div
+                  <AnimatedProgress
+                    value={(count / maxProductCount) * 100}
                     className="mt-1.5 h-2 w-full rounded-full bg-secondary"
-                    role="img"
-                    aria-label={`${product.name}: ${count} ${count === 1 ? "solicitud" : "solicitudes"}`}
-                  >
-                    <div
-                      className="h-2 rounded-full bg-primary"
-                      style={{ width: `${(count / maxProductCount) * 100}%` }}
-                    />
-                  </div>
+                    barClassName="h-2 rounded-full bg-primary"
+                    ariaLabel={`${product.name}: ${count} ${count === 1 ? "solicitud" : "solicitudes"}`}
+                  />
                 </li>
               ))}
             </ul>

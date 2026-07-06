@@ -21,13 +21,13 @@ function PageHeader({
   return (
     <header
       className={cn(
-        "border-b bg-gradient-to-r from-secondary via-background to-accent/40",
+        "border-b bg-secondary/40",
         className
       )}
       {...props}
     >
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 md:py-14 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+        <h1 className="font-display text-3xl font-bold tracking-tight text-foreground md:text-5xl">
           {title}
         </h1>
         {description ? (

@@ -2,13 +2,15 @@ import { Link } from "react-router-dom"
 import {
   ArrowRight,
   ArrowUpRight,
+  Boxes,
+  ClipboardCheck,
   Handshake,
   Mail,
   MapPin,
   MessageCircle,
   PackageCheck,
   Phone,
-  ShieldCheck,
+  Route,
   Truck,
 } from "lucide-react"
 
@@ -16,6 +18,7 @@ import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
+import { MediaFrame } from "@/components/ui/media-frame"
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
 import { getCategoryCode } from "@/lib/catalog"
@@ -34,27 +37,54 @@ import { businessTypes } from "@/data/businessTypes"
 const reasons = [
   {
     icon: PackageCheck,
-    title: "Catálogo integral",
+    title: "Continuidad de stock",
     description:
-      "Desde desinfectantes y desengrasantes hasta papel institucional, herramientas y equipos de protección. Un solo proveedor para todo el abastecimiento de su negocio.",
+      "Planificamos reposición para productos críticos como papel, desinfectantes, guantes y químicos de uso diario.",
   },
   {
-    icon: Truck,
-    title: "Entrega confiable",
+    icon: Boxes,
+    title: "Catálogo concentrado",
     description:
-      "Distribuimos en todo Quito y provincias cercanas, con reposición constante para que su operación nunca se quede sin insumos.",
+      "Agrupamos limpieza, higiene, protección y consumibles para reducir compras dispersas entre varios proveedores.",
   },
   {
     icon: Handshake,
-    title: "Atención B2B cercana",
+    title: "Atención B2B",
     description:
-      "Le acompañamos con asesoría por tipo de negocio y precios pensados para pedidos recurrentes y de volumen, no para consumo doméstico.",
+      "Acompañamos pedidos recurrentes con asesoría por tipo de negocio, presentación y frecuencia de consumo.",
   },
   {
-    icon: ShieldCheck,
-    title: "Calidad y bioseguridad",
+    icon: Truck,
+    title: "Cobertura operativa",
     description:
-      "Productos aptos para cocinas, baños, áreas de atención y entornos clínicos, con los estándares de higiene que su sector exige.",
+      "Coordinamos entregas en Quito y sectores cercanos para negocios que necesitan abastecimiento sin interrupciones.",
+  },
+]
+
+const procurementTiles = [
+  {
+    icon: Boxes,
+    title: "Producto en percha",
+    label: "Catálogo",
+    imageUrl:
+      "https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?q=80&w=900&auto=format&fit=crop",
+    imageAlt: "Productos de limpieza organizados para abastecimiento",
+  },
+  {
+    icon: Route,
+    title: "Entrega coordinada",
+    label: "Logística",
+    imageUrl:
+      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=900&auto=format&fit=crop",
+    imageAlt: "Operación de limpieza y logística profesional",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Reposición recurrente",
+    label: "Seguimiento",
+    imageUrl:
+      "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=900&auto=format&fit=crop",
+    imageAlt: "Guantes y protección para equipos operativos",
   },
 ]
 
@@ -67,19 +97,53 @@ export default function HomePage() {
     <>
       <HeroSection />
 
+      {/* Image-led procurement band */}
+      <Section id="abastecimiento" className="bg-background">
+        <Reveal className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:items-end">
+          <div>
+            <Eyebrow>Abastecimiento empresarial</Eyebrow>
+            <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+              Una compra más ordenada para negocios que operan todos los días
+            </h2>
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
+              LABMAREMI ayuda a centralizar productos de limpieza, protección e
+              higiene en un flujo simple: catálogo claro, cotización directa y
+              seguimiento comercial.
+            </p>
+          </div>
+          <RevealGroup className="grid gap-4 sm:grid-cols-3" stagger={0.07}>
+            {procurementTiles.map((tile) => (
+              <RevealItem key={tile.title} className="group">
+                <MediaFrame
+                  src={tile.imageUrl}
+                  alt={tile.imageAlt}
+                  fallbackLabel={tile.title}
+                  fallbackIcon={tile.icon}
+                  badge={tile.label}
+                  className="aspect-[4/5] shadow-sm transition-all group-hover:-translate-y-0.5 group-hover:shadow-md"
+                />
+                <p className="mt-3 font-display text-base font-semibold tracking-tight text-foreground">
+                  {tile.title}
+                </p>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </Reveal>
+      </Section>
+
       {/* Why choose us */}
-      <Section id="por-que-labmaremi" className="bg-background">
+      <Section id="por-que-labmaremi" className="border-y bg-secondary/40">
         <Reveal>
           <Eyebrow>Por qué LABMAREMI</Eyebrow>
           <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Un proveedor pensado para la operación de su negocio
+            Criterios de compra que importan en una operación real
           </h2>
         </Reveal>
         <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {reasons.map((reason) => (
             <RevealItem key={reason.title}>
-            <Card className="h-full p-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-secondary text-primary">
+            <Card className="h-full p-6 transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
+              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <reason.icon className="h-5 w-5" aria-hidden="true" />
               </span>
               <h3 className="mt-5 font-display text-lg font-semibold tracking-tight text-foreground">
@@ -95,7 +159,7 @@ export default function HomePage() {
       </Section>
 
       {/* Product category preview */}
-      <Section id="categorias" className="border-y bg-secondary/40">
+      <Section id="categorias" className="bg-background">
         <Reveal className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <Eyebrow>Catálogo / Categorías</Eyebrow>
@@ -120,17 +184,18 @@ export default function HomePage() {
               <RevealItem key={category.id} className="flex">
               <Link
                 to={`/catalogo?categoria=${category.id}`}
-                className="group relative flex w-full flex-col rounded-xl border bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md"
+                className="group relative flex w-full flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md"
               >
-                <div className="flex items-center justify-between">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <span className="font-mono text-xs tracking-widest text-muted-foreground">
-                    {code}
-                  </span>
-                </div>
-                <h3 className="mt-5 font-display text-lg font-semibold tracking-tight text-foreground">
+                <MediaFrame
+                  src={category.imageUrl}
+                  alt={category.imageAlt ?? category.name}
+                  fallbackLabel={category.name}
+                  fallbackIcon={Icon}
+                  badge={code}
+                  className="aspect-[16/10] rounded-b-none border-0 border-b"
+                />
+                <div className="flex flex-1 flex-col p-5">
+                <h3 className="font-display text-lg font-semibold tracking-tight text-foreground">
                   {category.name}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -140,6 +205,7 @@ export default function HomePage() {
                   Ver productos
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                 </span>
+                </div>
               </Link>
               </RevealItem>
             )
@@ -158,11 +224,14 @@ export default function HomePage() {
           Entendemos las exigencias de cada sector y adaptamos el abastecimiento
           a su ritmo de trabajo.
         </p>
-        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <RevealGroup
+          className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+          stagger={0.05}
+        >
           {businessTypes.map((type) => {
             const Icon = getBusinessTypeIcon(type.id)
             return (
-              <div
+              <RevealItem
                 key={type.id}
                 className="flex items-center gap-3 rounded-xl border bg-card px-4 py-4 shadow-sm"
               >
@@ -172,10 +241,10 @@ export default function HomePage() {
                 <span className="font-display text-sm font-semibold leading-tight text-foreground">
                   {type.name}
                 </span>
-              </div>
+              </RevealItem>
             )
           })}
-        </div>
+        </RevealGroup>
         </Reveal>
       </Section>
 
@@ -192,17 +261,19 @@ export default function HomePage() {
               alrededores. Coordinamos entregas periódicas para que su negocio
               mantenga su stock de limpieza e higiene sin interrupciones.
             </p>
-            <div className="mt-8 flex flex-wrap gap-2">
+            <RevealGroup className="mt-8 flex flex-wrap gap-2" stagger={0.04}>
               {coverageSectors.map((sector) => (
-                <Badge key={sector} variant="outline" className="gap-1.5">
-                  <MapPin className="h-3 w-3 text-ring" aria-hidden="true" />
-                  {sector}
-                </Badge>
+                <RevealItem key={sector} distance={10}>
+                  <Badge variant="outline" className="gap-1.5">
+                    <MapPin className="h-3 w-3 text-ring" aria-hidden="true" />
+                    {sector}
+                  </Badge>
+                </RevealItem>
               ))}
-            </div>
+            </RevealGroup>
           </div>
 
-          <div className="overflow-hidden rounded-xl border shadow-sm">
+          <Reveal className="overflow-hidden rounded-xl border shadow-sm" direction="left">
             <iframe
               title="Ubicación de LABMAREMI en Quito"
               src={OFFICE_MAP_SRC}
@@ -210,7 +281,7 @@ export default function HomePage() {
               referrerPolicy="no-referrer-when-downgrade"
               className="h-[320px] w-full border-0 md:h-[400px]"
             />
-          </div>
+          </Reveal>
         </Reveal>
       </Section>
 

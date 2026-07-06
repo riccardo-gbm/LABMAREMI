@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight, ChevronRight, PackageX } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Eyebrow } from "@/components/ui/eyebrow"
+import { MediaFrame } from "@/components/ui/media-frame"
+import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
 import { ProductCard } from "@/components/catalog/ProductCard"
 import {
@@ -61,6 +63,7 @@ export default function ProductDetailPage() {
     <>
       <Section className="pb-0 pt-8 md:pb-0 md:pt-10">
         {/* Breadcrumb */}
+        <Reveal>
         <nav aria-label="Ruta de navegación">
           <ol className="flex flex-wrap items-center gap-1.5 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
             <li>
@@ -87,33 +90,24 @@ export default function ProductDetailPage() {
             </li>
           </ol>
         </nav>
+        </Reveal>
       </Section>
 
       <Section className="pt-8 md:pt-10">
         <div className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
-          {/* Specimen panel — image placeholder in Phase 1 */}
-          <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-primary/15 bg-gradient-to-br from-secondary via-background to-accent">
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 opacity-[0.35]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(to right, oklch(0.929 0.013 255.508) 1px, transparent 1px), linear-gradient(to bottom, oklch(0.929 0.013 255.508) 1px, transparent 1px)",
-                backgroundSize: "32px 32px",
-              }}
+          <Reveal direction="right">
+            <MediaFrame
+              src={product.imageUrl ?? category?.imageUrl}
+              alt={product.imageAlt ?? category?.imageAlt ?? product.name}
+              fallbackLabel="Imagen referencial del producto"
+              fallbackIcon={Icon}
+              badge={code}
+              className="aspect-square shadow-sm"
             />
-            <span className="relative flex h-24 w-24 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-              <Icon className="h-11 w-11" aria-hidden="true" />
-            </span>
-            <span className="absolute bottom-4 left-4 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-              Imagen referencial · próximamente
-            </span>
-            <span className="absolute right-4 top-4 font-mono text-xs tracking-widest text-muted-foreground">
-              {code}
-            </span>
-          </div>
+          </Reveal>
 
           {/* Spec sheet */}
+          <Reveal direction="left" delay={0.08}>
           <div>
             <Eyebrow>Ficha de producto</Eyebrow>
             {category ? (
@@ -166,21 +160,26 @@ export default function ProductDetailPage() {
               </Link>
             </div>
           </div>
+          </Reveal>
         </div>
       </Section>
 
       {/* Related products */}
       {related.length > 0 ? (
         <Section className="border-t bg-secondary/40">
-          <Eyebrow>Misma categoría</Eyebrow>
-          <h2 className="mt-4 font-display text-2xl font-bold tracking-tight text-foreground">
-            Productos relacionados
-          </h2>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Reveal>
+            <Eyebrow>Misma categoría</Eyebrow>
+            <h2 className="mt-4 font-display text-2xl font-bold tracking-tight text-foreground">
+              Productos relacionados
+            </h2>
+          </Reveal>
+          <RevealGroup className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((relatedProduct) => (
-              <ProductCard key={relatedProduct.id} product={relatedProduct} />
+              <RevealItem key={relatedProduct.id} className="flex">
+                <ProductCard product={relatedProduct} />
+              </RevealItem>
             ))}
-          </div>
+          </RevealGroup>
         </Section>
       ) : null}
     </>

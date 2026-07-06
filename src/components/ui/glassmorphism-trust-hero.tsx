@@ -40,7 +40,7 @@ interface StatItemProps {
 function StatItem({ value, label }: StatItemProps) {
   return (
     <div className="flex flex-col items-center justify-center px-3 text-center transition-transform hover:-translate-y-1">
-      <span className="text-xl font-bold text-primary sm:text-2xl">{value}</span>
+      <span className="text-xl font-playfair font-bold text-primary sm:text-2xl">{value}</span>
       <span className="mt-1 text-[10px] font-medium uppercase leading-tight text-muted-foreground sm:text-xs">
         {label}
       </span>
@@ -51,43 +51,15 @@ function StatItem({ value, label }: StatItemProps) {
 export default function GlassmorphismTrustHero() {
   return (
     <section className="relative w-full overflow-hidden border-b bg-background text-foreground">
-      <style>{`
-        @keyframes labmaremiHeroFadeSlideIn {
-          from { opacity: 0; transform: translateY(18px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes labmaremiHeroMarquee {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-        .labmaremi-hero-fade-in {
-          animation: labmaremiHeroFadeSlideIn 0.8s ease-out forwards;
-          opacity: 0;
-        }
-        .labmaremi-hero-marquee {
-          animation: labmaremiHeroMarquee 42s linear infinite;
-        }
-        .labmaremi-hero-delay-100 { animation-delay: 0.1s; }
-        .labmaremi-hero-delay-200 { animation-delay: 0.2s; }
-        .labmaremi-hero-delay-300 { animation-delay: 0.3s; }
-        .labmaremi-hero-delay-400 { animation-delay: 0.4s; }
-        .labmaremi-hero-delay-500 { animation-delay: 0.5s; }
-        @media (prefers-reduced-motion: reduce) {
-          .labmaremi-hero-fade-in,
-          .labmaremi-hero-marquee {
-            animation: none;
-            opacity: 1;
-            transform: none;
-          }
-        }
-      `}</style>
-
-      <div className="absolute inset-0 z-0" aria-hidden="true">
+      <div className="absolute inset-0 z-0 opacity-30" aria-hidden="true">
         <HeroFloatingCanvas />
       </div>
 
       <div className="relative z-20 mx-auto grid min-h-[calc(100vh-4rem)] max-w-6xl grid-cols-1 items-center gap-10 px-4 py-16 sm:px-6 md:py-20 lg:grid-cols-12 lg:gap-8 lg:px-8">
-        <div className="flex flex-col justify-center space-y-7 rounded-xl border border-white/70 bg-white/55 p-6 shadow-xl backdrop-blur-md md:p-8 lg:col-span-7">
+        <div className="relative flex flex-col justify-center space-y-7 p-6 md:p-8 lg:col-span-7">
+          {/* Subtle borderless background glow for text readability */}
+          <div className="absolute inset-0 z-[-1] rounded-[3rem] bg-white/40 blur-2xl pointer-events-none" />
+          
           <div className="labmaremi-hero-fade-in labmaremi-hero-delay-100">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-white/70 px-3 py-1.5 text-xs font-semibold uppercase text-primary shadow-sm backdrop-blur-md transition-colors hover:bg-white">
               <MapPin className="h-3.5 w-3.5 text-ring" aria-hidden="true" />
@@ -95,14 +67,11 @@ export default function GlassmorphismTrustHero() {
             </div>
           </div>
 
-          <h1 className="labmaremi-hero-fade-in labmaremi-hero-delay-200 text-5xl font-extrabold leading-none text-foreground sm:text-6xl lg:text-7xl xl:text-8xl">
-            LAB
-            <span className="bg-gradient-to-br from-cyan-500 via-blue-500 to-primary bg-clip-text text-transparent">
-              MAREMI
-            </span>
+          <h1 className="labmaremi-hero-fade-in labmaremi-hero-delay-200 text-5xl font-playfair font-bold leading-none text-black sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight">
+            LABMAREMI
           </h1>
 
-          <p className="labmaremi-hero-fade-in labmaremi-hero-delay-300 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+          <p className="labmaremi-hero-fade-in labmaremi-hero-delay-300 max-w-xl text-base leading-relaxed text-slate-900 font-medium md:text-lg">
             Distribuimos productos de limpieza, desinfección, protección e
             higiene para empresas que necesitan abastecimiento confiable en Quito
             y provincias cercanas.
@@ -145,22 +114,10 @@ export default function GlassmorphismTrustHero() {
                   <Package className="h-6 w-6 text-primary" aria-hidden="true" />
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-foreground">200+</div>
+                  <div className="text-3xl font-playfair font-bold text-foreground">200+</div>
                   <div className="text-sm text-muted-foreground">
                     Productos disponibles
                   </div>
-                </div>
-              </div>
-
-              <div className="mb-7 space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">
-                    Cobertura de categorías críticas
-                  </span>
-                  <span className="font-medium text-foreground">100%</span>
-                </div>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-primary/10">
-                  <div className="h-full w-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-300" />
                 </div>
               </div>
 
