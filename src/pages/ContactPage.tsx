@@ -12,13 +12,11 @@ import { Section } from "@/components/ui/section"
 import {
   coverageSectors,
   EMAIL_DISPLAY,
+  OFFICE_MAP_SRC,
   PHONE_DISPLAY,
   WHATSAPP_HREF,
 } from "@/lib/contact"
 import { cn } from "@/lib/utils"
-
-const OFFICE_MAP_SRC =
-  "https://www.google.com/maps?q=-0.180653,-78.467834&z=13&output=embed"
 
 export default function ContactPage() {
   return (

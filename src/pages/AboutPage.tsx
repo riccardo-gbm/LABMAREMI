@@ -11,7 +11,6 @@ import {
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { MediaFrame } from "@/components/ui/media-frame"
-import { PageHeader } from "@/components/ui/page-header"
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
 import { Timeline, type TimelineEntry } from "@/components/about/Timeline"
@@ -114,15 +113,10 @@ export default function AboutPage() {
     <>
       <AboutHeroMorph />
 
-      <PageHeader
-        title="Nosotros"
-        description="Una empresa familiar quiteña, construida entrega tras entrega durante los últimos cinco años."
-      />
-
-      <Section className="pt-8 md:pt-10">
+      <Section>
         <Reveal className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:items-center">
           <div>
-            <Eyebrow>Quiénes somos</Eyebrow>
+            <Eyebrow>Nosotros</Eyebrow>
             <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
               Un negocio familiar que abastece a otros negocios
             </h2>
@@ -130,8 +124,9 @@ export default function AboutPage() {
               LABMAREMI nació en 2021 como el proyecto de una familia quiteña que
               vio la necesidad de un proveedor confiable de insumos de limpieza,
               desinfección e higiene para pequeños y medianos negocios. Cinco
-              años después, seguimos siendo una empresa familiar, ahora con un
-              equipo que comparte el mismo compromiso con el que empezamos.
+              años y entrega tras entrega después, seguimos siendo una empresa
+              familiar, ahora con un equipo que comparte el mismo compromiso con
+              el que empezamos.
             </p>
           </div>
           <MediaFrame

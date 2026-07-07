@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Brand mark: droplet on blue badge. Colors match src/index.css tokens:
+       --primary (blue-700 #1d4ed8) and --ring (cyan-500 #06b6d4). -->
+  <rect width="64" height="64" rx="14" fill="#1d4ed8"/>
+  <path d="M32 11c8.4 11 14.5 18.6 14.5 26.2a14.5 14.5 0 0 1-29 0C17.5 29.6 23.6 22 32 11z" fill="#ffffff"/>
+  <path d="M25.5 38.5a8.5 8.5 0 0 0 5.5 7.6" stroke="#06b6d4" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+</svg>

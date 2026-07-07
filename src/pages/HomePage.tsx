@@ -25,6 +25,7 @@ import { getCategoryCode } from "@/lib/catalog"
 import {
   coverageSectors,
   EMAIL_DISPLAY,
+  OFFICE_MAP_SRC,
   PHONE_DISPLAY,
   WHATSAPP_HREF,
 } from "@/lib/contact"
@@ -87,10 +88,6 @@ const procurementTiles = [
     imageAlt: "Guantes y protección para equipos operativos",
   },
 ]
-
-// Placeholder office location — generic Quito coordinates for the demo.
-const OFFICE_MAP_SRC =
-  "https://www.google.com/maps?q=-0.180653,-78.467834&z=13&output=embed"
 
 export default function HomePage() {
   return (

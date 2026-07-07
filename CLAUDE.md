@@ -1,7 +1,7 @@
 # LABMAREMI — Phase 1 (Frontend Demo)
 
 ## What this is
-A professional, clickable frontend demo for LABMAREMI, a B2B distributor of cleaning, disinfection, protection, and hygiene supplies based in Quito, Ecuador, serving Quito and nearby provinces. Customers are restaurants, hotels, offices, schools, clinics, cleaning companies, and local stores. This is Phase 1: mock data only, no real backend, no auth. The full spec lives in `docs/phase1-scope.md` — read it whenever a requirement is unclear instead of guessing.
+A professional, clickable frontend demo for LABMAREMI, a B2B distributor of cleaning, disinfection, protection, and hygiene supplies based in Quito, Ecuador, serving Quito and nearby provinces. Customers are restaurants, hotels, offices, schools, clinics, cleaning companies, and local stores. This is Phase 1: mock data only, no real backend, no auth. The full spec lives in `docs/00-phase-1-scope.md` — read it whenever a requirement is unclear instead of guessing.
 
 ## Stack (fixed for Phase 1)
 - React + Vite + TypeScript
@@ -32,6 +32,6 @@ Real database, Supabase, authentication/admin login, real quote persistence, pay
 ## Definition of done
 - Runs locally, zero console errors
 - Responsive on mobile and desktop
-- Every page in `docs/phase1-scope.md`'s Main Pages section is implemented
+- Every page in `docs/00-phase-1-scope.md`'s Main Pages section is implemented
 - Mock data is realistic and contains no real customer information
 - Clean README, working deployed link

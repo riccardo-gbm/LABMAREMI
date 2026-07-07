@@ -1,4 +1,5 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { useEffect } from "react"
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
 
 import { Layout } from "@/components/layout/Layout"
 import HomePage from "@/pages/HomePage"
@@ -11,9 +12,20 @@ import AdminPage from "@/pages/AdminPage"
 import PlatformPage from "@/pages/PlatformPage"
 import NotFoundPage from "@/pages/NotFoundPage"
 
+/** Resets scroll on every route change — the browser only restores scroll
+ * for history navigation, not for in-app Link clicks. */
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
+
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />

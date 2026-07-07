@@ -30,10 +30,11 @@ function FlipCard({ src, target }: FlipCardProps) {
           <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-transparent" />
         </div>
         <div
-          className="absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg bg-blue-950 flex flex-col items-center justify-center p-3 border border-blue-800"
+          className="absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg bg-slate-200"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
-          <p className="text-[9px] font-bold text-cyan-300 uppercase tracking-widest">LABMAREMI</p>
+          {/* Counter-mirror so the photo reads identical to the front, not flipped */}
+          <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" style={{ transform: "scaleX(-1)" }} draggable={false} />
         </div>
       </motion.div>
     </motion.div>
@@ -174,7 +175,7 @@ export default function AboutHeroMorph() {
     return (
       <section className="relative py-20 px-4 text-center bg-[#FAFAFA]">
         <h1 className="text-3xl md:text-5xl font-bold text-slate-900 tracking-tight">
-          Tu satisfacción es nuestro éxito
+          Su satisfacción es nuestro éxito
         </h1>
         <p className="mt-4 text-slate-600 max-w-lg mx-auto">
           Cinco años cuidando la higiene de su negocio. Desde Quito, LABMAREMI abastece a
@@ -207,7 +208,7 @@ export default function AboutHeroMorph() {
               transition={{ duration: 1 }}
               className="max-w-[13rem] text-2xl font-bold tracking-tight text-slate-900 md:max-w-sm md:text-4xl"
             >
-              Tu satisfacción es nuestro éxito
+              Su satisfacción es nuestro éxito
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
@@ -225,7 +226,7 @@ export default function AboutHeroMorph() {
 
           <motion.div
             style={{ opacity: contentOpacity, y: contentY }}
-            className="absolute top-[12%] z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4 md:top-[10%]"
+            className="absolute top-[28%] z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4 md:top-[24%]"
           >
             <h2 className="text-3xl md:text-5xl font-bold text-slate-900 tracking-tight mb-4">
               Cinco años cuidando la higiene de su negocio.
