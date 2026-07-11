@@ -63,27 +63,27 @@ interface TeamPerson {
 
 const owners: TeamPerson[] = [
   {
-    name: "Marco Andrade",
-    role: "Fundador",
+    name: "Diego Cango",
+    role: "Función",
   },
   {
-    name: "Daniela Andrade",
-    role: "Gerente General",
+    name: "Juan Carlos Cango",
+    role: "Función",
   },
 ]
 
 const teamMembers: TeamPerson[] = [
   {
-    name: "Patricio Salazar",
-    role: "Coordinador de Logística",
+    name: "Empleado",
+    role: "Función",
   },
   {
-    name: "Gabriela Torres",
-    role: "Atención a Clientes B2B",
+    name: "Empleado",
+    role: "Función",
   },
   {
-    name: "Wilson Chávez",
-    role: "Jefe de Bodega",
+    name: "Empleado",
+    role: "Función",
   },
 ]
 
