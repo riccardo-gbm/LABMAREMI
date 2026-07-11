@@ -13,4 +13,14 @@ export default defineConfig({
       "@": path.resolve(dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom", "react-router-dom"],
+          motion: ["framer-motion"],
+        },
+      },
+    },
+  },
 })
