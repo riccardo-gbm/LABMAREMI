@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom"
 import { motion, useReducedMotion } from "framer-motion"
-import { Droplets } from "lucide-react"
-
 import { TextReveal } from "@/components/ui/text-reveal"
 
 const publicLinks = [
@@ -65,15 +63,15 @@ function Footer() {
         <div className="grid gap-10 md:grid-cols-3">
           <div>
             <div className="flex items-center gap-2">
-              <motion.span
+              <motion.img
+                src="/logo1.svg"
+                alt="LABMAREMI"
                 initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.7 }}
                 transition={{ duration: 0.32, ease: "easeOut" }}
-                className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-ring text-primary-foreground"
-              >
-                <Droplets className="h-4 w-4" aria-hidden="true" />
-              </motion.span>
+                className="h-8 w-8 object-contain"
+              />
               <TextReveal
                 text="LABMAREMI"
                 mode="letters"

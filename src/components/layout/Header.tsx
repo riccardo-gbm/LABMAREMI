@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link, NavLink, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import { Droplets, Menu, X } from "lucide-react"
+import { Menu, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -30,10 +30,8 @@ function Header() {
           className="flex items-center gap-2"
           onClick={() => setMobileOpen(false)}
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-ring text-primary-foreground">
-            <Droplets className="h-5 w-5" aria-hidden="true" />
-          </span>
-          <span className="font-display text-lg font-bold tracking-tight text-foreground">
+          <img src="/logo1.svg" alt="LABMAREMI" className="h-15 w-15 object-contain" />
+          <span className="font-goodtimes text-lg font-bold tracking-tight text-[#0066cc]">
             LABMAREMI
           </span>
         </Link>

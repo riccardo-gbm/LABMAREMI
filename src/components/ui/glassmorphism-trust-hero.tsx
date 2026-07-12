@@ -59,7 +59,7 @@ export default function GlassmorphismTrustHero() {
         <div className="relative flex flex-col justify-center space-y-7 p-6 md:p-8 lg:col-span-7">
           {/* Subtle borderless background glow for text readability */}
           <div className="absolute inset-0 z-[-1] rounded-[3rem] bg-white/40 blur-2xl pointer-events-none" />
-          
+
           <div className="labmaremi-hero-fade-in labmaremi-hero-delay-100">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-white/70 px-3 py-1.5 text-xs font-semibold uppercase text-primary shadow-sm backdrop-blur-md transition-colors hover:bg-white">
               <MapPin className="h-3.5 w-3.5 text-ring" aria-hidden="true" />
@@ -67,15 +67,11 @@ export default function GlassmorphismTrustHero() {
             </div>
           </div>
 
-          <h1 className="labmaremi-hero-fade-in labmaremi-hero-delay-200 text-5xl font-playfair font-bold leading-none text-black sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight">
-            LABMAREMI
-          </h1>
-
-          <p className="labmaremi-hero-fade-in labmaremi-hero-delay-300 max-w-xl text-base leading-relaxed text-slate-900 font-medium md:text-lg">
-            Distribuimos productos de limpieza, desinfección, protección e
-            higiene para empresas que necesitan abastecimiento confiable en Quito
-            y provincias cercanas.
-          </p>
+          <div className="labmaremi-hero-fade-in labmaremi-hero-delay-200 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
+            <h1 className="text-5xl font-goodtimes font-bold leading-none text-[#0066cc] sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight">
+              LABMAREMI
+            </h1>
+          </div>
 
           <div className="labmaremi-hero-fade-in labmaremi-hero-delay-400 flex flex-col gap-3 sm:flex-row">
             <Link
