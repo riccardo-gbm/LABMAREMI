@@ -1,10 +1,10 @@
 import { type FormEvent, useId, useMemo, useRef, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import { ArrowRight, CheckCircle2, Clock, FileText, PackageCheck } from "lucide-react"
+import { CheckCircle2, Clock, FileText, PackageCheck } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { Input } from "@/components/ui/input"
@@ -278,10 +278,12 @@ export default function QuotePage() {
               * Campos obligatorios
             </p>
 
-            <Button type="submit" size="lg" className="group mt-6 w-full sm:w-auto">
-              Enviar solicitud
-              <ArrowRight className="transition-transform group-hover:translate-x-0.5" />
-            </Button>
+            <InteractiveHoverButton
+              type="submit"
+              text="Enviar solicitud"
+              size="lg"
+              className="mt-6 w-full sm:w-auto"
+            />
           </Card>
           </Reveal>
 

@@ -1,8 +1,9 @@
 import { Link, useParams } from "react-router-dom"
-import { ArrowLeft, ArrowRight, ChevronRight, PackageX } from "lucide-react"
+import { ArrowLeft, ChevronRight, PackageX } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
+import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { MediaFrame } from "@/components/ui/media-frame"
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
@@ -144,13 +145,11 @@ export default function ProductDetailPage() {
             </dl>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
+              <InteractiveHoverLink
                 to={`/cotizacion?productos=${product.id}`}
-                className={cn(buttonVariants({ size: "lg" }), "group")}
-              >
-                Solicitar cotización de este producto
-                <ArrowRight className="transition-transform group-hover:translate-x-0.5" />
-              </Link>
+                text="Solicitar cotización de este producto"
+                size="lg"
+              />
               <Link
                 to="/catalogo"
                 className={cn(buttonVariants({ variant: "outline", size: "lg" }))}

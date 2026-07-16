@@ -2,12 +2,11 @@ import { Link } from "react-router-dom"
 import { ArrowUpRight } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
-import { buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
 import { MediaFrame } from "@/components/ui/media-frame"
 import { getProductCode, getCategoryById } from "@/lib/catalog"
 import { getCategoryIcon } from "@/lib/icons"
-import { cn } from "@/lib/utils"
 import type { Product } from "@/types"
 
 interface ProductCardProps {
@@ -63,12 +62,11 @@ function ProductCard({ product }: ProductCardProps) {
       </p>
 
       <div className="mt-auto flex items-center justify-between gap-3 pt-5">
-        <Link
+        <InteractiveHoverLink
           to={`/cotizacion?productos=${product.id}`}
-          className={cn(buttonVariants({ size: "sm" }))}
-        >
-          Solicitar cotización
-        </Link>
+          text="Solicitar cotización"
+          size="sm"
+        />
         <Link
           to={`/producto/${product.id}`}
           className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"

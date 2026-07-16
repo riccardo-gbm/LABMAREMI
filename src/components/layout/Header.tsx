@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { Menu, X } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
 import { cn } from "@/lib/utils"
 
 const navItems = [
@@ -68,7 +68,7 @@ function Header() {
         </nav>
 
         <div className="hidden md:block">
-          <Button onClick={goToQuote}>Solicitar cotización</Button>
+          <InteractiveHoverButton text="Solicitar cotización" onClick={goToQuote} />
         </div>
 
         <button
@@ -118,9 +118,11 @@ function Header() {
                 </motion.li>
               ))}
             </ul>
-            <Button className="mt-3 w-full" onClick={goToQuote}>
-              Solicitar cotización
-            </Button>
+            <InteractiveHoverButton
+              text="Solicitar cotización"
+              className="mt-3 w-full"
+              onClick={goToQuote}
+            />
           </motion.nav>
         ) : null}
       </AnimatePresence>

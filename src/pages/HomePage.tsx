@@ -15,7 +15,10 @@ import {
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
-import { buttonVariants } from "@/components/ui/button"
+import {
+  InteractiveHoverAnchor,
+  InteractiveHoverLink,
+} from "@/components/ui/interactive-hover-button"
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { MediaFrame } from "@/components/ui/media-frame"
@@ -30,7 +33,6 @@ import {
   WHATSAPP_HREF,
 } from "@/lib/contact"
 import { getBusinessTypeIcon, getCategoryIcon } from "@/lib/icons"
-import { cn } from "@/lib/utils"
 import { HeroSection } from "@/components/hero/HeroSection"
 import { categories } from "@/data/categories"
 import { businessTypes } from "@/data/businessTypes"
@@ -297,27 +299,21 @@ export default function HomePage() {
               su medida. También puede escribirnos directamente por WhatsApp.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
+              <InteractiveHoverLink
                 to="/cotizacion"
-                className={cn(
-                  buttonVariants({ variant: "secondary", size: "lg" })
-                )}
-              >
-                Solicitar cotización
-                <ArrowRight />
-              </Link>
-              <a
+                text="Solicitar cotización"
+                variant="secondary"
+                size="lg"
+              />
+              <InteractiveHoverAnchor
                 href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noreferrer"
-                className={cn(
-                  buttonVariants({ variant: "outline", size: "lg" }),
-                  "border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
-                )}
-              >
-                <MessageCircle />
-                Escribir por WhatsApp
-              </a>
+                text="Escribir por WhatsApp"
+                variant="inverse"
+                size="lg"
+                icon={<MessageCircle aria-hidden="true" />}
+              />
             </div>
           </div>
 

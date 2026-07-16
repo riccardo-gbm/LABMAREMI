@@ -1,7 +1,4 @@
-import { Link } from "react-router-dom"
 import {
-  ArrowRight,
-  BookOpen,
   Briefcase,
   Building,
   Factory,
@@ -11,8 +8,7 @@ import {
 } from "lucide-react"
 
 import HeroFloatingCanvas from "@/components/hero/HeroFloatingCanvas"
-import { buttonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
 
 const clientSegments = [
   { name: "Hoteles", icon: Building },
@@ -65,26 +61,19 @@ export default function GlassmorphismTrustHero() {
             </div>
 
             <div className="labmaremi-hero-fade-in labmaremi-hero-delay-400 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link
+              <InteractiveHoverLink
                 to="/cotizacion"
-                className={cn(
-                  buttonVariants({ size: "lg" }),
-                  "group rounded-full bg-blue-600 px-8 py-6 text-white shadow-[0_0_24px_rgba(37,99,235,0.32)] hover:bg-blue-500"
-                )}
-              >
-                Solicitar cotización
-                <ArrowRight className="transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link
+                text="Solicitar cotización"
+                size="lg"
+                className="bg-blue-600 px-8 py-6 text-white shadow-[0_0_24px_rgba(37,99,235,0.32)]"
+              />
+              <InteractiveHoverLink
                 to="/catalogo"
-                className={cn(
-                  buttonVariants({ variant: "outline", size: "lg" }),
-                  "rounded-full border-primary/15 bg-white/70 px-8 py-6 text-primary backdrop-blur-sm hover:bg-white hover:text-primary"
-                )}
-              >
-                <BookOpen className="opacity-80" aria-hidden="true" />
-                Ver catálogo
-              </Link>
+                text="Ver catálogo"
+                variant="outline"
+                size="lg"
+                className="border-primary/15 bg-white/70 px-8 py-6 text-primary backdrop-blur-sm"
+              />
             </div>
           </div>
         </div>

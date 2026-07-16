@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom"
-import { Home, Package, Phone } from "lucide-react"
+import { Phone } from "lucide-react"
 
 import { buttonVariants } from "@/components/ui/button"
+import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { Reveal } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
@@ -25,17 +26,13 @@ export default function NotFoundPage() {
           continuar hacia nuestro catálogo de productos.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/" className={buttonVariants({ size: "lg" })}>
-            <Home aria-hidden="true" />
-            Volver al inicio
-          </Link>
-          <Link
+          <InteractiveHoverLink to="/" text="Volver al inicio" size="lg" />
+          <InteractiveHoverLink
             to="/catalogo"
-            className={buttonVariants({ variant: "outline", size: "lg" })}
-          >
-            <Package aria-hidden="true" />
-            Ver catálogo
-          </Link>
+            text="Ver catálogo"
+            variant="outline"
+            size="lg"
+          />
           <Link
             to="/contacto"
             className={buttonVariants({ variant: "ghost", size: "lg" })}

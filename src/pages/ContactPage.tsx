@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom"
-import { ArrowRight, Mail, MapPin, MessageCircle, Phone } from "lucide-react"
+import { Mail, MapPin, MessageCircle, Phone } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
-import { buttonVariants } from "@/components/ui/button"
+import {
+  InteractiveHoverAnchor,
+  InteractiveHoverLink,
+} from "@/components/ui/interactive-hover-button"
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { MediaFrame } from "@/components/ui/media-frame"
@@ -16,7 +18,6 @@ import {
   PHONE_DISPLAY,
   WHATSAPP_HREF,
 } from "@/lib/contact"
-import { cn } from "@/lib/utils"
 
 export default function ContactPage() {
   return (
@@ -46,18 +47,16 @@ export default function ContactPage() {
                 laboral. Para una propuesta formal, puede solicitar una
                 cotización directamente.
               </p>
-              <a
+              <InteractiveHoverAnchor
                 href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noreferrer"
-                className={cn(
-                  buttonVariants({ variant: "secondary", size: "lg" }),
-                  "mt-7"
-                )}
-              >
-                <MessageCircle />
-                Escribir por WhatsApp
-              </a>
+                text="Escribir por WhatsApp"
+                variant="secondary"
+                size="lg"
+                icon={<MessageCircle aria-hidden="true" />}
+                className="mt-7"
+              />
 
               <div className="mt-auto w-full border-t border-primary-foreground/20 pt-6">
                 <ul className="space-y-4">
@@ -126,16 +125,12 @@ export default function ContactPage() {
             <p className="text-sm text-muted-foreground">
               ¿Ya sabe qué productos necesita?
             </p>
-            <Link
+            <InteractiveHoverLink
               to="/cotizacion"
-              className={cn(
-                buttonVariants({ variant: "outline" }),
-                "group w-full md:w-auto"
-              )}
-            >
-              Solicitar cotización
-              <ArrowRight className="transition-transform group-hover:translate-x-0.5" />
-            </Link>
+              text="Solicitar cotización"
+              variant="outline"
+              className="w-full md:w-auto"
+            />
           </div>
         </Card>
         </Reveal>
