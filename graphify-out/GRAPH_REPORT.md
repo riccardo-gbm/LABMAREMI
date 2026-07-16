@@ -1,149 +1,152 @@
-# Graph Report - .  (2026-07-05)
+# Graph Report - .  (2026-07-11)
 
 ## Corpus Check
-- Corpus is ~15,935 words - fits in a single context window. You may not need a graph.
+- 39 files · ~24,542 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 289 nodes · 586 edges · 21 communities (16 shown, 5 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.92)
-- Token cost: 30,000 input · 4,945 output
+- 332 nodes · 468 edges · 24 communities (16 shown, 8 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 22 edges (avg confidence: 0.85)
+- Token cost: 120,412 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Catalog & Hero Pages|Catalog & Hero Pages]]
-- [[_COMMUNITY_Quote Flow & UI Primitives|Quote Flow & UI Primitives]]
-- [[_COMMUNITY_App Shell & About|App Shell & About]]
-- [[_COMMUNITY_Admin Dashboard & Mock Data|Admin Dashboard & Mock Data]]
-- [[_COMMUNITY_NPM Dependencies (package.json)|NPM Dependencies (package.json)]]
+- [[_COMMUNITY_App Root & ProductQuote UI|App Root & Product/Quote UI]]
+- [[_COMMUNITY_shadcnui Primitives|shadcn/ui Primitives]]
+- [[_COMMUNITY_Mock Data & Admin Selectors|Mock Data & Admin Selectors]]
+- [[_COMMUNITY_NPM Dependencies|NPM Dependencies]]
+- [[_COMMUNITY_Phase 1 Plan & Milestones|Phase 1 Plan & Milestones]]
 - [[_COMMUNITY_TypeScript App Config|TypeScript App Config]]
-- [[_COMMUNITY_README & Font Loading|README & Font Loading]]
-- [[_COMMUNITY_shadcnui Config|shadcn/ui Config]]
+- [[_COMMUNITY_Layout Chrome & WhatsApp Widget|Layout Chrome & WhatsApp Widget]]
+- [[_COMMUNITY_shadcn Components Config|shadcn Components Config]]
+- [[_COMMUNITY_About Page & Timeline|About Page & Timeline]]
 - [[_COMMUNITY_TypeScript Node Config|TypeScript Node Config]]
-- [[_COMMUNITY_CLAUDE.md Project Rules|CLAUDE.md Project Rules]]
-- [[_COMMUNITY_Phase 1 Spec Pages & Mock Data|Phase 1 Spec: Pages & Mock Data]]
-- [[_COMMUNITY_Header & Footer Layout|Header & Footer Layout]]
-- [[_COMMUNITY_Root TS Project References|Root TS Project References]]
-- [[_COMMUNITY_Phase 1 Spec Hero & Spline Plan|Phase 1 Spec: Hero & Spline Plan]]
-- [[_COMMUNITY_Hero Floating Canvas|Hero Floating Canvas]]
-- [[_COMMUNITY_Phase 1 Spec Tooling Roles|Phase 1 Spec: Tooling Roles]]
+- [[_COMMUNITY_Home Hero Components|Home Hero Components]]
+- [[_COMMUNITY_TypeScript Base Config|TypeScript Base Config]]
+- [[_COMMUNITY_ContactAbout Scroll-Morph Design|Contact/About Scroll-Morph Design]]
+- [[_COMMUNITY_White Logo & Brand Identity|White Logo & Brand Identity]]
+- [[_COMMUNITY_Icon Mapping Helpers|Icon Mapping Helpers]]
+- [[_COMMUNITY_Blue Logo & Palette|Blue Logo & Palette]]
+- [[_COMMUNITY_Phase 2 Supabase Guard|Phase 2 Supabase Guard]]
+- [[_COMMUNITY_WhatsApp Widget Milestone|WhatsApp Widget Milestone]]
+- [[_COMMUNITY_Project Shell & Structure|Project Shell & Structure]]
 - [[_COMMUNITY_Vite Config|Vite Config]]
-- [[_COMMUNITY_Phase 1 Spec About Us Page|Phase 1 Spec: About Us Page]]
-- [[_COMMUNITY_Phase 1 Spec Contact Page|Phase 1 Spec: Contact Page]]
-- [[_COMMUNITY_Phase 1 Spec Business Description|Phase 1 Spec: Business Description]]
+- [[_COMMUNITY_Spanish Formal Copy Rule|Spanish Formal Copy Rule]]
+- [[_COMMUNITY_BlueWhiteCyan Palette|Blue/White/Cyan Palette]]
+- [[_COMMUNITY_Social Meta Tags|Social Meta Tags]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `cn()` - 46 edges
+1. `cn()` - 21 edges
 2. `compilerOptions` - 20 edges
-3. `buttonVariants` - 14 edges
-4. `compilerOptions` - 13 edges
-5. `Section()` - 11 edges
-6. `getCategoryIcon()` - 11 edges
-7. `AdminPage()` - 11 edges
-8. `Eyebrow()` - 10 edges
-9. `getCategoryCode()` - 10 edges
-10. `getProductById()` - 10 edges
+3. `compilerOptions` - 13 edges
+4. `Reveal()` - 11 edges
+5. `Card()` - 10 edges
+6. `RevealItem()` - 8 edges
+7. `RevealGroup()` - 7 edges
+8. `Product` - 7 edges
+9. `tailwind` - 6 edges
+10. `aliases` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `CLAUDE.md Project Instructions` --references--> `Out of Scope for Phase 1 (DB, Supabase, auth, payments, cart, etc.)`  [INFERRED]
-  CLAUDE.md → docs/00-phase-1-scope.md
-- `CLAUDE.md Project Instructions` --references--> `Phase 1 Tech Stack (React, Vite, TS, Tailwind, shadcn/ui, React Router, Spline, GitHub, Claude Code, Graphify)`  [INFERRED]
-  CLAUDE.md → docs/00-phase-1-scope.md
-- `CLAUDE.md Project Instructions` --references--> `Supabase (deferred to Phase 2 backend)`  [EXTRACTED]
-  CLAUDE.md → docs/00-phase-1-scope.md
-- `Visual Identity Guidelines (blue/white/cyan, clean & clinical, not generic-SaaS-gradient)` --references--> `Professional Quality Requirements (responsive, clean palette, no Lorem Ipsum, no console errors)`  [INFERRED]
-  CLAUDE.md → docs/00-phase-1-scope.md
-- `Meta Description (Distribuidor B2B de productos de limpieza, Quito, Ecuador)` --references--> `LABMAREMI Cía. Ltda. (B2B Cleaning Supplies Distributor, Quito)`  [INFERRED]
-  index.html → README.md
+- `CLAUDE.md Project Instructions` --semantically_similar_to--> `LABMAREMI Phase 1 Frontend Demo`  [INFERRED] [semantically similar]
+  CLAUDE.md → AGENTS.md
+- `README Tech Stack (Tailwind v4, RR v7, framer-motion)` --semantically_similar_to--> `Phase 1 Fixed Stack (React/Vite/TS/Tailwind/shadcn)`  [INFERRED] [semantically similar]
+  README.md → AGENTS.md
+- `README — LABMAREMI Phase 1 Demo` --references--> `LABMAREMI Phase 1 Frontend Demo`  [INFERRED]
+  README.md → AGENTS.md
+- `M0 — Foundation & Design System` --implements--> `Shared UI Primitives Reuse Principle`  [INFERRED]
+  docs/phase1-execution-plan_2.md → AGENTS.md
+- `One-Milestone-At-A-Time Working Style` --conceptually_related_to--> `Review Gate Between Milestones`  [INFERRED]
+  AGENTS.md → docs/phase1-execution-plan_2.md
 
 ## Import Cycles
 - None detected.
 
 ## Hyperedges (group relationships)
-- **Phase 1 Documentation Set** — claude_projectinstructions, readme_readme, docs_00_phase_1_scope_phase1scope [EXTRACTED 1.00]
-- **Phase 1 Main Pages** — docs_00_phase_1_scope_homepage, docs_00_phase_1_scope_productcatalogpage, docs_00_phase_1_scope_productdetail, docs_00_phase_1_scope_quoterequestpage, docs_00_phase_1_scope_contactpage, docs_00_phase_1_scope_aboutuspage, docs_00_phase_1_scope_admindashboard, docs_00_phase_1_scope_businessflowvisualizer [EXTRACTED 1.00]
-- **Phase 1 Visual and Technical Foundation** — docs_00_phase_1_scope_techstack, docs_00_phase_1_scope_spline, docs_00_phase_1_scope_qualityreqs [INFERRED 0.85]
-- **Google Fonts typography pipeline (preconnect -> stylesheet -> Manrope + IBM Plex Mono, documented in README tech stack)** — index_google_fonts_preconnect, index_google_fonts_stylesheet_link, index_font_manrope, index_font_ibm_plex_mono, readme_tech_stack [EXTRACTED 1.00]
+- **Phase 1 Milestone Build Sequence** — docs_phase1_execution_plan_2_m0, docs_phase1_execution_plan_2_m1, docs_phase1_execution_plan_2_m2, docs_phase1_execution_plan_2_m8 [EXTRACTED 0.90]
+- **M7 Hero Rebuild Components** — docs_phase1_execution_plan_2_m7, docs_phase1_execution_plan_2_herofloatingcanvas, docs_phase1_execution_plan_2_herosection, docs_phase1_execution_plan_2_manrope_font [EXTRACTED 0.90]
+- **Quote/Lead Data Flow Across Milestones** — docs_phase1_execution_plan_2_m3, docs_phase1_execution_plan_2_m4, docs_phase1_execution_plan_2_m6, readme_mock_data_layer [INFERRED 0.75]
 
-## Communities (21 total, 5 thin omitted)
+## Communities (24 total, 8 thin omitted)
 
-### Community 0 - "Catalog & Hero Pages"
-Cohesion: 0.15
-Nodes (27): ProductCard(), HeroSection(), trustPoints, ProductPicker(), ProductPickerProps, Badge(), BadgeProps, badgeVariants (+19 more)
+### Community 0 - "App Root & Product/Quote UI"
+Cohesion: 0.06
+Nodes (38): ProductCard(), ProductPicker(), ProductPickerProps, QuoteSuccess(), QuoteSuccessProps, Card(), MediaFrame(), MediaFrameProps (+30 more)
 
-### Community 1 - "Quote Flow & UI Primitives"
-Cohesion: 0.13
-Nodes (24): QuoteSuccess(), QuoteSuccessProps, Button(), ButtonProps, Card(), CardContent(), CardDescription(), CardFooter() (+16 more)
+### Community 1 - "shadcn/ui Primitives"
+Cohesion: 0.10
+Nodes (23): StatusBadge(), statusStyles, Avatar(), AvatarProps, getInitials(), sizeClasses, Badge(), BadgeProps (+15 more)
 
-### Community 2 - "App Shell & About"
-Cohesion: 0.11
-Nodes (17): Timeline(), TimelineEntry, TimelineProps, Avatar(), AvatarProps, getInitials(), sizeClasses, PageHeader() (+9 more)
+### Community 2 - "Mock Data & Admin Selectors"
+Cohesion: 0.10
+Nodes (23): StatusBadgeProps, ProductCardProps, businessTypes, leads, products, CategoryCount, getProductInterestRanking(), getTopCategories() (+15 more)
 
-### Community 3 - "Admin Dashboard & Mock Data"
-Cohesion: 0.14
-Nodes (23): StatusBadge(), StatusBadgeProps, statusStyles, ProductCardProps, businessTypes, leads, CategoryCount, getProductInterestRanking() (+15 more)
-
-### Community 4 - "NPM Dependencies (package.json)"
+### Community 3 - "NPM Dependencies"
 Cohesion: 0.07
 Nodes (27): dependencies, class-variance-authority, clsx, framer-motion, lucide-react, react, react-dom, react-router-dom (+19 more)
+
+### Community 4 - "Phase 1 Plan & Milestones"
+Cohesion: 0.08
+Nodes (25): Phase 1 Definition of Done, Phase 1 Fixed Stack (React/Vite/TS/Tailwind/shadcn), One-Milestone-At-A-Time Working Style, LABMAREMI Phase 1 Frontend Demo, Shared UI Primitives Reuse Principle, CLAUDE.md Project Instructions, Graphify Extraction Checkpoints, HeroFloatingCanvas Component (+17 more)
 
 ### Community 5 - "TypeScript App Config"
 Cohesion: 0.09
 Nodes (22): compilerOptions, allowImportingTsExtensions, baseUrl, jsx, lib, module, moduleDetection, moduleResolution (+14 more)
 
-### Community 6 - "README & Font Loading"
-Cohesion: 0.14
-Nodes (20): Phase 1 Scope Document (docs/00-phase-1-scope.md), IBM Plex Mono Font (weights 400-500), Manrope Font (weights 400-800), Google Fonts Preconnect Links, Google Fonts Stylesheet Link (Manrope 400-800 + IBM Plex Mono 400-500), index.html (App HTML Entry), Module Script Entry (/src/main.tsx), Meta Description (Distribuidor B2B de productos de limpieza, Quito, Ecuador) (+12 more)
+### Community 6 - "Layout Chrome & WhatsApp Widget"
+Cohesion: 0.12
+Nodes (12): demoLinks, Footer(), FooterLinkProps, publicLinks, Header(), navItems, Layout(), getTag() (+4 more)
 
-### Community 7 - "shadcn/ui Config"
+### Community 7 - "shadcn Components Config"
 Cohesion: 0.11
 Nodes (17): aliases, components, hooks, lib, ui, utils, iconLibrary, rsc (+9 more)
 
-### Community 8 - "TypeScript Node Config"
+### Community 8 - "About Page & Timeline"
+Cohesion: 0.13
+Nodes (12): AboutHeroMorph(), AnimationPhase, FlipCardProps, IMAGES, lerp(), Timeline(), TimelineEntry, TimelineProps (+4 more)
+
+### Community 9 - "TypeScript Node Config"
 Cohesion: 0.13
 Nodes (14): compilerOptions, allowImportingTsExtensions, lib, module, moduleDetection, moduleResolution, noEmit, skipLibCheck (+6 more)
 
-### Community 9 - "CLAUDE.md Project Rules"
-Cohesion: 0.24
-Nodes (12): Definition of Done (runs locally, responsive, all main pages implemented, clean README, deployed link), CLAUDE.md Project Instructions, Shared UI Primitives in src/components/ui (Button, Card, Section, Badge, PageHeader), Visual Identity Guidelines (blue/white/cyan, clean & clinical, not generic-SaaS-gradient), Working Style: one milestone at a time, report and stop, don't chain unprompted, Phase 1 Acceptance Criteria, Out of Scope for Phase 1 (DB, Supabase, auth, payments, cart, etc.), Phase 1 Scope Document (+4 more)
-
-### Community 10 - "Phase 1 Spec: Pages & Mock Data"
+### Community 10 - "Home Hero Components"
 Cohesion: 0.22
-Nodes (9): Admin Dashboard Preview, Business Flow Visualizer (/platform), src/data/businessTypes.ts (mock business-type data), src/data/categories.ts (mock category data), src/data/leads.ts (mock lead data), Product Catalog Page, Product Detail Modal/Page, src/data/products.ts (mock product data) (+1 more)
+Nodes (6): HeroFloatingCanvas(), images, random(), clientSegments, StatItemProps, trustStats
 
-### Community 11 - "Header & Footer Layout"
-Cohesion: 0.28
-Nodes (6): demoLinks, Footer(), publicLinks, Header(), navItems, Layout()
-
-### Community 12 - "Root TS Project References"
+### Community 11 - "TypeScript Base Config"
 Cohesion: 0.29
 Nodes (6): compilerOptions, baseUrl, paths, files, @/*, references
 
-### Community 13 - "Phase 1 Spec: Hero & Spline Plan"
-Cohesion: 0.67
-Nodes (4): HeroSection.tsx (planned Home hero component), Home Page, Spline 3D Hero Animation (rationale: communicate cleanliness/professionalism, isolated & lazy-loadable, non-blocking), SplineHeroScene.tsx (planned isolated component)
+### Community 12 - "Contact/About Scroll-Morph Design"
+Cohesion: 0.40
+Nodes (5): AboutHeroMorph Component, M5 — Contact + About Us, M9 — About Us Scroll-Morph Intro, prefers-reduced-motion Accessibility Branch, Non-Hijacked Scroll (useScroll + sticky 300vh)
 
-### Community 14 - "Hero Floating Canvas"
+### Community 13 - "White Logo & Brand Identity"
+Cohesion: 0.60
+Nodes (5): LABMAREMI Logo (White Variant), Embedded PNG Raster via SVG Mask, B2B Cleaning & Hygiene Supplier, LABMAREMI Brand Identity, White Monochrome Logo Treatment
+
+### Community 15 - "Blue Logo & Palette"
 Cohesion: 0.67
-Nodes (3): HeroFloatingCanvas(), images, random()
+Nodes (4): Blue on White Clinical Palette, LABMAREMI Logo (logo2), LABMAREMI Brand Identity, Stylized M Monogram with Node Terminals
 
 ## Knowledge Gaps
-- **118 isolated node(s):** `$schema`, `style`, `rsc`, `tsx`, `config` (+113 more)
+- **142 isolated node(s):** `$schema`, `style`, `rsc`, `tsx`, `config` (+137 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `cn()` connect `Quote Flow & UI Primitives` to `Catalog & Hero Pages`, `Header & Footer Layout`, `App Shell & About`, `Admin Dashboard & Mock Data`?**
-  _High betweenness centrality (0.060) - this node is a cross-community bridge._
-- **Why does `Section()` connect `App Shell & About` to `Catalog & Hero Pages`, `Quote Flow & UI Primitives`, `Admin Dashboard & Mock Data`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
-- **Why does `Eyebrow()` connect `Quote Flow & UI Primitives` to `Catalog & Hero Pages`, `App Shell & About`, `Admin Dashboard & Mock Data`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
+- **Why does `Card()` connect `App Root & Product/Quote UI` to `About Page & Timeline`, `Mock Data & Admin Selectors`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `categories` connect `App Root & Product/Quote UI` to `Mock Data & Admin Selectors`?**
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **What connects `$schema`, `style`, `rsc` to the rest of the system?**
-  _121 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Quote Flow & UI Primitives` be split into smaller, more focused modules?**
-  _Cohesion score 0.12605042016806722 - nodes in this community are weakly interconnected._
-- **Should `App Shell & About` be split into smaller, more focused modules?**
-  _Cohesion score 0.10591133004926108 - nodes in this community are weakly interconnected._
-- **Should `Admin Dashboard & Mock Data` be split into smaller, more focused modules?**
-  _Cohesion score 0.14039408866995073 - nodes in this community are weakly interconnected._
+  _151 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `App Root & Product/Quote UI` be split into smaller, more focused modules?**
+  _Cohesion score 0.061018437225636525 - nodes in this community are weakly interconnected._
+- **Should `shadcn/ui Primitives` be split into smaller, more focused modules?**
+  _Cohesion score 0.09982174688057041 - nodes in this community are weakly interconnected._
+- **Should `Mock Data & Admin Selectors` be split into smaller, more focused modules?**
+  _Cohesion score 0.10338680926916222 - nodes in this community are weakly interconnected._
+- **Should `NPM Dependencies` be split into smaller, more focused modules?**
+  _Cohesion score 0.07142857142857142 - nodes in this community are weakly interconnected._
