@@ -15,7 +15,7 @@ const clientSegments = [
   { name: "Restaurantes", icon: Utensils },
   { name: "Oficinas", icon: Briefcase },
   { name: "Clínicas", icon: ShieldCheck },
-  { name: "Instituciones", icon: School },
+  { name: "Instituciones Educativas", icon: School },
   { name: "Industrias", icon: Factory },
 ]
 
@@ -44,7 +44,7 @@ export default function GlassmorphismTrustHero() {
                 to="/cotizacion"
                 text="Solicitar cotización"
                 size="lg"
-                className="bg-blue-600 px-8 py-6 text-white shadow-[0_0_24px_rgba(37,99,235,0.32)]"
+                className="liquid-glass bg-blue-600 px-8 py-6 text-white shadow-[0_0_24px_rgba(37,99,235,0.32)] inset-shadow-[0_1px_0_rgba(255,255,255,0.35),0_-1px_0_rgba(0,0,0,0.12)]"
                 dotClassName="left-3.5"
               />
               <InteractiveHoverLink
@@ -52,7 +52,7 @@ export default function GlassmorphismTrustHero() {
                 text="Ver catálogo"
                 variant="outline"
                 size="lg"
-                className="border-primary/15 bg-white/70 px-8 py-6 text-primary backdrop-blur-sm"
+                className="liquid-glass border-primary/15 bg-white/70 px-8 py-6 text-primary backdrop-blur-md backdrop-saturate-150 inset-shadow-[0_1px_0_rgba(255,255,255,0.8),0_-1px_0_rgba(15,23,42,0.06)]"
                 dotClassName="left-3.5"
               />
             </div>
@@ -60,7 +60,7 @@ export default function GlassmorphismTrustHero() {
         </div>
 
         {/* Bottom: sector marquee panel fills the full width */}
-        <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 relative flex w-full flex-col justify-center overflow-hidden rounded-xl border border-white/70 bg-white/55 py-4 shadow-lg backdrop-blur-xl">
+        <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 liquid-glass relative flex w-full flex-col justify-center overflow-hidden rounded-xl border border-white/40 bg-white/55 py-4 shadow-lg backdrop-blur-xl backdrop-saturate-150 inset-shadow-[0_1px_0_rgba(255,255,255,0.8),0_-1px_0_rgba(15,23,42,0.08)]">
           <h2 className="mb-2 px-6 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground md:px-8">
             Atendemos sectores como:
           </h2>
