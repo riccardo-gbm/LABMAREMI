@@ -1,3 +1,4 @@
+import { useReducedMotion } from "framer-motion"
 import {
   Briefcase,
   Building,
@@ -9,6 +10,7 @@ import {
 
 import HeroFloatingCanvas from "@/components/hero/HeroFloatingCanvas"
 import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
+import { TextLoop } from "@/components/ui/text-loop"
 
 const clientSegments = [
   { name: "Hoteles", icon: Building },
@@ -20,6 +22,8 @@ const clientSegments = [
 ]
 
 export default function GlassmorphismTrustHero() {
+  const reduceMotion = useReducedMotion()
+
   return (
     <section className="relative w-full overflow-hidden border-b bg-background text-foreground">
       <div className="absolute inset-0 z-0 opacity-90" aria-hidden="true">
@@ -32,6 +36,22 @@ export default function GlassmorphismTrustHero() {
           <div className="relative flex flex-col items-center justify-center space-y-3 p-6 text-center md:p-8">
             {/* Subtle borderless background glow for text readability */}
             <div className="absolute inset-0 z-[-1] rounded-[3rem] bg-white/40 blur-2xl pointer-events-none" />
+
+            {/* div, not p: TextLoop renders block-level divs, invalid inside <p> */}
+            <div className="labmaremi-hero-fade-in labmaremi-hero-delay-100 flex flex-wrap items-baseline justify-center gap-x-1.5 text-base font-semibold text-foreground/80 sm:text-lg md:text-xl">
+              Entregas
+              <TextLoop
+                className="text-primary"
+                interval={2.5}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+                trigger={!reduceMotion}
+              >
+                <span>inmediatas</span>
+                <span>el mismo día</span>
+                <span>hasta en 48 horas</span>
+                <span>en Quito y provincias cercanas</span>
+              </TextLoop>
+            </div>
 
             <div className="labmaremi-hero-fade-in labmaremi-hero-delay-200 flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-4">
               <h1 className="text-5xl font-goodtimes font-bold leading-none text-[#0066cc] sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight">
