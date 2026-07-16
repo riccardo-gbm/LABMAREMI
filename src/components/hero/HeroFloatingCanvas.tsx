@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import {
   motion,
   useAnimationFrame,
@@ -10,7 +10,7 @@ import {
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
-const TWO_PI = Math.PI * 2;
+const TWO_PI = Math.PI;
 
 // Exactly 9 clouds around the wordmark: the 5 local product illustrations plus
 // 4 verified Unsplash stock photos (cleaning/protection subjects) sized small
@@ -21,39 +21,22 @@ const images = [
   // Blue nitrile gloves forming a heart
   { src: "/photo1.svg", shape: "rounded-full", size: "w-[75px] h-[75px] md:w-[105px] md:h-[105px]", rotate: -4 },
   // Amber "kitchen/bathroom cleaner" spray bottles with brush
-  { src: "/photo2.svg", shape: "rounded-[40%_60%_60%_40%/60%_30%_70%_40%]", size: "w-[85px] h-[105px] md:w-[115px] md:h-[140px]", rotate: 5 },
+  { src: "/photo2.svg", shape: "rounded-full", size: "w-[85px] h-[85px] md:w-[120px] md:h-[120px]", rotate: 5 },
   // Rubber glove holding a yellow spray bottle
-  { src: "/photo3.svg", shape: "rounded-[30%_70%_70%_30%/30%_30%_70%_70%]", size: "w-[75px] h-[75px] md:w-[100px] md:h-[100px]", rotate: -5 },
+  { src: "/photo3.svg", shape: "rounded-full", size: "w-[75px] h-[75px] md:w-[100px] md:h-[100px]", rotate: -5 },
   // Gloved hands disinfecting a surface with spray + paper towel
-  { src: "/photo4.svg", shape: "rounded-[40px]", size: "w-[85px] h-[70px] md:w-[120px] md:h-[100px]", rotate: 4 },
+  { src: "/photo4.svg", shape: "rounded-full", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: 4 },
   // Putting on blue nitrile gloves
-  { src: "/photo5.svg", shape: "rounded-full", size: "w-[70px] h-[85px] md:w-[95px] md:h-[115px]", rotate: 3 },
+  { src: "/photo5.svg", shape: "rounded-full", size: "w-[75px] h-[75px] md:w-[105px] md:h-[105px]", rotate: 3 },
   // Natural cleaner spray bottle with lemons
-  { src: "https://images.unsplash.com/photo-1583907659441-addbe699e921?q=80&w=500", shape: "rounded-[40%_60%_50%_50%/50%_50%_50%_50%]", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: -3 },
+  { src: "https://images.unsplash.com/photo-1583907659441-addbe699e921?q=80&w=500", shape: "rounded-full", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: -3 },
   // Hand sanitizer bottle with face mask
-  { src: "https://images.unsplash.com/photo-1584744982491-665216d95f8b?q=80&w=500", shape: "rounded-[50px]", size: "w-[70px] h-[90px] md:w-[95px] md:h-[120px]", rotate: 6 },
+  { src: "https://images.unsplash.com/photo-1584744982491-665216d95f8b?q=80&w=500", shape: "rounded-full", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: 6 },
   // Worker with mask, goggles and gloves cleaning window shutters
-  { src: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=500", shape: "rounded-[60%_40%_40%_60%/50%_60%_40%_50%]", size: "w-[80px] h-[70px] md:w-[115px] md:h-[95px]", rotate: -6 },
+  { src: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=500", shape: "rounded-full", size: "w-[75px] h-[75px] md:w-[105px] md:h-[105px]", rotate: -6 },
   // Blue glass-cleaner spray bottle with paper towel roll
-  { src: "https://images.unsplash.com/photo-1550963295-019d8a8a61c5?q=80&w=500", shape: "rounded-[45px]", size: "w-[70px] h-[85px] md:w-[100px] md:h-[125px]", rotate: 4 },
+  { src: "https://images.unsplash.com/photo-1550963295-019d8a8a61c5?q=80&w=500", shape: "rounded-full", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: 4 },
 ];
-
-// Deterministic ring positions, computed once at module load — the layout is
-// identical on every visit/refresh (no Math.random). The 9 clouds sit on an
-// ellipse that fully surrounds the wordmark, alternating inner/outer radii so
-// ring neighbors never crowd each other.
-const positions = images.map((_, i) => {
-  const wobble = ((i % 3) - 1) * 0.06; // fixed organic offset, not random
-  const theta = (-90 + i * 40) * (Math.PI / 180) + wobble; // start at the top, step 40°
-  const outer = i % 2 === 0; // alternate rings; mobile keeps only the outer ones
-  const rx = outer ? 41 : 33; // horizontal radius, % of container
-  const ry = outer ? 30 : 23; // vertical radius
-  // Ellipse centered at (50%, 44%); -4 ≈ half a cloud's footprint in %. Top is
-  // clamped so no cloud drifts under the CTAs or the bottom glass boxes.
-  const left = clamp(50 + rx * Math.cos(theta) - 4, 3, 88);
-  const top = clamp(44 + ry * Math.sin(theta) - 4, 4, 64);
-  return { left: `${left}%`, top: `${top}%` };
-});
 
 interface FloatingCloudProps {
   img: (typeof images)[number];
@@ -61,9 +44,10 @@ interface FloatingCloudProps {
   parallaxX: MotionValue<number>;
   parallaxY: MotionValue<number>;
   staticOnly: boolean;
+  position: { left: string; top: string };
 }
 
-function FloatingCloud({ img, index, parallaxX, parallaxY, staticOnly }: FloatingCloudProps) {
+function FloatingCloud({ img, index, parallaxX, parallaxY, staticOnly, position }: FloatingCloudProps) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotate = useMotionValue(img.rotate);
@@ -104,7 +88,7 @@ function FloatingCloud({ img, index, parallaxX, parallaxY, staticOnly }: Floatin
   return (
     <motion.div
       className={`absolute overflow-hidden border border-white/60 bg-white/40 shadow-[0_15px_40px_rgba(0,0,0,0.08)] ${img.shape} ${img.size} ${index % 2 === 1 ? "hidden md:block" : ""}`}
-      style={{ ...positions[index], x, y, rotate }}
+      style={{ ...position, x, y, rotate }}
     >
       <img src={img.src} alt="" loading="lazy" className="w-full h-full object-cover" draggable={false} />
     </motion.div>
@@ -112,6 +96,83 @@ function FloatingCloud({ img, index, parallaxX, parallaxY, staticOnly }: Floatin
 }
 
 export default function HeroFloatingCanvas() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 1200, height: 600 });
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setDimensions({
+          width: entry.contentRect.width || 1200,
+          height: entry.contentRect.height || 600,
+        });
+      }
+    });
+    resizeObserver.observe(containerRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  const positions = useMemo(() => {
+    const K = dimensions.height > 0 ? dimensions.width / dimensions.height : 2.0;
+    const rx = 35;
+    const ry = 30;
+
+    // Scale horizontal radius by the aspect ratio for arc-length integration in pixel space
+    const rxEff = rx * K;
+    const ryEff = ry;
+
+    // The angles to distribute (from 26.67 to -186.69 degrees)
+    const thetaStart = 20 * Math.PI / 180;
+    const thetaEnd = -200 * Math.PI / 180;
+
+    // Numerical integration of arc length on the scaled ellipse
+    const N = 300;
+    const step = (thetaEnd - thetaStart) / N;
+    const arcLengths = [0];
+    let totalLength = 0;
+
+    const f = (t: number) => {
+      const s = Math.sin(t);
+      const c = Math.cos(t);
+      return Math.sqrt(rxEff * rxEff * s * s + ryEff * ryEff * c * c);
+    };
+
+    for (let i = 0; i < N; i++) {
+      const t = thetaStart + i * step;
+      totalLength += Math.abs(f(t) * step);
+      arcLengths.push(totalLength);
+    }
+
+    const positionsArray = [];
+    const targetSegments = images.length - 1;
+
+    for (let i = 0; i <= targetSegments; i++) {
+      const targetLen = i * (totalLength / targetSegments);
+
+      // Binary search for the theta that corresponds to targetLen
+      let low = 0;
+      let high = N;
+      while (low < high) {
+        const mid = Math.floor((low + high) / 2);
+        if (arcLengths[mid] < targetLen) {
+          low = mid + 1;
+        } else {
+          high = mid;
+        }
+      }
+
+      const theta = thetaStart + low * step;
+
+      const left = clamp(50 + rx * Math.cos(theta) - 4, 3, 88);
+      const top = clamp(44 + ry * Math.sin(theta) - 4, 4, 64);
+
+      positionsArray.push({ left: `${left}%`, top: `${top}%` });
+    }
+
+    return positionsArray;
+  }, [dimensions]);
+
   const reduceMotion = useReducedMotion();
 
   // Cursor-follow parallax: normalized viewport position smoothed by a soft
@@ -132,7 +193,7 @@ export default function HeroFloatingCanvas() {
   }, [mouseX, mouseY, reduceMotion]);
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    <div ref={containerRef} className="relative h-full w-full overflow-hidden">
       {/* Cyan/white diffusion background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <motion.div
@@ -170,7 +231,8 @@ export default function HeroFloatingCanvas() {
             index={i}
             parallaxX={parallaxX}
             parallaxY={parallaxY}
-            staticOnly={reduceMotion ?? false}
+            staticOnly={reduceMotion ?? false} // FOR TESTING: set to true to disable movement, originally: reduceMotion ?? false
+            position={positions[i] || { left: "0%", top: "0%" }}
           />
         ))}
       </div>
