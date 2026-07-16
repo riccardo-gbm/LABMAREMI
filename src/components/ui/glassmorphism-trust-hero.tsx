@@ -19,27 +19,6 @@ const clientSegments = [
   { name: "Industrias", icon: Factory },
 ]
 
-const trustStats = [
-  { value: "Entregas inmediatas", label: " en 24 horas" },
-  { value: "Quito", label: "y provincias\ncercanas" },
-]
-
-interface StatItemProps {
-  value: string
-  label: string
-}
-
-function StatItem({ value, label }: StatItemProps) {
-  return (
-    <div className="flex flex-col items-center justify-center px-3 text-center transition-transform hover:-translate-y-1">
-      <span className="text-lg font-playfair font-bold text-primary sm:text-xl">{value}</span>
-      <span className="mt-1 whitespace-pre-line text-[11px] font-medium leading-tight text-muted-foreground sm:text-xs">
-        {label}
-      </span>
-    </div>
-  )
-}
-
 export default function GlassmorphismTrustHero() {
   return (
     <section className="relative w-full overflow-hidden border-b bg-background text-foreground">
@@ -80,55 +59,36 @@ export default function GlassmorphismTrustHero() {
           </div>
         </div>
 
-        {/* Bottom row: stats rectangle (left) + sector marquee rectangle (right) */}
-        <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 flex w-full flex-col gap-5 lg:flex-row">
-          {/* Left: trust stats */}
-          <div className="relative overflow-hidden rounded-xl border border-white/70 bg-white/55 px-4 py-4 shadow-lg backdrop-blur-xl lg:w-[360px]">
-            <div
-              className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-cyan-300/25 blur-3xl"
-              aria-hidden="true"
-            />
+        {/* Bottom: sector marquee panel fills the full width */}
+        <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 relative flex w-full flex-col justify-center overflow-hidden rounded-xl border border-white/70 bg-white/55 py-4 shadow-lg backdrop-blur-xl">
+          <h2 className="mb-2 px-6 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground md:px-8">
+            Atendemos sectores como:
+          </h2>
 
-            <div className="relative z-10 flex h-full items-center justify-center">
-              <div className="grid w-full grid-cols-2 divide-x divide-primary/10">
-                {trustStats.map((stat) => (
-                  <StatItem key={stat.label} {...stat} />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Right: sector marquee fills the remaining width */}
-          <div className="relative flex flex-1 flex-col justify-center overflow-hidden rounded-xl border border-white/70 bg-white/55 py-4 shadow-lg backdrop-blur-xl">
-            <h2 className="mb-2 px-6 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground md:px-8">
-              Atendemos sectores como:
-            </h2>
-
-            <div
-              className="relative flex overflow-hidden"
-              style={{
-                maskImage:
-                  "linear-gradient(to right, transparent, black 18%, black 82%, transparent)",
-                WebkitMaskImage:
-                  "linear-gradient(to right, transparent, black 18%, black 82%, transparent)",
-              }}
-            >
-              <div className="labmaremi-hero-marquee flex gap-10 whitespace-nowrap px-4">
-                {[...clientSegments, ...clientSegments, ...clientSegments].map(
-                  (client, index) => (
-                    <div
-                      key={`${client.name}-${index}`}
-                      className="flex cursor-default items-center gap-2 text-muted-foreground transition-all hover:scale-105 hover:text-foreground"
-                    >
-                      <client.icon
-                        className="h-6 w-6 text-primary"
-                        aria-hidden="true"
-                      />
-                      <span className="text-lg font-bold">{client.name}</span>
-                    </div>
-                  )
-                )}
-              </div>
+          <div
+            className="relative flex overflow-hidden"
+            style={{
+              maskImage:
+                "linear-gradient(to right, transparent, black 18%, black 82%, transparent)",
+              WebkitMaskImage:
+                "linear-gradient(to right, transparent, black 18%, black 82%, transparent)",
+            }}
+          >
+            <div className="labmaremi-hero-marquee flex gap-10 whitespace-nowrap px-4">
+              {[...clientSegments, ...clientSegments, ...clientSegments].map(
+                (client, index) => (
+                  <div
+                    key={`${client.name}-${index}`}
+                    className="flex cursor-default items-center gap-2 text-muted-foreground transition-all hover:scale-105 hover:text-foreground"
+                  >
+                    <client.icon
+                      className="h-6 w-6 text-primary"
+                      aria-hidden="true"
+                    />
+                    <span className="text-lg font-bold">{client.name}</span>
+                  </div>
+                )
+              )}
             </div>
           </div>
         </div>
