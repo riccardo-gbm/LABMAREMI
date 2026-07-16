@@ -2,7 +2,10 @@
  * Placeholder contact details (Phase 1 demo — not a real number/inbox yet).
  * Shared by Home and Contact so the two pages never drift apart.
  */
-export const WHATSAPP_HREF = "https://wa.me/593999999999"
+// Digits only, no + or spaces, country code included (593 = Ecuador).
+// This is the single place to change the WhatsApp number for the whole app.
+export const WHATSAPP_NUMBER = "593999999999"
+export const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_NUMBER}`
 export const PHONE_DISPLAY = "+593 99 999 9999"
 export const EMAIL_DISPLAY = "ventas@labmaremi.ec"
 

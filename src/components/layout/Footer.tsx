@@ -55,7 +55,7 @@ function FooterLink({ to, label, index, baseDelay }: FooterLinkProps) {
 function Footer() {
   const reduceMotion = useReducedMotion()
   const year = new Date().getFullYear()
-  const copyright = `© ${year} LABMAREMI Cía. Ltda. — Quito, Ecuador. Demo de la Fase 1 con datos de ejemplo.`
+  const copyright = `© ${year} LABMAREMI Cía. Ltda. Todos los derechos reservados.`
 
   return (
     <footer className="border-t bg-secondary/40">
@@ -70,7 +70,7 @@ function Footer() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.7 }}
                 transition={{ duration: 0.32, ease: "easeOut" }}
-                className="h-8 w-8 object-contain"
+                className="h-20 w-20 object-contain"
               />
               <TextReveal
                 text="LABMAREMI"
