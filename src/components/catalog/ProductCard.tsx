@@ -65,7 +65,6 @@ function ProductCard({ product }: ProductCardProps) {
         <InteractiveHoverLink
           to={`/cotizacion?productos=${product.id}`}
           text="Solicitar cotización"
-          size="sm"
         />
         <Link
           to={`/producto/${product.id}`}

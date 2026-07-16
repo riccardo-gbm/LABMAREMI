@@ -66,6 +66,7 @@ export default function GlassmorphismTrustHero() {
                 text="Solicitar cotización"
                 size="lg"
                 className="bg-blue-600 px-8 py-6 text-white shadow-[0_0_24px_rgba(37,99,235,0.32)]"
+                dotClassName="left-3.5"
               />
               <InteractiveHoverLink
                 to="/catalogo"
@@ -73,6 +74,7 @@ export default function GlassmorphismTrustHero() {
                 variant="outline"
                 size="lg"
                 className="border-primary/15 bg-white/70 px-8 py-6 text-primary backdrop-blur-sm"
+                dotClassName="left-3.5"
               />
             </div>
           </div>

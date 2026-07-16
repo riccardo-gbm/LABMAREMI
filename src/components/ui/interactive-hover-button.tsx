@@ -41,11 +41,22 @@ const sizeClasses: Record<InteractiveHoverSize, string> = {
   lg: "h-10 px-7 text-sm",
 }
 
+// Rest position that centers the dot between the button's left edge and the
+// label's start (padding-left + the label's own translate-x-1). Must be
+// overridden via `dotClassName` when a call site replaces the padding.
+const dotOffsetClasses: Record<InteractiveHoverSize, string> = {
+  default: "left-2",
+  sm: "left-1.5",
+  lg: "left-3",
+}
+
 interface InteractiveHoverStyleProps {
   text?: string
   icon?: React.ReactNode
   variant?: InteractiveHoverVariant
   size?: InteractiveHoverSize
+  /** Override the fill dot's rest position; needed when className replaces the size's padding. */
+  dotClassName?: string
 }
 
 function rootClasses(
@@ -65,10 +76,14 @@ function InteractiveHoverInner({
   text,
   icon,
   variant,
+  size,
+  dotClassName,
 }: {
   text: string
   icon: React.ReactNode
   variant: InteractiveHoverVariant
+  size: InteractiveHoverSize
+  dotClassName?: string
 }) {
   const styles = variantClasses[variant]
   return (
@@ -88,9 +103,9 @@ function InteractiveHoverInner({
       </div>
       <div
         className={cn(
-          // Fixed rest offset (stock uses left-[20%], tuned for its fixed w-32;
-          // on wider auto-width buttons a % offset lands on the label)
-          "absolute left-2 top-[40%] h-2 w-2 scale-[1] rounded-lg transition-all duration-300 group-hover:left-[0%] group-hover:top-[0%] group-hover:h-full group-hover:w-full group-hover:scale-[1.8] motion-reduce:transition-none",
+          "absolute top-[40%] h-2 w-2 scale-[1] rounded-lg transition-all duration-300 group-hover:left-[0%] group-hover:top-[0%] group-hover:h-full group-hover:w-full group-hover:scale-[1.8] motion-reduce:transition-none",
+          dotOffsetClasses[size],
+          dotClassName,
           styles.fill
         )}
       />
@@ -112,13 +127,20 @@ const InteractiveHoverButton = React.forwardRef<
       icon = <ArrowRight aria-hidden="true" />,
       variant = "default",
       size = "default",
+      dotClassName,
       className,
       ...props
     },
     ref
   ) => (
     <button ref={ref} className={rootClasses(variant, size, className)} {...props}>
-      <InteractiveHoverInner text={text} icon={icon} variant={variant} />
+      <InteractiveHoverInner
+        text={text}
+        icon={icon}
+        variant={variant}
+        size={size}
+        dotClassName={dotClassName}
+      />
     </button>
   )
 )
@@ -138,13 +160,20 @@ const InteractiveHoverLink = React.forwardRef<
       icon = <ArrowRight aria-hidden="true" />,
       variant = "default",
       size = "default",
+      dotClassName,
       className,
       ...props
     },
     ref
   ) => (
     <Link ref={ref} className={rootClasses(variant, size, className)} {...props}>
-      <InteractiveHoverInner text={text} icon={icon} variant={variant} />
+      <InteractiveHoverInner
+        text={text}
+        icon={icon}
+        variant={variant}
+        size={size}
+        dotClassName={dotClassName}
+      />
     </Link>
   )
 )
@@ -164,13 +193,20 @@ const InteractiveHoverAnchor = React.forwardRef<
       icon = <ArrowRight aria-hidden="true" />,
       variant = "default",
       size = "default",
+      dotClassName,
       className,
       ...props
     },
     ref
   ) => (
     <a ref={ref} className={rootClasses(variant, size, className)} {...props}>
-      <InteractiveHoverInner text={text} icon={icon} variant={variant} />
+      <InteractiveHoverInner
+        text={text}
+        icon={icon}
+        variant={variant}
+        size={size}
+        dotClassName={dotClassName}
+      />
     </a>
   )
 )
