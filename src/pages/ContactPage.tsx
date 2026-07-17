@@ -119,6 +119,7 @@ export default function ContactPage() {
             src={OFFICE_MAP_SRC}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
+            sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
             className="h-[320px] w-full border-0 md:h-[420px]"
           />
           <div className="flex flex-col gap-4 border-t p-5 md:flex-row md:items-center md:justify-between">

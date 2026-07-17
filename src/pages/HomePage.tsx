@@ -278,6 +278,7 @@ export default function HomePage() {
               src={OFFICE_MAP_SRC}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
+              sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
               className="h-[320px] w-full border-0 md:h-[400px]"
             />
           </Reveal>

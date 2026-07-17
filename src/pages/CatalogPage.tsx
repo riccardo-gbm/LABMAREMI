@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
+import { AnimatePresence, LayoutGroup, m } from "framer-motion"
 import { Search, SearchX } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -89,7 +89,7 @@ export default function CatalogPage() {
               aria-live="polite"
             >
               <AnimatePresence mode="wait" initial={false}>
-                <motion.span
+                <m.span
                   key={filtered.length}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -98,7 +98,7 @@ export default function CatalogPage() {
                   className="inline-block"
                 >
                   {filtered.length} de {products.length} productos
-                </motion.span>
+                </m.span>
               </AnimatePresence>
             </p>
 
@@ -127,7 +127,7 @@ export default function CatalogPage() {
               )}
             >
               {!activeCategory ? (
-                <motion.span
+                <m.span
                   layoutId="catalog-filter-active"
                   className="absolute inset-0 rounded-full bg-primary"
                   transition={{ type: "spring", stiffness: 420, damping: 34 }}
@@ -151,7 +151,7 @@ export default function CatalogPage() {
                   )}
                 >
                   {isActive ? (
-                    <motion.span
+                    <m.span
                       layoutId="catalog-filter-active"
                       className="absolute inset-0 rounded-full bg-primary"
                       transition={{ type: "spring", stiffness: 420, damping: 34 }}
@@ -178,10 +178,10 @@ export default function CatalogPage() {
 
         {/* Results */}
         {filtered.length > 0 ? (
-          <motion.div layout className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <m.div layout className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
               {filtered.map((product) => (
-                <motion.div
+                <m.div
                   key={product.id}
                   layout
                   initial={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -191,12 +191,12 @@ export default function CatalogPage() {
                   className="flex"
                 >
                   <ProductCard product={product} />
-                </motion.div>
+                </m.div>
               ))}
             </AnimatePresence>
-          </motion.div>
+          </m.div>
         ) : (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
@@ -217,7 +217,7 @@ export default function CatalogPage() {
                 Limpiar búsqueda y filtros
               </Button>
             ) : null}
-          </motion.div>
+          </m.div>
         )}
       </Section>
     </>

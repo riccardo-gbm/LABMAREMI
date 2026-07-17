@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom"
 import { ArrowLeft, ChevronRight, PackageX } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
-import { buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button-variants"
 import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { MediaFrame } from "@/components/ui/media-frame"

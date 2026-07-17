@@ -1,5 +1,5 @@
 import * as React from "react"
-import { motion, useReducedMotion, type Variants } from "framer-motion"
+import { m, useReducedMotion, type Variants } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 
@@ -16,6 +16,16 @@ interface TextRevealProps {
   amount?: number
 }
 
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 10, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.34, ease: "easeOut" },
+  },
+}
+
 function getTag(as: TextRevealTag, reduceMotion: boolean) {
   if (reduceMotion) {
     if (as === "p") return "p"
@@ -23,9 +33,9 @@ function getTag(as: TextRevealTag, reduceMotion: boolean) {
     return "span"
   }
 
-  if (as === "p") return motion.p
-  if (as === "h2") return motion.h2
-  return motion.span
+  if (as === "p") return m.p
+  if (as === "h2") return m.h2
+  return m.span
 }
 
 function TextReveal({
@@ -58,19 +68,21 @@ function TextReveal({
     )
   }
 
-  const parts = mode === "letters" ? Array.from(text) : text.split(" ")
+  // Key each part by its character offset in `text` — a stable identity even
+  // when the same word or letter appears more than once.
+  let offset = 0
+  const parts = (mode === "letters" ? Array.from(text) : text.split(" ")).map(
+    (part) => {
+      const item = { part, id: `${offset}-${part}` }
+      offset += part.length + (mode === "words" ? 1 : 0)
+      return item
+    }
+  )
+  // Stays in-component: references the `delay`/`stagger` props, so it is not
+  // a module-scope-static value.
   const groupVariants: Variants = {
     hidden: {},
     visible: { transition: { delayChildren: delay, staggerChildren: stagger } },
-  }
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 10, filter: "blur(4px)" },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: "blur(0px)",
-      transition: { duration: 0.34, ease: "easeOut" },
-    },
   }
 
   return (
@@ -82,15 +94,15 @@ function TextReveal({
       viewport={{ once: true, amount }}
       variants={groupVariants}
     >
-      {parts.map((part, index) => (
-        <React.Fragment key={`${part}-${index}`}>
-          <motion.span
+      {parts.map((item, index) => (
+        <React.Fragment key={item.id}>
+          <m.span
             aria-hidden="true"
             className="inline-block"
             variants={itemVariants}
           >
-            {part}
-          </motion.span>
+            {item.part}
+          </m.span>
           {mode === "words" && index < parts.length - 1 ? " " : null}
         </React.Fragment>
       ))}

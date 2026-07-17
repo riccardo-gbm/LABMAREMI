@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { Phone } from "lucide-react"
 
-import { buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button-variants"
 import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { Reveal } from "@/components/ui/reveal"

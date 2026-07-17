@@ -1,7 +1,7 @@
 import * as React from "react"
 import {
   animate,
-  motion,
+  m,
   useInView,
   useReducedMotion,
   type Variants,
@@ -62,7 +62,7 @@ function Reveal({
   const offset = getOffset(direction, distance)
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, ...offset }}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
       viewport={{ once: true, amount }}
@@ -70,7 +70,7 @@ function Reveal({
       className={className}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -105,7 +105,7 @@ function RevealGroup({
   }
 
   return (
-    <motion.div
+    <m.div
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount }}
@@ -113,7 +113,7 @@ function RevealGroup({
       className={className}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -149,9 +149,9 @@ function RevealItem({
   }
 
   return (
-    <motion.div variants={itemVariants} className={className}>
+    <m.div variants={itemVariants} className={className}>
       {children}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -171,24 +171,23 @@ function AnimatedMetric({
   const ref = React.useRef<HTMLSpanElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.65 })
   const reduceMotion = useReducedMotion()
-  const [displayValue, setDisplayValue] = React.useState(reduceMotion ? value : 0)
+  // Only the count-up animation owns this state. The reduced-motion value is
+  // derived at render time (below), so no effect syncs state to the prop.
+  const [animatedValue, setAnimatedValue] = React.useState(0)
 
   React.useEffect(() => {
-    if (reduceMotion) {
-      setDisplayValue(value)
-      return
-    }
-
-    if (!isInView) return
+    if (reduceMotion || !isInView) return
 
     const controls = animate(0, value, {
       duration,
       ease: "easeOut",
-      onUpdate: (latest) => setDisplayValue(Math.round(latest)),
+      onUpdate: (latest) => setAnimatedValue(Math.round(latest)),
     })
 
     return () => controls.stop()
   }, [duration, isInView, reduceMotion, value])
+
+  const displayValue = reduceMotion ? value : animatedValue
 
   return (
     <span ref={ref} className={className}>
@@ -211,14 +210,18 @@ function AnimatedProgress({
   ariaLabel,
 }: AnimatedProgressProps) {
   const reduceMotion = useReducedMotion()
-  const width = `${Math.max(0, Math.min(value, 100))}%`
+  // Fill fraction (0–1). The bar spans the full track and scales horizontally
+  // from its left edge, so we animate a GPU-composited transform instead of the
+  // layout-triggering `width`.
+  const scaleX = Math.max(0, Math.min(value, 100)) / 100
 
   return (
     <div className={className} role={ariaLabel ? "img" : undefined} aria-label={ariaLabel}>
-      <motion.div
+      <m.div
         className={barClassName}
-        initial={reduceMotion ? false : { width: 0 }}
-        whileInView={{ width }}
+        style={{ width: "100%", transformOrigin: "left" }}
+        initial={reduceMotion ? false : { scaleX: 0 }}
+        whileInView={{ scaleX }}
         viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 0.75, ease: "easeOut" }}
       />

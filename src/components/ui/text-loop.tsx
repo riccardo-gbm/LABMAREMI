@@ -1,7 +1,7 @@
 import {
   AnimatePresence,
   type AnimatePresenceProps,
-  motion,
+  m,
   type Transition,
   type Variants,
 } from "framer-motion";
@@ -53,7 +53,7 @@ export function TextLoop({
   return (
     <div className={cn("relative inline-block whitespace-nowrap", className)}>
       <AnimatePresence initial={false} mode={mode}>
-        <motion.div
+        <m.div
           animate="animate"
           exit="exit"
           initial="initial"
@@ -62,7 +62,7 @@ export function TextLoop({
           variants={variants ?? defaultVariants}
         >
           {items[currentIndex]}
-        </motion.div>
+        </m.div>
       </AnimatePresence>
     </div>
   );

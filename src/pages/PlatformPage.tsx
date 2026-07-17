@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { motion } from "framer-motion"
+import { m } from "framer-motion"
 import {
   ArrowUpRight,
   BadgeCheck,
@@ -105,7 +105,7 @@ export default function PlatformPage() {
         </Reveal>
 
         <div className="relative mt-12">
-        <motion.div
+        <m.div
           aria-hidden="true"
           className="absolute left-8 right-8 top-[4.2rem] hidden h-px origin-left bg-gradient-to-r from-primary/10 via-ring/50 to-primary/10 xl:block"
           initial={{ scaleX: 0, opacity: 0 }}
