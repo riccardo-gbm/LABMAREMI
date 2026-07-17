@@ -141,7 +141,7 @@ export default function HomePage() {
         <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {reasons.map((reason) => (
             <RevealItem key={reason.title}>
-            <Card className="liquid-glass h-full overflow-hidden bg-white/70 p-6 backdrop-blur-md backdrop-saturate-150 inset-shadow-[0_1px_0_rgba(255,255,255,0.9),0_-1px_0_rgba(15,23,42,0.05)] transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
+            <Card className="h-full overflow-hidden bg-white p-6 shadow-sm border border-slate-200 transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
               <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <reason.icon className="h-5 w-5" aria-hidden="true" />
               </span>

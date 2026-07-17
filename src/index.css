@@ -103,30 +103,7 @@
     animation-delay: 0.5s;
   }
 
-  /* Frosted-glass surface: a fixed upper-left specular sheen plus a safe
-     stacking context. Opacity/blur/saturation/tint stay per call site via
-     ordinary utilities, so this one primitive works on both fully opaque
-     and translucent surfaces. isolation+negative z-index is required
-     (not decorative) — without it an absolutely-positioned ::before with
-     z-index:auto paints above in-flow content regardless of DOM order. */
-  .liquid-glass {
-    position: relative;
-    isolation: isolate;
-  }
-  .liquid-glass::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    pointer-events: none;
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.55) 0%,
-      rgba(255, 255, 255, 0.16) 22%,
-      rgba(255, 255, 255, 0) 45%
-    );
-  }
+
 }
 
 @keyframes labmaremi-float {

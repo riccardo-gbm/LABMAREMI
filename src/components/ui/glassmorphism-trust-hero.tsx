@@ -64,7 +64,7 @@ export default function GlassmorphismTrustHero() {
                 to="/cotizacion"
                 text="Solicitar cotización"
                 size="lg"
-                className="liquid-glass bg-blue-600 px-8 py-6 text-white shadow-[0_0_24px_rgba(37,99,235,0.32)] inset-shadow-[0_1px_0_rgba(255,255,255,0.35),0_-1px_0_rgba(0,0,0,0.12)]"
+                className="bg-blue-600 px-8 py-6 text-white shadow-md hover:bg-blue-700 transition-colors"
                 dotClassName="left-3.5"
               />
               <InteractiveHoverLink
@@ -72,7 +72,7 @@ export default function GlassmorphismTrustHero() {
                 text="Ver catálogo"
                 variant="outline"
                 size="lg"
-                className="liquid-glass border-primary/15 bg-white/70 px-8 py-6 text-primary backdrop-blur-md backdrop-saturate-150 inset-shadow-[0_1px_0_rgba(255,255,255,0.8),0_-1px_0_rgba(15,23,42,0.06)]"
+                className="border border-primary/20 bg-white px-8 py-6 text-primary hover:bg-primary/5 transition-colors shadow-sm"
                 dotClassName="left-3.5"
               />
             </div>
@@ -80,7 +80,7 @@ export default function GlassmorphismTrustHero() {
         </div>
 
         {/* Bottom: sector marquee panel fills the full width */}
-        <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 liquid-glass relative flex w-full flex-col justify-center overflow-hidden rounded-xl border border-white/40 bg-white/55 py-4 shadow-lg backdrop-blur-md backdrop-saturate-150 inset-shadow-[0_1px_0_rgba(255,255,255,0.8),0_-1px_0_rgba(15,23,42,0.08)]">
+        <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 relative flex w-full flex-col justify-center overflow-hidden rounded-xl border border-slate-200 bg-white py-4 shadow-sm">
           <h2 className="mb-2 px-6 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground md:px-8">
             Atendemos sectores como:
           </h2>
