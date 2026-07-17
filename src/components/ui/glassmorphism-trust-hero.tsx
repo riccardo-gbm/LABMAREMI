@@ -30,9 +30,9 @@ export default function GlassmorphismTrustHero() {
         <HeroFloatingCanvas />
       </div>
 
-      <div className="relative z-20 mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-6xl flex-col gap-0 px-4 py-16 sm:px-6 md:py-20 lg:px-8">
+      <div className="relative z-20 mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-6xl flex-col gap-0 px-4 pt-32 pb-4 sm:px-6 md:pt-40 md:pb-8 lg:px-8">
         {/* Centered wordmark + CTAs */}
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 items-center justify-center pb-2 sm:pb-3 md:pb-4">
           <div className="relative flex flex-col items-center justify-center space-y-3 p-6 text-center md:p-8">
             {/* Subtle borderless background glow for text readability */}
             <div className="absolute inset-0 z-[-1] rounded-[3rem] bg-white/40 blur-2xl pointer-events-none" />
@@ -48,8 +48,8 @@ export default function GlassmorphismTrustHero() {
               >
                 <span>inmediatas</span>
                 <span>el mismo día</span>
-                <span>hasta en 48 horas</span>
-                <span>en Quito y provincias cercanas</span>
+                <span>o en 48 horas</span>
+                <span>en Quito</span>2
               </TextLoop>
             </div>
 
@@ -80,7 +80,7 @@ export default function GlassmorphismTrustHero() {
         </div>
 
         {/* Bottom: sector marquee panel fills the full width */}
-        <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 liquid-glass relative flex w-full flex-col justify-center overflow-hidden rounded-xl border border-white/40 bg-white/55 py-4 shadow-lg backdrop-blur-xl backdrop-saturate-150 inset-shadow-[0_1px_0_rgba(255,255,255,0.8),0_-1px_0_rgba(15,23,42,0.08)]">
+        <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 liquid-glass relative flex w-full flex-col justify-center overflow-hidden rounded-xl border border-white/40 bg-white/55 py-4 shadow-lg backdrop-blur-md backdrop-saturate-150 inset-shadow-[0_1px_0_rgba(255,255,255,0.8),0_-1px_0_rgba(15,23,42,0.08)]">
           <h2 className="mb-2 px-6 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground md:px-8">
             Atendemos sectores como:
           </h2>
@@ -95,10 +95,10 @@ export default function GlassmorphismTrustHero() {
             }}
           >
             <div className="labmaremi-hero-marquee flex gap-10 whitespace-nowrap px-4">
-              {[...clientSegments, ...clientSegments, ...clientSegments].map(
-                (client, index) => (
+              {[0, 1, 2].flatMap((copy) =>
+                clientSegments.map((client) => (
                   <div
-                    key={`${client.name}-${index}`}
+                    key={`${client.name}-${copy}`}
                     className="flex cursor-default items-center gap-2 text-muted-foreground transition-all hover:scale-105 hover:text-foreground"
                   >
                     <client.icon
@@ -107,7 +107,7 @@ export default function GlassmorphismTrustHero() {
                     />
                     <span className="text-lg font-bold">{client.name}</span>
                   </div>
-                )
+                ))
               )}
             </div>
           </div>
