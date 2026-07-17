@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { motion, useTransform, useSpring, useMotionValue, useScroll } from "framer-motion";
+import { m, useTransform, useSpring, useMotionValue, useScroll, useMotionValueEvent } from "framer-motion";
 
 type AnimationPhase = "scatter" | "line" | "circle";
 
@@ -13,13 +13,13 @@ const IMG_HEIGHT = 95;
 
 function FlipCard({ src, target }: FlipCardProps) {
   return (
-    <motion.div
+    <m.div
       animate={{ x: target.x, y: target.y, rotate: target.rotation, scale: target.scale, opacity: target.opacity }}
       transition={{ type: "spring", stiffness: 40, damping: 15 }}
       style={{ position: "absolute", width: IMG_WIDTH, height: IMG_HEIGHT, transformStyle: "preserve-3d" }}
       className="cursor-pointer group"
     >
-      <motion.div
+      <m.div
         className="relative h-full w-full"
         style={{ transformStyle: "preserve-3d" }}
         transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
@@ -36,8 +36,8 @@ function FlipCard({ src, target }: FlipCardProps) {
           {/* Counter-mirror so the photo reads identical to the front, not flipped */}
           <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" style={{ transform: "scaleX(-1)" }} draggable={false} />
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }
 
@@ -159,12 +159,9 @@ export default function AboutHeroMorph() {
   const [rotateValue, setRotateValue] = useState(0);
   const [parallaxValue, setParallaxValue] = useState(0);
 
-  useEffect(() => {
-    const u1 = smoothMorph.on("change", setMorphValue);
-    const u2 = smoothScrollRotate.on("change", setRotateValue);
-    const u3 = smoothMouseX.on("change", setParallaxValue);
-    return () => { u1(); u2(); u3(); };
-  }, [smoothMorph, smoothScrollRotate, smoothMouseX]);
+  useMotionValueEvent(smoothMorph, "change", setMorphValue);
+  useMotionValueEvent(smoothScrollRotate, "change", setRotateValue);
+  useMotionValueEvent(smoothMouseX, "change", setParallaxValue);
 
   const contentOpacity = useTransform(smoothMorph, [0.8, 1], [0, 1]);
   const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
@@ -183,8 +180,8 @@ export default function AboutHeroMorph() {
           con un servicio confiable.
         </p>
         <div className="mx-auto mt-10 grid max-w-4xl grid-cols-5 gap-2 sm:grid-cols-10 sm:gap-3">
-          {IMAGES.map((src, i) => (
-            <div key={i} className="aspect-[3/4] overflow-hidden rounded-xl bg-slate-200 shadow-sm">
+          {IMAGES.map((src) => (
+            <div key={src} className="aspect-[3/4] overflow-hidden rounded-xl bg-slate-200 shadow-sm">
               <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" draggable={false} />
             </div>
           ))}
@@ -198,7 +195,7 @@ export default function AboutHeroMorph() {
       <div ref={stickyRef} className="sticky top-0 h-screen w-full overflow-hidden bg-[#FAFAFA]">
         <div className="flex h-full w-full flex-col items-center justify-center">
           <div className="absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2 px-4">
-            <motion.h1
+            <m.h1
               initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
               animate={
                 introPhase === "circle" && morphValue < 0.5
@@ -209,8 +206,8 @@ export default function AboutHeroMorph() {
               className="max-w-[13rem] text-2xl font-bold tracking-tight text-slate-900 md:max-w-sm md:text-4xl"
             >
               Su satisfacción es nuestro éxito
-            </motion.h1>
-            <motion.p
+            </m.h1>
+            <m.p
               initial={{ opacity: 0 }}
               animate={
                 introPhase === "circle" && morphValue < 0.5
@@ -221,10 +218,10 @@ export default function AboutHeroMorph() {
               className="mt-4 text-xs font-bold tracking-[0.2em] text-slate-500 uppercase"
             >
               Desliza para explorar
-            </motion.p>
+            </m.p>
           </div>
 
-          <motion.div
+          <m.div
             style={{ opacity: contentOpacity, y: contentY }}
             className="absolute top-[28%] z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4 md:top-[24%]"
           >
@@ -235,7 +232,7 @@ export default function AboutHeroMorph() {
               Desde Quito, LABMAREMI abastece a restaurantes, hoteles, oficinas e instituciones
               en la ciudad y provincias cercanas con un servicio confiable.
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="relative flex items-center justify-center w-full h-full">
             {IMAGES.map((src, i) => {
@@ -291,7 +288,7 @@ export default function AboutHeroMorph() {
                 };
               }
 
-              return <FlipCard key={i} src={src} target={target} />;
+              return <FlipCard key={src} src={src} target={target} />;
             })}
           </div>
         </div>
