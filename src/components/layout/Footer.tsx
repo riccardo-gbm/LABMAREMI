@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { motion, useReducedMotion } from "framer-motion"
+import { m, useReducedMotion } from "framer-motion"
 import { TextReveal } from "@/components/ui/text-reveal"
 
 const publicLinks = [
@@ -37,7 +37,7 @@ function FooterLink({ to, label, index, baseDelay }: FooterLinkProps) {
   }
 
   return (
-    <motion.li
+    <m.li
       initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.7 }}
@@ -48,7 +48,7 @@ function FooterLink({ to, label, index, baseDelay }: FooterLinkProps) {
       }}
     >
       {content}
-    </motion.li>
+    </m.li>
   )
 }
 
@@ -63,7 +63,7 @@ function Footer() {
         <div className="grid gap-10 md:grid-cols-3">
           <div>
             <div className="flex items-center gap-2">
-              <motion.img
+              <m.img
                 src="/logo1.svg"
                 alt="LABMAREMI"
                 initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}

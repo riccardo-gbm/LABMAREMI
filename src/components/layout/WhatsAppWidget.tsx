@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 import { WHATSAPP_NUMBER } from "@/lib/contact";
 
@@ -42,7 +42,7 @@ export default function WhatsAppWidget() {
     <div ref={containerRef} className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -55,6 +55,7 @@ export default function WhatsAppWidget() {
                 <span className="text-white font-semibold text-sm">LABMAREMI</span>
               </div>
               <button
+                type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Cerrar"
                 className="text-white/80 hover:text-white text-lg leading-none"
@@ -76,11 +77,12 @@ export default function WhatsAppWidget() {
                 Iniciar chat
               </a>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
       <button
+        type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label="Abrir chat de WhatsApp"
         className="w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20bd5a] shadow-lg flex items-center justify-center transition-transform hover:scale-105"

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link, NavLink, useNavigate } from "react-router-dom"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, m } from "framer-motion"
 import { Menu, X } from "lucide-react"
 
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
@@ -54,7 +54,7 @@ function Header() {
               {({ isActive }) => (
                 <>
                   {isActive ? (
-                    <motion.span
+                    <m.span
                       layoutId="desktop-nav-active"
                       className="absolute inset-0 rounded-md bg-secondary"
                       transition={{ type: "spring", stiffness: 420, damping: 32 }}
@@ -84,46 +84,50 @@ function Header() {
 
       <AnimatePresence initial={false}>
         {mobileOpen ? (
-          <motion.nav
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
+          <m.nav
+            initial={{ gridTemplateRows: "0fr", opacity: 0 }}
+            animate={{ gridTemplateRows: "1fr", opacity: 1 }}
+            exit={{ gridTemplateRows: "0fr", opacity: 0 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="overflow-hidden border-t bg-background px-4 py-4 md:hidden"
+            className="grid border-t bg-background md:hidden"
             aria-label="Principal móvil"
           >
-            <ul className="flex flex-col gap-1">
-              {navItems.map((item, index) => (
-                <motion.li
-                  key={item.to}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2, delay: index * 0.04 }}
-                >
-                  <NavLink
-                    to={item.to}
-                    end={item.to === "/"}
-                    onClick={() => setMobileOpen(false)}
-                    className={({ isActive }) =>
-                      cn(
-                        "block rounded-md px-3 py-2 text-sm font-medium",
-                        isActive
-                          ? "bg-secondary text-secondary-foreground"
-                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                      )
-                    }
+            {/* Inner track collapses via the grid row (0fr↔1fr) — a transform-free
+                reveal of unknown height that never animates the `height` property. */}
+            <div className="min-h-0 overflow-hidden px-4 py-4">
+              <ul className="flex flex-col gap-1">
+                {navItems.map((item, index) => (
+                  <m.li
+                    key={item.to}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, delay: index * 0.04 }}
                   >
-                    {item.label}
-                  </NavLink>
-                </motion.li>
-              ))}
-            </ul>
-            <InteractiveHoverButton
-              text="Solicitar cotización"
-              className="mt-3 w-full"
-              onClick={goToQuote}
-            />
-          </motion.nav>
+                    <NavLink
+                      to={item.to}
+                      end={item.to === "/"}
+                      onClick={() => setMobileOpen(false)}
+                      className={({ isActive }) =>
+                        cn(
+                          "block rounded-md px-3 py-2 text-sm font-medium",
+                          isActive
+                            ? "bg-secondary text-secondary-foreground"
+                            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                        )
+                      }
+                    >
+                      {item.label}
+                    </NavLink>
+                  </m.li>
+                ))}
+              </ul>
+              <InteractiveHoverButton
+                text="Solicitar cotización"
+                className="mt-3 w-full"
+                onClick={goToQuote}
+              />
+            </div>
+          </m.nav>
         ) : null}
       </AnimatePresence>
     </header>
