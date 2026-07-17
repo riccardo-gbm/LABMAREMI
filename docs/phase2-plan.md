@@ -42,7 +42,7 @@ Update the About Us page (/nosotros) in two ways. Don't touch the M9 scroll-morp
 
 Style this using the existing shared primitives (Card, Section) — don't invent a new visual pattern for this one section.
 
-**2. Simplify the team photos in the M5 section only.** Replace the current individual avatar-placeholder grid with exactly two photo blocks:
+**2. Simplify the team photos in the M5 section only.** Replace the current individual avatar-placeholder grid with exactly three photo blocks:
 - One labeled for the board/leadership photo ("Junta directiva" or similar)
 - One labeled for a general team group photo ("Nuestro equipo" or similar)
 
