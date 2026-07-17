@@ -41,7 +41,7 @@ export default function GlassmorphismTrustHero() {
             <div className="labmaremi-hero-fade-in labmaremi-hero-delay-100 flex flex-wrap items-baseline justify-center gap-x-1.5 text-base font-semibold text-foreground/80 sm:text-lg md:text-xl">
               Entregas
               <TextLoop
-                className="text-primary"
+                className="w-[130px] text-left font-bold text-black sm:w-[150px] md:w-[170px]"
                 interval={2.5}
                 transition={{ duration: 0.4, ease: "easeInOut" }}
                 trigger={!reduceMotion}
@@ -49,7 +49,7 @@ export default function GlassmorphismTrustHero() {
                 <span>inmediatas</span>
                 <span>el mismo día</span>
                 <span>o en 48 horas</span>
-                <span>en Quito</span>2
+                <span>en Quito</span>
               </TextLoop>
             </div>
 
