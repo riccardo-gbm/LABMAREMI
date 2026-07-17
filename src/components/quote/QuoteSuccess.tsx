@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"
+import { m } from "framer-motion"
 import { CheckCircle2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -24,31 +24,31 @@ function QuoteSuccess({
   onReset,
 }: QuoteSuccessProps) {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
     >
       <Card className="flex flex-col items-center px-6 py-14 text-center">
-        <motion.span
+        <m.span
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.32, ease: "easeOut", delay: 0.08 }}
           className="flex h-14 w-14 items-center justify-center rounded-full bg-secondary text-primary"
         >
           <CheckCircle2 className="h-7 w-7" aria-hidden="true" />
-        </motion.span>
+        </m.span>
 
-        <motion.h2
+        <m.h2
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut", delay: 0.16 }}
           className="mt-6 font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl"
         >
           Solicitud enviada
-        </motion.h2>
+        </m.h2>
 
-        <motion.p
+        <m.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut", delay: 0.22 }}
@@ -61,9 +61,9 @@ function QuoteSuccess({
             : `${productCount} productos de interés`}
           . Nuestro equipo comercial se pondrá en contacto a la brevedad para
           conversar sobre precios y disponibilidad.
-        </motion.p>
+        </m.p>
 
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut", delay: 0.3 }}
@@ -73,13 +73,13 @@ function QuoteSuccess({
           <p className="mt-1.5 font-mono text-lg tracking-widest text-foreground">
             {referenceCode}
           </p>
-        </motion.div>
+        </m.div>
 
         <Button variant="outline" className="mt-8" onClick={onReset}>
           Enviar otra solicitud
         </Button>
       </Card>
-    </motion.div>
+    </m.div>
   )
 }
 

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, m } from "framer-motion"
 import { Search, X } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
@@ -24,27 +24,31 @@ interface ProductPickerProps {
 function ProductPicker({ value, onChange, errorId }: ProductPickerProps) {
   const [query, setQuery] = useState("")
 
+  // Set for O(1) membership checks — the selection is read once per rendered
+  // chip, which would otherwise re-scan the array for every product.
+  const selectedIds = useMemo(() => new Set(value), [value])
+
   const selectedProducts = useMemo(
     () => value.map((id) => getProductById(id)).filter((p) => p !== undefined),
     [value]
   )
 
-  const groupedFiltered = useMemo(
-    () =>
-      categories
-        .map((category) => ({
-          category,
-          items: products.filter(
-            (product) =>
-              product.categoryId === category.id && matchesQuery(product, query)
-          ),
-        }))
-        .filter((group) => group.items.length > 0),
-    [query]
-  )
+  const groupedFiltered = useMemo(() => {
+    // Single pass over categories: build each group's items and keep only the
+    // non-empty groups, instead of a separate .map().filter() chain.
+    const groups: { category: (typeof categories)[number]; items: typeof products }[] = []
+    for (const category of categories) {
+      const items = products.filter(
+        (product) =>
+          product.categoryId === category.id && matchesQuery(product, query)
+      )
+      if (items.length > 0) groups.push({ category, items })
+    }
+    return groups
+  }, [query])
 
   const toggle = (productId: string) => {
-    if (value.includes(productId)) {
+    if (selectedIds.has(productId)) {
       onChange(value.filter((id) => id !== productId))
     } else {
       onChange([...value, productId])
@@ -57,7 +61,7 @@ function ProductPicker({ value, onChange, errorId }: ProductPickerProps) {
         <ul className="mb-3 flex flex-wrap gap-2">
           <AnimatePresence initial={false}>
           {selectedProducts.map((product) => (
-            <motion.li
+            <m.li
               key={product.id}
               layout
               initial={{ opacity: 0, y: 8, scale: 0.96 }}
@@ -75,7 +79,7 @@ function ProductPicker({ value, onChange, errorId }: ProductPickerProps) {
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
-            </motion.li>
+            </m.li>
           ))}
           </AnimatePresence>
         </ul>
@@ -115,7 +119,7 @@ function ProductPicker({ value, onChange, errorId }: ProductPickerProps) {
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {items.map((product) => {
-                    const isSelected = value.includes(product.id)
+                    const isSelected = selectedIds.has(product.id)
                     return (
                       <button
                         key={product.id}

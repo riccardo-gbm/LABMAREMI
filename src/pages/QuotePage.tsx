@@ -1,9 +1,7 @@
-import { type FormEvent, useId, useMemo, useRef, useState } from "react"
+import { type FormEvent, useId, useMemo, useReducer, useRef, useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import { AnimatePresence, motion } from "framer-motion"
-import { CheckCircle2, Clock, FileText, PackageCheck } from "lucide-react"
+import { AnimatePresence, m } from "framer-motion"
 
-import { Badge } from "@/components/ui/badge"
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
@@ -16,8 +14,9 @@ import { Select } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { ProductPicker } from "@/components/quote/ProductPicker"
 import { QuoteSuccess } from "@/components/quote/QuoteSuccess"
+import { QuoteSummaryAside } from "@/components/quote/QuoteSummaryAside"
 import { businessTypes } from "@/data/businessTypes"
-import { getProductById, getProductCode } from "@/lib/catalog"
+import { getProductById } from "@/lib/catalog"
 
 const PRODUCTS_PARAM = "productos"
 
@@ -35,20 +34,65 @@ function parseInitialProducts(raw: string | null): string[] {
     .filter((id) => getProductById(id) !== undefined)
 }
 
+interface QuoteFormState {
+  companyName: string
+  contactPerson: string
+  phone: string
+  email: string
+  businessTypeId: string
+  location: string
+  productsOfInterest: string[]
+  message: string
+}
+
+// These text fields always move together as one "quote form" unit, so a single
+// reducer keeps the transitions (edit a field / set products / reset) in one
+// place instead of ten scattered setState calls.
+type QuoteTextField = Exclude<keyof QuoteFormState, "productsOfInterest">
+
+type QuoteFormAction =
+  | { type: "setField"; field: QuoteTextField; value: string }
+  | { type: "setProducts"; value: string[] }
+  | { type: "reset" }
+
+function createInitialFormState(rawProducts: string | null): QuoteFormState {
+  return {
+    companyName: "",
+    contactPerson: "",
+    phone: "",
+    email: "",
+    businessTypeId: "",
+    location: "",
+    productsOfInterest: parseInitialProducts(rawProducts),
+    message: "",
+  }
+}
+
+function quoteFormReducer(
+  state: QuoteFormState,
+  action: QuoteFormAction
+): QuoteFormState {
+  switch (action.type) {
+    case "setField":
+      return { ...state, [action.field]: action.value }
+    case "setProducts":
+      return { ...state, productsOfInterest: action.value }
+    case "reset":
+      return createInitialFormState(null)
+    default:
+      return state
+  }
+}
+
 export default function QuotePage() {
   const [searchParams] = useSearchParams()
   const productsErrorId = useId()
 
-  const [companyName, setCompanyName] = useState("")
-  const [contactPerson, setContactPerson] = useState("")
-  const [phone, setPhone] = useState("")
-  const [email, setEmail] = useState("")
-  const [businessTypeId, setBusinessTypeId] = useState("")
-  const [location, setLocation] = useState("")
-  const [productsOfInterest, setProductsOfInterest] = useState<string[]>(() =>
-    parseInitialProducts(searchParams.get(PRODUCTS_PARAM))
+  const [form, dispatch] = useReducer(
+    quoteFormReducer,
+    searchParams.get(PRODUCTS_PARAM),
+    createInitialFormState
   )
-  const [message, setMessage] = useState("")
 
   const [productsError, setProductsError] = useState(false)
   const productsPickerRef = useRef<HTMLDivElement>(null)
@@ -60,27 +104,24 @@ export default function QuotePage() {
   } | null>(null)
 
   const productSummary = useMemo(
-    () => productsOfInterest.length,
-    [productsOfInterest]
+    () => form.productsOfInterest.length,
+    [form.productsOfInterest]
   )
 
   const selectedProducts = useMemo(
     () =>
-      productsOfInterest
+      form.productsOfInterest
         .map((productId) => getProductById(productId))
         .filter((product) => product !== undefined),
-    [productsOfInterest]
+    [form.productsOfInterest]
   )
 
+  const setField = (field: QuoteTextField) => (
+    event: { target: { value: string } }
+  ) => dispatch({ type: "setField", field, value: event.target.value })
+
   const resetForm = () => {
-    setCompanyName("")
-    setContactPerson("")
-    setPhone("")
-    setEmail("")
-    setBusinessTypeId("")
-    setLocation("")
-    setProductsOfInterest([])
-    setMessage("")
+    dispatch({ type: "reset" })
     setProductsError(false)
     setSubmission(null)
   }
@@ -96,7 +137,7 @@ export default function QuotePage() {
       return
     }
 
-    if (productsOfInterest.length === 0) {
+    if (form.productsOfInterest.length === 0) {
       setProductsError(true)
       productsPickerRef.current?.scrollIntoView({
         behavior: "smooth",
@@ -106,7 +147,7 @@ export default function QuotePage() {
     }
 
     setSubmission({
-      companyName,
+      companyName: form.companyName,
       productCount: productSummary,
       referenceCode: generateReferenceCode(),
     })
@@ -156,8 +197,8 @@ export default function QuotePage() {
                   id="companyName"
                   name="companyName"
                   required
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
+                  value={form.companyName}
+                  onChange={setField("companyName")}
                   placeholder="Ej. Restaurante Sabor Andino"
                 />
               </div>
@@ -167,8 +208,8 @@ export default function QuotePage() {
                   id="contactPerson"
                   name="contactPerson"
                   required
-                  value={contactPerson}
-                  onChange={(e) => setContactPerson(e.target.value)}
+                  value={form.contactPerson}
+                  onChange={setField("contactPerson")}
                   placeholder="Nombre de quien solicita"
                 />
               </div>
@@ -181,8 +222,8 @@ export default function QuotePage() {
                   required
                   pattern="^\+?[0-9\s]{7,15}$"
                   title="Ingrese un número de teléfono válido, ej. +593 99 123 4567"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={form.phone}
+                  onChange={setField("phone")}
                   placeholder="+593 99 123 4567"
                 />
               </div>
@@ -193,8 +234,8 @@ export default function QuotePage() {
                   name="email"
                   type="email"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={form.email}
+                  onChange={setField("email")}
                   placeholder="empresa@correo.com"
                 />
               </div>
@@ -204,8 +245,8 @@ export default function QuotePage() {
                   id="businessTypeId"
                   name="businessTypeId"
                   required
-                  value={businessTypeId}
-                  onChange={(e) => setBusinessTypeId(e.target.value)}
+                  value={form.businessTypeId}
+                  onChange={setField("businessTypeId")}
                 >
                   <option value="" disabled>
                     Seleccione una opción
@@ -223,8 +264,8 @@ export default function QuotePage() {
                   id="location"
                   name="location"
                   required
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  value={form.location}
+                  onChange={setField("location")}
                   placeholder="Ej. Cumbayá, Quito"
                 />
               </div>
@@ -238,16 +279,16 @@ export default function QuotePage() {
                   Productos de interés *
                 </Label>
                 <ProductPicker
-                  value={productsOfInterest}
+                  value={form.productsOfInterest}
                   onChange={(next) => {
-                    setProductsOfInterest(next)
+                    dispatch({ type: "setProducts", value: next })
                     if (next.length > 0) setProductsError(false)
                   }}
                   errorId={productsError ? productsErrorId : undefined}
                 />
                 <AnimatePresence>
                 {productsError ? (
-                  <motion.p
+                  <m.p
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
@@ -257,7 +298,7 @@ export default function QuotePage() {
                     className="text-sm font-medium text-destructive"
                   >
                     Seleccione al menos un producto de interés.
-                  </motion.p>
+                  </m.p>
                 ) : null}
                 </AnimatePresence>
               </div>
@@ -267,8 +308,8 @@ export default function QuotePage() {
                 <Textarea
                   id="message"
                   name="message"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  value={form.message}
+                  onChange={setField("message")}
                   placeholder="Cuéntenos cualquier detalle adicional sobre su pedido (cantidades, frecuencia, plazos)…"
                 />
               </div>
@@ -287,80 +328,10 @@ export default function QuotePage() {
           </Card>
           </Reveal>
 
-          <Reveal direction="left" delay={0.08} className="space-y-4 lg:sticky lg:top-24">
-          <aside className="space-y-4">
-            <Card className="overflow-hidden">
-              <div className="border-b bg-secondary/50 px-5 py-4">
-                <Eyebrow>Resumen de solicitud</Eyebrow>
-                <p className="mt-2 font-display text-xl font-bold tracking-tight text-foreground">
-                  {productSummary === 0
-                    ? "Seleccione productos para cotizar"
-                    : `${productSummary} ${productSummary === 1 ? "producto seleccionado" : "productos seleccionados"}`}
-                </p>
-              </div>
-
-              <div className="p-5">
-                {selectedProducts.length > 0 ? (
-                  <ul className="space-y-3">
-                    <AnimatePresence initial={false}>
-                    {selectedProducts.map((product) => (
-                      <motion.li
-                        key={product.id}
-                        layout
-                        initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                        transition={{ duration: 0.22, ease: "easeOut" }}
-                        className="rounded-lg border p-3"
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <p className="text-sm font-semibold leading-snug text-foreground">
-                            {product.name}
-                          </p>
-                          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ring">
-                            {getProductCode(product)}
-                          </span>
-                        </div>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          {product.presentation}
-                        </p>
-                      </motion.li>
-                    ))}
-                    </AnimatePresence>
-                  </ul>
-                ) : (
-                  <div className="rounded-lg border border-dashed p-5 text-center">
-                    <PackageCheck className="mx-auto h-7 w-7 text-primary" />
-                    <p className="mt-3 text-sm text-muted-foreground">
-                      Los productos que marque aparecerán aquí antes de enviar la solicitud.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </Card>
-
-            <Card className="p-5">
-              <Eyebrow>Qué ocurre después</Eyebrow>
-              <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-                <li className="flex gap-3">
-                  <Clock className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  Revisamos productos, presentación y sector de entrega.
-                </li>
-                <li className="flex gap-3">
-                  <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  Preparamos una cotización formal para su negocio.
-                </li>
-                <li className="flex gap-3">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  Coordinamos seguimiento por WhatsApp o correo.
-                </li>
-              </ul>
-              <Badge variant="secondary" className="mt-5">
-                Demo Fase 1 · sin persistencia real
-              </Badge>
-            </Card>
-          </aside>
-          </Reveal>
+          <QuoteSummaryAside
+            productSummary={productSummary}
+            selectedProducts={selectedProducts}
+          />
         </form>
       </Section>
     </>
