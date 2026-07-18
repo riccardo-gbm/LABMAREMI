@@ -34,22 +34,21 @@ export default function GlassmorphismTrustHero() {
         {/* Centered wordmark + CTAs */}
         <div className="flex flex-1 items-center justify-center pb-2 sm:pb-3 md:pb-4">
           <div className="relative flex flex-col items-center justify-center space-y-3 p-6 text-center md:p-8">
-            {/* Subtle borderless background glow for text readability */}
-            <div className="absolute inset-0 z-[-1] rounded-[3rem] bg-white/40 blur-2xl pointer-events-none" />
+
 
             {/* div, not p: TextLoop renders block-level divs, invalid inside <p> */}
             <div className="labmaremi-hero-fade-in labmaremi-hero-delay-100 flex flex-wrap items-baseline justify-center gap-x-1.5 text-base font-semibold text-foreground/80 sm:text-lg md:text-xl">
               Entregas
               <TextLoop
-                className="w-[130px] text-left font-bold text-black sm:w-[150px] md:w-[170px]"
+                className="w-[130px] text-right font-bold text-black sm:w-[150px] md:w-[170px]"
                 interval={2.5}
                 transition={{ duration: 0.4, ease: "easeInOut" }}
                 trigger={!reduceMotion}
               >
                 <span>inmediatas</span>
                 <span>el mismo día</span>
-                <span>o en 48 horas</span>
                 <span>en Quito</span>
+                <span>y provincias cercanas</span>
               </TextLoop>
             </div>
 
@@ -81,7 +80,7 @@ export default function GlassmorphismTrustHero() {
 
         {/* Bottom: sector marquee panel fills the full width */}
         <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 relative flex w-full flex-col justify-center overflow-hidden rounded-xl border border-slate-200 bg-white py-4 shadow-sm">
-          <h2 className="mb-2 px-6 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground md:px-8">
+          <h2 className="mb-2 px-6 text-[15px] font-semibold tracking-wider text-muted-foreground md:px-8">
             Atendemos sectores como:
           </h2>
 

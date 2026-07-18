@@ -12,30 +12,34 @@ const clamp = (value: number, min: number, max: number) => Math.min(max, Math.ma
 
 const TWO_PI = Math.PI;
 
-// Exactly 9 clouds around the wordmark: the 5 local product illustrations plus
+// Exactly 12 clouds around the wordmark: the 5 local product illustrations plus
 // 4 verified Unsplash stock photos (cleaning/protection subjects) sized small
 // via "?q=80&w=500". Swap in real LABMAREMI product photos later; only this
 // array needs to change. Odd indices are hidden on mobile so the 5 that remain
 // stay evenly spread around the ring.
 const images = [
   // Blue nitrile gloves forming a heart
-  { src: "/photo1.svg", shape: "rounded-full", size: "w-[75px] h-[75px] md:w-[105px] md:h-[105px]", rotate: -4 },
+  { src: "/photo1.svg", shape: "rectangular", size: "w-[75px] h-[75px] md:w-[105px] md:h-[105px]", rotate: -4 },
   // Amber "kitchen/bathroom cleaner" spray bottles with brush
-  { src: "/photo2.svg", shape: "rounded-full", size: "w-[85px] h-[85px] md:w-[120px] md:h-[120px]", rotate: 5 },
+  { src: "/photo2.svg", shape: "rectangular", size: "w-[85px] h-[85px] md:w-[120px] md:h-[120px]", rotate: 5 },
   // Rubber glove holding a yellow spray bottle
-  { src: "/photo3.svg", shape: "rounded-full", size: "w-[75px] h-[75px] md:w-[100px] md:h-[100px]", rotate: -5 },
+  { src: "/photo3.svg", shape: "rectangular", size: "w-[75px] h-[75px] md:w-[100px] md:h-[100px]", rotate: -5 },
   // Gloved hands disinfecting a surface with spray + paper towel
-  { src: "/photo4.svg", shape: "rounded-full", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: 4 },
+  { src: "/photo4.svg", shape: "rectangular", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: 4 },
   // Putting on blue nitrile gloves
-  { src: "/photo5.svg", shape: "rounded-full", size: "w-[75px] h-[75px] md:w-[105px] md:h-[105px]", rotate: 3 },
+  { src: "/photo5.svg", shape: "rectangular", size: "w-[75px] h-[75px] md:w-[105px] md:h-[105px]", rotate: 3 },
   // Natural cleaner spray bottle with lemons
-  { src: "https://images.unsplash.com/photo-1583907659441-addbe699e921?q=80&w=500", shape: "rounded-full", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: -3 },
+  { src: "/photo6.svg", shape: "rectangular", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: -3 },
   // Hand sanitizer bottle with face mask
-  { src: "https://images.unsplash.com/photo-1584744982491-665216d95f8b?q=80&w=500", shape: "rounded-full", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: 6 },
+  { src: "/photo7.svg", shape: "rectangular", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: 6 },
   // Worker with mask, goggles and gloves cleaning window shutters
-  { src: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=500", shape: "rounded-full", size: "w-[75px] h-[75px] md:w-[105px] md:h-[105px]", rotate: -6 },
+  { src: "/photo8.svg", shape: "rectangular", size: "w-[75px] h-[75px] md:w-[105px] md:h-[105px]", rotate: -6 },
   // Blue glass-cleaner spray bottle with paper towel roll
-  { src: "https://images.unsplash.com/photo-1550963295-019d8a8a61c5?q=80&w=500", shape: "rounded-full", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: 4 },
+  { src: "/photo9.svg", shape: "rectangular", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: 4 },
+  // Additional photo
+  { src: "/photo10.svg", shape: "rectangular", size: "w-[75px] h-[75px] md:w-[105px] md:h-[105px]", rotate: 2 },
+  { src: "/photo11.svg", shape: "rectangular", size: "w-[80px] h-[80px] md:w-[110px] md:h-[110px]", rotate: -3 },
+  { src: "/photo12.svg", shape: "rectangular", size: "w-[85px] h-[85px] md:w-[115px] md:h-[115px]", rotate: 5 },
 ];
 
 interface FloatingCloudProps {
@@ -87,7 +91,7 @@ function FloatingCloud({ img, index, parallaxX, parallaxY, staticOnly, position 
 
   return (
     <m.div
-      className={`absolute overflow-hidden border border-white/60 bg-white/40 shadow-[0_15px_40px_rgba(0,0,0,0.08)] ${img.shape} ${img.size} ${index % 2 === 1 ? "hidden md:block" : ""}`}
+      className={`absolute overflow-hidden ${img.shape} ${img.size} ${index % 2 === 1 ? "hidden md:block" : ""}`}
       style={{ ...position, x, y, rotate }}
     >
       <img src={img.src} alt="" loading="lazy" className="w-full h-full object-cover" draggable={false} />
@@ -136,8 +140,8 @@ export default function HeroFloatingCanvas() {
     const ryEff = ry;
 
     // The angles to distribute (from 26.67 to -186.69 degrees)
-    const thetaStart = 20 * Math.PI / 180;
-    const thetaEnd = -200 * Math.PI / 180;
+    const thetaStart = 40 * Math.PI / 180;
+    const thetaEnd = -220 * Math.PI / 180;
 
     // Numerical integration of arc length on the scaled ellipse
     const N = 300;
@@ -239,7 +243,7 @@ export default function HeroFloatingCanvas() {
       />
 
       {/* Floating product imagery */}
-      <div className="absolute inset-0 z-10">
+      <div className="absolute inset-0 z-20">
         {images.map((img, i) => (
           <FloatingCloud
             key={img.src}

@@ -38,29 +38,29 @@ import { categories } from "@/data/categories"
 import { businessTypes } from "@/data/businessTypes"
 
 const reasons = [
+    {
+    icon: Truck,
+    title: "Entregas inmediatas",
+    description:
+      "Coordinamos entregas el mismo día o hasta 48 horas a Quito y provincias cercanas.",
+  },
   {
     icon: PackageCheck,
-    title: "Continuidad de stock",
+    title: "Continuidad de inventario",
     description:
-      "Planificamos reposición para productos críticos como papel, desinfectantes, guantes y químicos de uso diario.",
+      "Planificamos reposición para productos como papel, desinfectantes, guantes y químicos de uso diario.",
   },
   {
     icon: Boxes,
-    title: "Catálogo concentrado",
+    title: "Catálogo completo",
     description:
-      "Agrupamos limpieza, higiene, protección y consumibles para reducir compras dispersas entre varios proveedores.",
+      "Agrupamos limpieza, higiene, protección y consumibles para reducir compras dispersas entre varios proveedores",
   },
   {
     icon: Handshake,
-    title: "Atención B2B",
+    title: "Atención personalizada",
     description:
       "Acompañamos pedidos recurrentes con asesoría por tipo de negocio, presentación y frecuencia de consumo.",
-  },
-  {
-    icon: Truck,
-    title: "Cobertura operativa",
-    description:
-      "Coordinamos entregas en Quito y sectores cercanos para negocios que necesitan abastecimiento sin interrupciones.",
   },
 ]
 

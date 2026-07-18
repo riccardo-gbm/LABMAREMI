@@ -24,3 +24,4 @@ npm-debug.log*
 # Local env files
 *.local
 .claude
+graphify-out
