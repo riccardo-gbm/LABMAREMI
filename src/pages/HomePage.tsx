@@ -67,15 +67,15 @@ const reasons = [
 const procurementTiles = [
   {
     icon: Boxes,
-    title: "Producto en percha",
-    label: "Catálogo",
+    title: "Producto en inventario",
+    label: "Disponibilidad",
     imageUrl:
       "https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?q=80&w=900&auto=format&fit=crop",
     imageAlt: "Productos de limpieza organizados para abastecimiento",
   },
   {
     icon: Route,
-    title: "Entrega coordinada",
+    title: "Entrega inmediata",
     label: "Logística",
     imageUrl:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=900&auto=format&fit=crop",
@@ -83,8 +83,8 @@ const procurementTiles = [
   },
   {
     icon: ClipboardCheck,
-    title: "Reposición recurrente",
-    label: "Seguimiento",
+    title: "Cotización personalizada",
+    label: "Servicio",
     imageUrl:
       "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=900&auto=format&fit=crop",
     imageAlt: "Guantes y protección para equipos operativos",
@@ -100,14 +100,13 @@ export default function HomePage() {
       <Section id="abastecimiento" className="bg-background">
         <Reveal className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:items-end">
           <div>
-            <Eyebrow>Abastecimiento empresarial</Eyebrow>
-            <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              Una compra más ordenada para negocios que operan todos los días
+            <Eyebrow>¿Quiénes somos?</Eyebrow>
+            <h2 className="mt-4 font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+              LABMAREMI es un distribuidor de productos de limpieza, protección e higiene para tu negocio
             </h2>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-              LABMAREMI ayuda a centralizar productos de limpieza, protección e
-              higiene en un flujo simple: catálogo claro, cotización directa y
-              seguimiento comercial.
+              Nuestro catálogo centraliza todos los productos que necesitas con cotización directa y
+              seguimiento personalizado.
             </p>
           </div>
           <RevealGroup className="grid gap-4 sm:grid-cols-3" stagger={0.07}>
@@ -133,9 +132,9 @@ export default function HomePage() {
       {/* Why choose us */}
       <Section id="por-que-labmaremi" className="border-y bg-secondary/40">
         <Reveal>
-          <Eyebrow>Por qué LABMAREMI</Eyebrow>
-          <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Criterios de compra que importan en una operación real
+          <Eyebrow>¿Por qué LABMAREMI?</Eyebrow>
+          <h2 className="mt-4 max-w-full font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            Trabajar con nosotros le da estos beneficios: 
           </h2>
         </Reveal>
         <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
