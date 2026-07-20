@@ -1,11 +1,18 @@
 import {
+  BadgeCheck,
   Camera,
+  Eye,
+  Handshake,
+  MapPin,
   Rocket,
+  ShieldCheck,
   Store,
+  Target,
   Truck,
   UserRound,
   Users,
   Warehouse,
+  type LucideIcon,
 } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
@@ -54,6 +61,39 @@ const timelineEntries: TimelineEntry[] = [
   },
 ]
 
+interface ValueItem {
+  title: string
+  description: string
+  icon: LucideIcon
+}
+
+const values: ValueItem[] = [
+  {
+    title: "Confiabilidad",
+    description:
+      "Cumplimos lo que prometemos, en cada entrega y en cada plazo acordado.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Calidad",
+    description:
+      "Ofrecemos productos que cumplen los más altos estándares de higiene.",
+    icon: BadgeCheck,
+  },
+  {
+    title: "Compromiso",
+    description:
+      "Acompañamos a cada cliente como si su negocio fuera el nuestro.",
+    icon: Handshake,
+  },
+  {
+    title: "Cercanía",
+    description:
+      "Atendemos de forma directa y personal a los negocios de Quito y Ecuador.",
+    icon: MapPin,
+  },
+]
+
 interface TeamPerson {
   name: string
   role: string
@@ -68,21 +108,6 @@ const owners: TeamPerson[] = [
   },
   {
     name: "Juan Carlos Cango",
-    role: "Función",
-  },
-]
-
-const teamMembers: TeamPerson[] = [
-  {
-    name: "Empleado",
-    role: "Función",
-  },
-  {
-    name: "Empleado",
-    role: "Función",
-  },
-  {
-    name: "Empleado",
     role: "Función",
   },
 ]
@@ -140,6 +165,72 @@ export default function AboutPage() {
         </Reveal>
       </Section>
 
+      <Section>
+        <Reveal>
+          <Eyebrow>Misión, visión y valores</Eyebrow>
+          <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            Lo que nos mueve
+          </h2>
+        </Reveal>
+
+        <RevealGroup className="mt-10 grid gap-6 md:grid-cols-2">
+          <RevealItem>
+            <Card className="h-full p-6">
+              <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+                <Target className="h-6 w-6" aria-hidden="true" />
+              </span>
+              <p className="mt-5 font-mono text-xs uppercase tracking-[0.16em] text-primary">
+                Misión
+              </p>
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+                Proveer a las empresas de Quito y Ecuador productos de limpieza,
+                desinfección e higiene de calidad, con un servicio confiable y
+                oportuno que les permita mantener los más altos estándares de
+                higiene para sus clientes y colaboradores.
+              </p>
+            </Card>
+          </RevealItem>
+          <RevealItem>
+            <Card className="h-full p-6">
+              <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+                <Eye className="h-6 w-6" aria-hidden="true" />
+              </span>
+              <p className="mt-5 font-mono text-xs uppercase tracking-[0.16em] text-primary">
+                Visión
+              </p>
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+                Ser el distribuidor de productos de limpieza e higiene de mayor
+                confianza para las empresas ecuatorianas, reconocido por nuestra
+                calidad, cercanía y compromiso con cada cliente.
+              </p>
+            </Card>
+          </RevealItem>
+        </RevealGroup>
+
+        <Reveal className="mt-10" delay={0.05}>
+          <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+            Nuestros valores
+          </p>
+        </Reveal>
+        <RevealGroup className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {values.map((value) => (
+            <RevealItem key={value.title}>
+              <Card className="h-full p-5">
+                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-secondary text-primary">
+                  <value.icon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <p className="mt-4 font-display text-lg font-semibold tracking-tight text-foreground">
+                  {value.title}
+                </p>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                  {value.description}
+                </p>
+              </Card>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </Section>
+
       <Section className="border-y bg-secondary/40">
         <Reveal className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:items-start">
           <div>
@@ -187,19 +278,18 @@ export default function AboutPage() {
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Equipo operativo
           </p>
-          <RevealGroup className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {teamMembers.map((person) => (
-              <RevealItem key={person.name}>
-                <TeamCard person={person} />
-              </RevealItem>
-            ))}
-          </RevealGroup>
+          <MediaFrame
+            fallbackLabel="Foto próximamente"
+            fallbackIcon={Users}
+            badge="Equipo"
+            className="mt-4 aspect-[16/9]"
+          />
         </Reveal>
 
         <Reveal>
         <p className="mt-8 text-xs text-muted-foreground">
           Las imágenes de equipo son espacios temporales hasta cargar fotos
-          reales de propietarios y colaboradores.
+          reales de la dirección y del equipo de trabajo.
         </p>
         </Reveal>
       </Section>
