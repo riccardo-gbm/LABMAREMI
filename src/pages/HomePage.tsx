@@ -158,7 +158,7 @@ export default function HomePage() {
       <Section id="categorias" className="bg-background">
         <Reveal className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <Eyebrow>Catálogo / Categorías</Eyebrow>
+
             <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
               Todo lo que su negocio necesita para mantenerse limpio
             </h2>
@@ -175,7 +175,6 @@ export default function HomePage() {
         <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => {
             const Icon = getCategoryIcon(category.id)
-            const code = getCategoryCode(category.id)
             return (
               <RevealItem key={category.id} className="flex">
               <Link
@@ -187,7 +186,6 @@ export default function HomePage() {
                   alt={category.imageAlt ?? category.name}
                   fallbackLabel={category.name}
                   fallbackIcon={Icon}
-                  badge={code}
                   className="aspect-[16/10] rounded-b-none border-0 border-b"
                 />
                 <div className="flex flex-1 flex-col p-5">
@@ -212,7 +210,6 @@ export default function HomePage() {
       {/* Business customer types */}
       <Section id="sectores" className="bg-background">
         <Reveal>
-        <Eyebrow>Sectores que atendemos</Eyebrow>
         <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
           Diseñado para su tipo de negocio
         </h2>
