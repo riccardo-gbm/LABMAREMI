@@ -99,14 +99,13 @@ export default function HomePage() {
       {/* Image-led procurement band */}
       <Section id="abastecimiento" className="bg-background">
         <Reveal className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:items-end">
-          <div>
-            <Eyebrow>¿Quiénes somos?</Eyebrow>
-            <h2 className="mt-4 font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-              LABMAREMI es un distribuidor de productos de limpieza, protección e higiene para tu negocio
+          <div className="flex h-full flex-col justify-center">
+            <h2 className="mt-4 font-display text-xl font-bold tracking-tight text-foreground md:text-4xl">
+              ¿Quienes somos?
             </h2>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-              Nuestro catálogo centraliza todos los productos que necesitas con cotización directa y
-              seguimiento personalizado.
+              LABMAREMI es un distribuidor que centraliza todos los productos de limpieza, protección e higiene para tu negocio. Ofrecemos cotización directa personalizada, entregas inmediatas y
+              seguimiento periódico.
             </p>
           </div>
           <RevealGroup className="grid gap-4 sm:grid-cols-3" stagger={0.07}>
@@ -132,9 +131,8 @@ export default function HomePage() {
       {/* Why choose us */}
       <Section id="por-que-labmaremi" className="border-y bg-secondary/40">
         <Reveal>
-          <Eyebrow>¿Por qué LABMAREMI?</Eyebrow>
           <h2 className="mt-4 max-w-full font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Trabajar con nosotros le da estos beneficios: 
+            Trabajar con nosotros le da estos beneficios a su negocio : 
           </h2>
         </Reveal>
         <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
