@@ -42,9 +42,12 @@ Update the About Us page (/nosotros) in two ways. Don't touch the M9 scroll-morp
 
 Style this using the existing shared primitives (Card, Section) — don't invent a new visual pattern for this one section.
 
-**2. Simplify the team photos in the M5 section only.** Replace the current individual avatar-placeholder grid with exactly three photo blocks:
-- One labeled for the board/leadership photo ("Junta directiva" or similar)
-- One labeled for a general team group photo ("Nuestro equipo" or similar)
+**2. Simplify the team photos in the M5 section only.** 
+
+We will replace the rest of the photo team with a big photo of all the working crew, just one photo, no description at all.
+
+- Keep the part that says DIEGO CANGO and JUAN CARLOS CANGO
+- We will put a team photo as the rest of the team
 
 Real photos aren't ready yet, so use styled placeholder blocks (not stock photos of random people) — same principle as the original M5 instruction: these represent specific real people, so a generic stock photo pretending to be them would be misleading. A simple bordered box with an icon and a caption like "Foto próximamente" is enough for now.
 
