@@ -245,7 +245,6 @@ export default function HomePage() {
       <Section id="cobertura" className="border-y bg-secondary/40">
         <Reveal className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
-            <Eyebrow>Cobertura / Quito-EC</Eyebrow>
             <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
               Presencia en Quito y provincias cercanas
             </h2>
@@ -283,9 +282,6 @@ export default function HomePage() {
       <Section id="contacto-cta" className="bg-primary text-primary-foreground">
         <Reveal className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <div>
-            <Eyebrow className="text-primary-foreground/70">
-              Solicite su cotización
-            </Eyebrow>
             <h2 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-4xl">
               ¿Listo para abastecer su negocio con LABMAREMI?
             </h2>
