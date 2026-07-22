@@ -2,26 +2,32 @@ import { m } from "framer-motion"
 
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
-import { StatusBadge } from "@/components/admin/StatusBadge"
-import { businessTypes } from "@/data/businessTypes"
-import type { getRecentLeads } from "@/lib/adminStats"
-import { getBusinessTypeIcon } from "@/lib/icons"
+import { StatusSelect } from "@/components/admin/StatusSelect"
+import type { DashboardLead } from "@/lib/adminDashboard"
+import type { QuoteStatus } from "@/types/database"
+import { getBusinessTypeIconByName } from "@/lib/icons"
 
-function formatDate(isoDate: string): string {
-  const [year, month, day] = isoDate.split("-")
-  return `${day}/${month}/${year}`
-}
-
-function getBusinessTypeName(businessTypeId: string): string {
-  return businessTypes.find((t) => t.id === businessTypeId)?.name ?? "—"
+/** ISO timestamp (e.g. "2026-07-21T14:03:00Z") → "dd/mm/yyyy". */
+function formatDate(iso: string): string {
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return "—"
+  const dd = String(d.getDate()).padStart(2, "0")
+  const mm = String(d.getMonth() + 1).padStart(2, "0")
+  return `${dd}/${mm}/${d.getFullYear()}`
 }
 
 interface RecentLeadsTableProps {
-  leads: ReturnType<typeof getRecentLeads>
+  leads: DashboardLead[]
+  pendingId: string | null
+  onStatusChange: (id: string, next: QuoteStatus) => void
 }
 
 /** Recent quote-request rows for the admin dashboard. */
-function RecentLeadsTable({ leads }: RecentLeadsTableProps) {
+function RecentLeadsTable({
+  leads,
+  pendingId,
+  onStatusChange,
+}: RecentLeadsTableProps) {
   return (
     <Card className="mt-4 overflow-hidden">
       <div className="border-b px-5 py-4">
@@ -64,7 +70,8 @@ function RecentLeadsTable({ leads }: RecentLeadsTableProps) {
               </tr>
             ) : null}
             {leads.map((lead, index) => {
-              const TypeIcon = getBusinessTypeIcon(lead.businessTypeId)
+              const TypeIcon = getBusinessTypeIconByName(lead.businessTypeName)
+              const productNames = lead.products.map((p) => p.name)
               return (
                 <m.tr
                   key={lead.id}
@@ -76,10 +83,15 @@ function RecentLeadsTable({ leads }: RecentLeadsTableProps) {
                     ease: "easeOut",
                     delay: index * 0.035,
                   }}
-                  className="border-b transition-colors last:border-b-0 hover:bg-secondary/30"
+                  className="border-b align-top transition-colors last:border-b-0 hover:bg-secondary/30"
                 >
-                  <td className="px-5 py-3.5 font-medium text-foreground">
-                    {lead.companyName}
+                  <td className="px-5 py-3.5">
+                    <span className="block font-medium text-foreground">
+                      {lead.companyName}
+                    </span>
+                    <span className="block text-xs text-muted-foreground">
+                      {lead.contactPerson}
+                    </span>
                   </td>
                   <td className="px-5 py-3.5 text-muted-foreground">
                     <span className="flex items-center gap-2">
@@ -87,20 +99,34 @@ function RecentLeadsTable({ leads }: RecentLeadsTableProps) {
                         className="h-4 w-4 shrink-0 text-primary"
                         aria-hidden="true"
                       />
-                      {getBusinessTypeName(lead.businessTypeId)}
+                      {lead.businessTypeName ?? "—"}
                     </span>
                   </td>
                   <td className="px-5 py-3.5 text-muted-foreground">
-                    {lead.location}
+                    {lead.location || "—"}
                   </td>
-                  <td className="px-5 py-3.5 text-right font-mono text-foreground">
-                    {lead.productsOfInterest.length}
+                  <td className="px-5 py-3.5 text-right">
+                    <span
+                      className="font-mono text-foreground"
+                      title={productNames.join(", ") || undefined}
+                    >
+                      {lead.products.length}
+                    </span>
+                    {productNames.length > 0 ? (
+                      <span className="mt-0.5 block max-w-[220px] truncate text-right text-xs text-muted-foreground">
+                        {productNames.join(", ")}
+                      </span>
+                    ) : null}
                   </td>
                   <td className="px-5 py-3.5 font-mono text-xs text-muted-foreground">
                     {formatDate(lead.createdAt)}
                   </td>
                   <td className="px-5 py-3.5">
-                    <StatusBadge status={lead.status} />
+                    <StatusSelect
+                      value={lead.status}
+                      disabled={pendingId === lead.id}
+                      onChange={(next) => onStatusChange(lead.id, next)}
+                    />
                   </td>
                 </m.tr>
               )

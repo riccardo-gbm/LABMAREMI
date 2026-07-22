@@ -1,16 +1,13 @@
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { AnimatedProgress } from "@/components/ui/reveal"
-import type {
-  getProductInterestRanking,
-  getTopCategories,
-} from "@/lib/adminStats"
+import type { CategoryRankEntry, ProductRankEntry } from "@/lib/adminDashboard"
 import { getCategoryCode } from "@/lib/catalog"
 import { getCategoryIcon } from "@/lib/icons"
 
 interface ProductInterestPanelsProps {
-  productRanking: ReturnType<typeof getProductInterestRanking>
-  topCategories: ReturnType<typeof getTopCategories>
+  productRanking: ProductRankEntry[]
+  topCategories: CategoryRankEntry[]
   maxProductCount: number
 }
 
@@ -31,22 +28,24 @@ function ProductInterestPanels({
           </p>
         ) : null}
         <ul className="mt-5 space-y-4">
-          {productRanking.map(({ product, count }) => (
-            <li key={product.id}>
+          {productRanking.map((entry) => (
+            <li key={entry.id}>
               <div className="flex items-baseline justify-between gap-3">
                 <p className="truncate text-sm font-medium text-foreground">
-                  {product.name}
-                  <span className="ml-2 font-mono text-xs tracking-widest text-muted-foreground">
-                    {getCategoryCode(product.categoryId)}
-                  </span>
+                  {entry.name}
+                  {entry.categorySlug ? (
+                    <span className="ml-2 font-mono text-xs tracking-widest text-muted-foreground">
+                      {getCategoryCode(entry.categorySlug)}
+                    </span>
+                  ) : null}
                 </p>
-                <p className="font-mono text-sm text-foreground">{count}</p>
+                <p className="font-mono text-sm text-foreground">{entry.count}</p>
               </div>
               <AnimatedProgress
-                value={(count / maxProductCount) * 100}
+                value={(entry.count / maxProductCount) * 100}
                 className="mt-1.5 h-2 w-full rounded-full bg-secondary"
                 barClassName="h-2 rounded-full bg-primary"
-                ariaLabel={`${product.name}: ${count} ${count === 1 ? "solicitud" : "solicitudes"}`}
+                ariaLabel={`${entry.name}: ${entry.count} ${entry.count === 1 ? "solicitud" : "solicitudes"}`}
               />
             </li>
           ))}
@@ -62,11 +61,11 @@ function ProductInterestPanels({
           </p>
         ) : null}
         <ul className="mt-5 space-y-3">
-          {topCategories.map(({ category, count }, index) => {
-            const Icon = getCategoryIcon(category.id)
+          {topCategories.map((entry, index) => {
+            const Icon = getCategoryIcon(entry.slug ?? "")
             return (
               <li
-                key={category.id}
+                key={entry.slug ?? entry.name}
                 className="flex items-center gap-3 rounded-lg border px-3.5 py-3"
               >
                 <span className="font-mono text-xs text-muted-foreground">
@@ -76,10 +75,10 @@ function ProductInterestPanels({
                   <Icon className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
-                  {category.name}
+                  {entry.name}
                 </span>
                 <span className="font-mono text-sm text-foreground">
-                  {count}
+                  {entry.count}
                 </span>
               </li>
             )

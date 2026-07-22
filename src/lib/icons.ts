@@ -46,10 +46,30 @@ const businessTypeIcons: Record<string, LucideIcon> = {
   "tiendas-locales": Store,
 }
 
+/**
+ * Business-type icons keyed by display name — for live data (Supabase
+ * `business_types` has no slug column, only id + name). Names match the
+ * canonical seven segments in src/data/businessTypes.ts.
+ */
+const businessTypeIconsByName: Record<string, LucideIcon> = {
+  Restaurantes: UtensilsCrossed,
+  Hoteles: BedDouble,
+  Oficinas: Building2,
+  "Instituciones Educativas": GraduationCap,
+  Clínicas: Stethoscope,
+  "Empresas de Limpieza": Sparkles,
+  "Tiendas Locales": Store,
+}
+
 export function getCategoryIcon(categoryId: string): LucideIcon {
   return categoryIcons[categoryId] ?? Package
 }
 
 export function getBusinessTypeIcon(businessTypeId: string): LucideIcon {
   return businessTypeIcons[businessTypeId] ?? Building2
+}
+
+export function getBusinessTypeIconByName(name: string | null): LucideIcon {
+  if (!name) return Building2
+  return businessTypeIconsByName[name] ?? Building2
 }
