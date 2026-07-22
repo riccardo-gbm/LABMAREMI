@@ -184,7 +184,7 @@ Security check: confirm the anon user can insert a quote but cannot read back an
 
 Import the product catalog from `labmaremi_catalog.csv` into the Supabase `products` and `categories` tables (schema from P1).
 
-The CSV columns are: `name, category, description, presentation, recommended_use` (there may also be a `product_line` column — ignore it if present, it's not needed).
+The CSV columns are: `name, category, description, presentation, recommended_use` .
 
 Steps:
 1. First, read the CSV and read `src/data/categories.ts` (or the `categories` table if already seeded). List every distinct `category` value in the CSV and show me how each maps to an existing category row. **Stop and show me this mapping before importing anything** — if a CSV category doesn't match an existing category exactly, I need to resolve it, not have you guess. Flag in particular any category that ends up with zero products, and any CSV category with no matching table row.
