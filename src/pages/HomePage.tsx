@@ -20,11 +20,9 @@ import {
   InteractiveHoverLink,
 } from "@/components/ui/interactive-hover-button"
 import { Card } from "@/components/ui/card"
-import { Eyebrow } from "@/components/ui/eyebrow"
 import { MediaFrame } from "@/components/ui/media-frame"
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
-import { getCategoryCode } from "@/lib/catalog"
 import {
   coverageSectors,
   EMAIL_DISPLAY,
