@@ -206,7 +206,7 @@ export default function HomePage() {
       </Section>
 
       {/* Business customer types */}
-      <Section id="sectores" className="bg-background">
+      <Section id="sectores" className="border-t bg-background">
         <Reveal>
         <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
           Diseñado para su tipo de negocio
