@@ -218,6 +218,10 @@ export interface Database {
         }
         Returns: undefined
       }
+      is_admin: {
+        Args: Record<string, never>
+        Returns: boolean
+      }
     }
     Enums: {
       quote_status: QuoteStatus

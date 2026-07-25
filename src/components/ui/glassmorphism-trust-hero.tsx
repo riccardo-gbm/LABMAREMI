@@ -98,7 +98,7 @@ export default function GlassmorphismTrustHero() {
                 clientSegments.map((client) => (
                   <div
                     key={`${client.name}-${copy}`}
-                    className="flex cursor-default items-center gap-2 text-muted-foreground transition-all hover:scale-105 hover:text-foreground"
+                    className="flex cursor-default items-center gap-2 text-muted-foreground transition hover:scale-105 hover:text-foreground"
                   >
                     <client.icon
                       className="h-6 w-6 text-primary"

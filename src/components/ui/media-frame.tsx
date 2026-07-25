@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import type { LucideIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -13,7 +13,7 @@ interface MediaFrameProps {
   badge?: string
 }
 
-function MediaFrame({
+function MediaFrameInner({
   src,
   alt,
   fallbackLabel,
@@ -26,9 +26,6 @@ function MediaFrame({
   // stored image_url 404s fails at load time. Both must land on the same
   // icon placeholder rather than a broken-image glyph.
   const [failed, setFailed] = useState(false)
-  useEffect(() => {
-    setFailed(false)
-  }, [src])
   const showImage = Boolean(src) && !failed
 
   return (
@@ -74,6 +71,15 @@ function MediaFrame({
       ) : null}
     </div>
   )
+}
+
+/**
+ * Remounts on `src` change (via `key`) so the internal `failed` flag resets for
+ * the new image on its own, instead of being cleared by hand in an effect —
+ * which briefly showed the previous image's fallback state on swap.
+ */
+function MediaFrame(props: MediaFrameProps) {
+  return <MediaFrameInner key={props.src ?? "__no-src__"} {...props} />
 }
 
 export { MediaFrame }

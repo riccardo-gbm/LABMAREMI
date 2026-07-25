@@ -88,7 +88,7 @@ function InteractiveHoverInner({
   const styles = variantClasses[variant]
   return (
     <>
-      <span className="inline-block translate-x-1 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 motion-reduce:transition-none">
+      <span className="inline-block translate-x-1 transition duration-300 group-hover:translate-x-12 group-hover:opacity-0 motion-reduce:transition-none">
         {text}
       </span>
       <div

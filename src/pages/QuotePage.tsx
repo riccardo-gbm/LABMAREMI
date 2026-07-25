@@ -168,6 +168,100 @@ interface QuoteFormProps {
   businessTypes: CatalogBusinessType[]
 }
 
+interface CompanyFieldsProps {
+  form: QuoteFormState
+  setField: (
+    field: QuoteTextField,
+  ) => (event: { target: { value: string } }) => void
+  businessTypes: CatalogBusinessType[]
+}
+
+/** The "Datos de la empresa" fieldset — the six contact fields. */
+function CompanyFields({ form, setField, businessTypes }: CompanyFieldsProps) {
+  return (
+    <div className="mt-5 grid gap-5 sm:grid-cols-2">
+      <div className="space-y-1.5">
+        <Label htmlFor="companyName">Nombre de la empresa *</Label>
+        <Input
+          id="companyName"
+          name="companyName"
+          required
+          value={form.companyName}
+          onChange={setField("companyName")}
+          placeholder="Ej. Restaurante Sabor Andino"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="contactPerson">Persona de contacto *</Label>
+        <Input
+          id="contactPerson"
+          name="contactPerson"
+          required
+          value={form.contactPerson}
+          onChange={setField("contactPerson")}
+          placeholder="Nombre de quien solicita"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="phone">Teléfono *</Label>
+        <Input
+          id="phone"
+          name="phone"
+          type="tel"
+          required
+          pattern="^\+?[0-9\s]{7,15}$"
+          title="Ingrese un número de teléfono válido, ej. +593 99 123 4567"
+          value={form.phone}
+          onChange={setField("phone")}
+          placeholder="+593 99 123 4567"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="email">Correo electrónico *</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          required
+          value={form.email}
+          onChange={setField("email")}
+          placeholder="empresa@correo.com"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="businessTypeId">Tipo de negocio *</Label>
+        <Select
+          id="businessTypeId"
+          name="businessTypeId"
+          required
+          value={form.businessTypeId}
+          onChange={setField("businessTypeId")}
+        >
+          <option value="" disabled>
+            Seleccione una opción
+          </option>
+          {businessTypes.map((type) => (
+            <option key={type.id} value={type.id}>
+              {type.name}
+            </option>
+          ))}
+        </Select>
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="location">Ubicación / sector *</Label>
+        <Input
+          id="location"
+          name="location"
+          required
+          value={form.location}
+          onChange={setField("location")}
+          placeholder="Ej. Cumbayá, Quito"
+        />
+      </div>
+    </div>
+  )
+}
+
 function QuoteForm({ catalog, businessTypes }: QuoteFormProps) {
   const [searchParams] = useSearchParams()
   const productsErrorId = useId()
@@ -300,86 +394,11 @@ function QuoteForm({ catalog, businessTypes }: QuoteFormProps) {
           <Reveal>
           <Card className="p-6 md:p-8">
             <Eyebrow>Datos de la empresa</Eyebrow>
-            <div className="mt-5 grid gap-5 sm:grid-cols-2">
-              <div className="space-y-1.5">
-                <Label htmlFor="companyName">Nombre de la empresa *</Label>
-                <Input
-                  id="companyName"
-                  name="companyName"
-                  required
-                  value={form.companyName}
-                  onChange={setField("companyName")}
-                  placeholder="Ej. Restaurante Sabor Andino"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="contactPerson">Persona de contacto *</Label>
-                <Input
-                  id="contactPerson"
-                  name="contactPerson"
-                  required
-                  value={form.contactPerson}
-                  onChange={setField("contactPerson")}
-                  placeholder="Nombre de quien solicita"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="phone">Teléfono *</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  required
-                  pattern="^\+?[0-9\s]{7,15}$"
-                  title="Ingrese un número de teléfono válido, ej. +593 99 123 4567"
-                  value={form.phone}
-                  onChange={setField("phone")}
-                  placeholder="+593 99 123 4567"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="email">Correo electrónico *</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={setField("email")}
-                  placeholder="empresa@correo.com"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="businessTypeId">Tipo de negocio *</Label>
-                <Select
-                  id="businessTypeId"
-                  name="businessTypeId"
-                  required
-                  value={form.businessTypeId}
-                  onChange={setField("businessTypeId")}
-                >
-                  <option value="" disabled>
-                    Seleccione una opción
-                  </option>
-                  {businessTypes.map((type) => (
-                    <option key={type.id} value={type.id}>
-                      {type.name}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="location">Ubicación / sector *</Label>
-                <Input
-                  id="location"
-                  name="location"
-                  required
-                  value={form.location}
-                  onChange={setField("location")}
-                  placeholder="Ej. Cumbayá, Quito"
-                />
-              </div>
-            </div>
+            <CompanyFields
+              form={form}
+              setField={setField}
+              businessTypes={businessTypes}
+            />
 
             <div className="mt-8 border-t pt-8">
               <Eyebrow>Detalle de la solicitud</Eyebrow>

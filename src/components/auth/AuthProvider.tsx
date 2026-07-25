@@ -9,6 +9,13 @@ interface AuthContextValue {
   user: User | null
   /** True until the initial session lookup resolves. Guards must wait on this. */
   loading: boolean
+  /**
+   * Server-verified admin membership (the `is_admin()` RPC, backed by the
+   * `admin_users` roster). `null` means "not known yet" — either there is no
+   * session, or the check is still in flight. A session alone is NOT authority:
+   * anyone can hold one, only roster members are admins.
+   */
+  isAdmin: boolean | null
   signOut: () => Promise<void>
 }
 
@@ -17,6 +24,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null)
 
   useEffect(() => {
     // Restore any persisted session (localStorage) on load, then stop loading.
@@ -33,16 +41,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => sub.subscription.unsubscribe()
   }, [])
 
+  // Ask the database who this user is. Re-runs on every sign-in/sign-out; the
+  // answer is never derived from client state, so it can't be spoofed.
+  const userId = session?.user.id ?? null
+  useEffect(() => {
+    if (!userId) {
+      setIsAdmin(null)
+      return
+    }
+    let cancelled = false
+    setIsAdmin(null)
+    supabase.rpc("is_admin").then(({ data, error }) => {
+      if (cancelled) return
+      // Any failure (RPC missing, network, denied) is treated as "not an admin".
+      setIsAdmin(!error && data === true)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [userId])
+
   const value = useMemo<AuthContextValue>(
     () => ({
       session,
       user: session?.user ?? null,
       loading,
+      isAdmin,
       signOut: async () => {
         await supabase.auth.signOut()
       },
     }),
-    [session, loading],
+    [session, loading, isAdmin],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

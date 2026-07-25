@@ -1,6 +1,6 @@
 import { ChevronDown } from "lucide-react"
 
-import { statusStyles } from "@/components/admin/StatusBadge"
+import { statusStyles } from "@/components/admin/statusStyles"
 import { QUOTE_STATUSES, STATUS_LABEL } from "@/lib/adminDashboard"
 import type { QuoteStatus } from "@/types/database"
 import { cn } from "@/lib/utils"

@@ -30,19 +30,26 @@ export default function AdminLoginPage() {
     setError(null)
     setSubmitting(true)
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password,
-    })
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      })
 
-    if (signInError) {
-      // Generic on purpose — never reveal whether the email exists.
-      setError("Credenciales incorrectas.")
+      if (signInError) {
+        // Generic on purpose — never reveal whether the email exists.
+        setError("Credenciales incorrectas.")
+        return
+      }
+
+      navigate("/admin", { replace: true })
+    } catch {
+      // Network/unexpected failure — don't leave the button stuck disabled.
+      setError("No se pudo iniciar sesión. Intente nuevamente.")
+    } finally {
+      // Runs on success, credential error, and rejection alike.
       setSubmitting(false)
-      return
     }
-
-    navigate("/admin", { replace: true })
   }
 
   return (

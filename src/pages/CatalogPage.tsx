@@ -12,12 +12,26 @@ import { Section } from "@/components/ui/section"
 import { Skeleton } from "@/components/ui/skeleton"
 import { QueryError } from "@/components/ui/query-error"
 import { ProductCard } from "@/components/catalog/ProductCard"
-import { fetchCatalog } from "@/lib/catalogData"
+import { fetchCatalog, type CatalogCategory, type CatalogProduct } from "@/lib/catalogData"
 import { useAsync } from "@/hooks/useAsync"
 import { getCategoryCode, matchesQuery } from "@/lib/catalog"
 import { cn } from "@/lib/utils"
 
 const CATEGORY_PARAM = "categoria"
+
+// Stable references for the empty state, so the filter useMemo below only
+// recomputes when the data actually changes — not on every render (a fresh
+// `[]` each render would invalidate the memo).
+const EMPTY_CATEGORIES: CatalogCategory[] = []
+const EMPTY_PRODUCTS: CatalogProduct[] = []
+
+// Static — no props — so it's built once, not rebuilt on every render.
+const HEADER = (
+  <PageHeader
+    title="Catálogo de productos"
+    description="Explore nuestro catálogo de limpieza, desinfección, protección e higiene. Seleccione una categoría o busque un producto específico."
+  />
+)
 
 /** Filter bar + card grid placeholders, matching the loaded layout. */
 function CatalogSkeleton() {
@@ -52,8 +66,8 @@ export default function CatalogPage() {
   const [query, setQuery] = useState("")
   const { data, loading, error, retry } = useAsync(fetchCatalog)
 
-  const categories = data?.categories ?? []
-  const products = data?.products ?? []
+  const categories = data?.categories ?? EMPTY_CATEGORIES
+  const products = data?.products ?? EMPTY_PRODUCTS
 
   const rawCategory = searchParams.get(CATEGORY_PARAM)
   // Ignore unknown category ids in the URL instead of showing zero results.
@@ -94,17 +108,10 @@ export default function CatalogPage() {
 
   const hasActiveFilters = Boolean(activeCategory || query.trim())
 
-  const header = (
-    <PageHeader
-      title="Catálogo de productos"
-      description="Explore nuestro catálogo de limpieza, desinfección, protección e higiene. Seleccione una categoría o busque un producto específico."
-    />
-  )
-
   if (loading) {
     return (
       <>
-        {header}
+        {HEADER}
         <CatalogSkeleton />
       </>
     )
@@ -113,7 +120,7 @@ export default function CatalogPage() {
   if (error) {
     return (
       <>
-        {header}
+        {HEADER}
         <Section className="pt-8 md:pt-10">
           <QueryError
             onRetry={retry}
@@ -127,7 +134,7 @@ export default function CatalogPage() {
 
   return (
     <>
-      {header}
+      {HEADER}
 
       <Section className="pt-8 md:pt-10">
         <Reveal>
@@ -240,9 +247,11 @@ export default function CatalogPage() {
         </Card>
         </Reveal>
 
-        {/* Results */}
-        {filtered.length > 0 ? (
-          <m.div layout className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Results — the grid + its AnimatePresence stay mounted so cards can
+            exit-animate as the list empties out; the empty state is a sibling,
+            not an alternative branch that would tear the boundary down. */}
+        <div className="mt-8">
+          <m.div layout className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
               {filtered.map((product) => (
                 <m.div
@@ -259,12 +268,12 @@ export default function CatalogPage() {
               ))}
             </AnimatePresence>
           </m.div>
-        ) : (
+          {filtered.length === 0 ? (
           <m.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="mt-8 flex flex-col items-center rounded-xl border border-dashed px-6 py-16 text-center"
+            className="flex flex-col items-center rounded-xl border border-dashed px-6 py-16 text-center"
           >
             <span className="flex h-14 w-14 items-center justify-center rounded-full bg-secondary text-primary">
               <SearchX className="h-6 w-6" aria-hidden="true" />
@@ -282,7 +291,8 @@ export default function CatalogPage() {
               </Button>
             ) : null}
           </m.div>
-        )}
+          ) : null}
+        </div>
       </Section>
     </>
   )

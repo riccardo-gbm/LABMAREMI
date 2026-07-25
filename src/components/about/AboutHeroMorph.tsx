@@ -22,7 +22,7 @@ function FlipCard({ src, target }: FlipCardProps) {
       <m.div
         className="relative h-full w-full"
         style={{ transformStyle: "preserve-3d" }}
-        transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20 }}
         whileHover={{ rotateY: 180 }}
       >
         <div className="absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg bg-slate-200" style={{ backfaceVisibility: "hidden" }}>

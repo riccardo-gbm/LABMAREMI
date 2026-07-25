@@ -62,5 +62,8 @@ grant execute on function submit_quote_request(
 -- honeypot + validation by inserting into the tables directly via P1's
 -- "anon insert" policies. Admin (authenticated) writes and the security-definer
 -- RPC are both unaffected.
+-- (0001 no longer creates those anon-insert policies at all, so on a fresh
+-- project these drops are no-ops. They stay for projects that ran the original
+-- 0001 before it was amended.)
 drop policy if exists "quote_requests anon insert" on quote_requests;
 drop policy if exists "qri anon insert"            on quote_request_items;

@@ -130,7 +130,7 @@ export default function HomePage() {
                   fallbackLabel={tile.title}
                   fallbackIcon={tile.icon}
                   badge={tile.label}
-                  className="aspect-[4/5] shadow-sm transition-all group-hover:-translate-y-0.5 group-hover:shadow-md"
+                  className="aspect-[4/5] shadow-sm transition group-hover:-translate-y-0.5 group-hover:shadow-md"
                 />
                 <p className="mt-3 font-display text-base font-semibold tracking-tight text-foreground">
                   {tile.title}
@@ -151,7 +151,7 @@ export default function HomePage() {
         <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {reasons.map((reason) => (
             <RevealItem key={reason.title}>
-            <Card className="h-full overflow-hidden bg-white p-6 shadow-sm border border-slate-200 transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
+            <Card className="h-full overflow-hidden bg-white p-6 shadow-sm border border-slate-200 transition hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
               <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <reason.icon className="h-5 w-5" aria-hidden="true" />
               </span>
@@ -208,7 +208,7 @@ export default function HomePage() {
               <RevealItem key={category.id} className="flex">
               <Link
                 to={`/catalogo?categoria=${category.id}`}
-                className="group relative flex w-full flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md"
+                className="group relative flex w-full flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md"
               >
                 <MediaFrame
                   src={category.imageUrl}

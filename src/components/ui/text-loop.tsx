@@ -5,7 +5,7 @@ import {
   type Transition,
   type Variants,
 } from "framer-motion";
-import { Children, useEffect, useState } from "react";
+import { Children, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export type TextLoopProps = {
@@ -37,15 +37,17 @@ export function TextLoop({
 }: TextLoopProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const items = Children.toArray(children);
+  const indexRef = useRef(0);
 
   useEffect(() => {
     if (!trigger) return;
     const timer = setInterval(() => {
-      setCurrentIndex((current) => {
-        const next = (current + 1) % items.length;
-        onIndexChange?.(next);
-        return next;
-      });
+      // Compute the next index purely, then update state and notify — both
+      // outside the state updater, which React may replay.
+      const next = (indexRef.current + 1) % items.length;
+      indexRef.current = next;
+      setCurrentIndex(next);
+      onIndexChange?.(next);
     }, interval * 1000);
     return () => clearInterval(timer);
   }, [items.length, interval, onIndexChange, trigger]);

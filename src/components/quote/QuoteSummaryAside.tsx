@@ -30,9 +30,10 @@ function QuoteSummaryAside({
           </div>
 
           <div className="p-5">
-            {selectedProducts.length > 0 ? (
-              <ul className="space-y-3">
-                <AnimatePresence initial={false}>
+            {/* The list stays mounted so the last item can exit-animate when
+                it's removed; the empty state is a sibling, not an alternative. */}
+            <ul className="space-y-3">
+              <AnimatePresence initial={false}>
                   {selectedProducts.map((product) => (
                     <m.li
                       key={product.id}
@@ -56,9 +57,9 @@ function QuoteSummaryAside({
                       </p>
                     </m.li>
                   ))}
-                </AnimatePresence>
-              </ul>
-            ) : (
+              </AnimatePresence>
+            </ul>
+            {selectedProducts.length === 0 ? (
               <div className="rounded-lg border border-dashed p-5 text-center">
                 <PackageCheck className="mx-auto h-7 w-7 text-primary" />
                 <p className="mt-3 text-sm text-muted-foreground">
@@ -66,7 +67,7 @@ function QuoteSummaryAside({
                   solicitud.
                 </p>
               </div>
-            )}
+            ) : null}
           </div>
         </Card>
 

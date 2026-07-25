@@ -65,9 +65,15 @@ function ProductPicker({
 
   return (
     <div>
-      {selectedProducts.length > 0 ? (
-        <ul className="mb-3 flex flex-wrap gap-2">
-          <AnimatePresence initial={false}>
+      {/* The list stays mounted (margin only when it has chips) so the last
+          chip's exit animation can still play when it's removed. */}
+      <ul
+        className={cn(
+          "flex flex-wrap gap-2",
+          selectedProducts.length > 0 && "mb-3",
+        )}
+      >
+        <AnimatePresence initial={false}>
           {selectedProducts.map((product) => (
             <m.li
               key={product.id}
@@ -89,9 +95,8 @@ function ProductPicker({
               </button>
             </m.li>
           ))}
-          </AnimatePresence>
-        </ul>
-      ) : null}
+        </AnimatePresence>
+      </ul>
 
       <div className="relative">
         <Search

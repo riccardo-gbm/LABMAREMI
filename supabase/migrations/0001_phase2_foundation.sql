@@ -1,6 +1,14 @@
 -- 0001_phase2_foundation.sql — LABMAREMI Phase 2 foundation
 -- Schema, enum, and Row Level Security for the Supabase backend.
 -- Run in the Supabase SQL editor on a fresh project.
+--
+-- AMENDED 2026-07-24: the admin policies here originally granted every write
+-- (and every lead/customer read) to the whole `authenticated` role with
+-- `using (true)`. Since Supabase allows public signup by default, any visitor
+-- could have signed up and inherited admin rights. They are now gated on
+-- `is_admin()` / the `admin_users` roster, defined below. Projects that already
+-- ran the original version get the identical end state from
+-- 0006_admin_role_rls.sql — do NOT re-run this file against them.
 
 create extension if not exists pgcrypto;   -- gen_random_uuid()
 
@@ -79,6 +87,15 @@ create table if not exists customers (
   created_at      timestamptz not null default now()
 );
 
+-- Admin roster. Holding a Supabase session is NOT authority — anyone can sign
+-- up for one. Only accounts listed here are admins. Membership is granted from
+-- the SQL editor (or by the service role); no client-writable policy exists.
+create table if not exists admin_users (
+  user_id     uuid primary key references auth.users(id) on delete cascade,
+  email       text not null default '',
+  created_at  timestamptz not null default now()
+);
+
 -- ---------------------------------------------------------------------------
 -- Row Level Security
 -- Model: deny by default. RLS is enabled on every table; a role can do only
@@ -90,28 +107,53 @@ alter table products            enable row level security;
 alter table quote_requests      enable row level security;
 alter table quote_request_items enable row level security;
 alter table customers           enable row level security;
+alter table admin_users         enable row level security;
 
--- Public catalog: everyone reads, only admins write.
-create policy "categories public read"     on categories     for select to anon, authenticated using (true);
-create policy "categories admin write"      on categories     for all    to authenticated using (true) with check (true);
+-- A signed-in user may check their own roster row; nobody may write the roster
+-- from a client, so no session can promote itself to admin.
+create policy "admin_users self read" on admin_users for select to authenticated using (user_id = auth.uid());
+
+-- Single source of truth for "is the caller an admin?". security definer so it
+-- reads the roster regardless of the caller's own RLS, which also stops policies
+-- that call it from recursing back into admin_users.
+create or replace function is_admin() returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (select 1 from public.admin_users a where a.user_id = auth.uid());
+$$;
+
+revoke all on function is_admin() from public;
+grant execute on function is_admin() to authenticated;
+
+-- Seed the roster before anyone tries to use the admin panel:
+--   insert into admin_users (user_id, email)
+--   select id, email from auth.users where email = 'your-admin@example.com';
+
+-- Public catalog: everyone reads, only roster admins write.
+create policy "categories public read"      on categories     for select to anon, authenticated using (true);
+create policy "categories admin write"      on categories     for all    to authenticated using (is_admin()) with check (is_admin());
 
 create policy "business_types public read"  on business_types for select to anon, authenticated using (true);
-create policy "business_types admin write"  on business_types for all    to authenticated using (true) with check (true);
+create policy "business_types admin write"  on business_types for all    to authenticated using (is_admin()) with check (is_admin());
 
 create policy "products public read"        on products       for select to anon, authenticated using (true);
-create policy "products admin write"        on products       for all    to authenticated using (true) with check (true);
+create policy "products admin write"        on products       for all    to authenticated using (is_admin()) with check (is_admin());
 
--- Leads: anon may INSERT only (so the public quote form works).
--- No anon SELECT / UPDATE / DELETE — a visitor can never read leads back.
-create policy "quote_requests anon insert"  on quote_requests for insert to anon, authenticated with check (true);
-create policy "quote_requests admin read"   on quote_requests for select to authenticated using (true);
-create policy "quote_requests admin update" on quote_requests for update to authenticated using (true) with check (true);
-create policy "quote_requests admin delete" on quote_requests for delete to authenticated using (true);
+-- Leads: no anon policy at all. The public quote form writes through the
+-- security-definer submit_quote_request() RPC (0005), which validates input and
+-- drops honeypot hits — a direct table insert would skip both, so anon never
+-- gets one. Reads and edits are roster-admin only, so a stranger who signs
+-- themselves up sees nothing.
+create policy "quote_requests admin read"   on quote_requests for select to authenticated using (is_admin());
+create policy "quote_requests admin update" on quote_requests for update to authenticated using (is_admin()) with check (is_admin());
+create policy "quote_requests admin delete" on quote_requests for delete to authenticated using (is_admin());
 
-create policy "qri anon insert"             on quote_request_items for insert to anon, authenticated with check (true);
-create policy "qri admin read"              on quote_request_items for select to authenticated using (true);
-create policy "qri admin update"            on quote_request_items for update to authenticated using (true) with check (true);
-create policy "qri admin delete"            on quote_request_items for delete to authenticated using (true);
+create policy "qri admin read"              on quote_request_items for select to authenticated using (is_admin());
+create policy "qri admin update"            on quote_request_items for update to authenticated using (is_admin()) with check (is_admin());
+create policy "qri admin delete"            on quote_request_items for delete to authenticated using (is_admin());
 
 -- Customers: admin-only. No anon policy of any kind — anon has zero access.
-create policy "customers admin all"         on customers      for all    to authenticated using (true) with check (true);
+create policy "customers admin all"         on customers      for all    to authenticated using (is_admin()) with check (is_admin());

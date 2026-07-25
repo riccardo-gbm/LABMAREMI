@@ -23,9 +23,20 @@ npm-debug.log*
 
 # Local env files
 *.local
-.claude
-graphify-out
 .env
+.env*.local
+
+# AI, Dev tools & Documentation
+.claude
+.agents
+graphify*
+docs
+
+# Root level PDF catalogs & AI context files
+*.pdf
+AGENTS.md
+CLAUDE.md
 
 # Supabase CLI local state (created by `supabase link`)
-supabase/.temp/
+supabase
+

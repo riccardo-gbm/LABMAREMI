@@ -116,7 +116,7 @@ export default function PlatformPage() {
         <RevealGroup className="relative grid gap-4 md:grid-cols-2 xl:grid-cols-3" stagger={0.08}>
           {flowSteps.map((step, index) => (
             <RevealItem key={step.title} className="flex">
-            <Card className="h-full w-full overflow-hidden transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
+            <Card className="h-full w-full overflow-hidden transition hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
               <div className="flex items-center gap-4 border-b bg-secondary/40 p-5">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <step.icon className="h-5 w-5" aria-hidden="true" />

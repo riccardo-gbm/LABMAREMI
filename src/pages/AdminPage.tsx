@@ -53,15 +53,16 @@ export default function AdminPage() {
   const handleStatusChange = useCallback(
     async (id: string, next: QuoteStatus) => {
       setStatusError(null)
-      let snapshot: DashboardLead[] | null = null
-      setLeads((current) => {
-        snapshot = current
-        return current
+      // Snapshot for rollback, read from the current render — not written inside
+      // the updater, which React may replay and which must stay pure.
+      const snapshot = leads
+      setLeads((current) =>
+        current
           ? current.map((lead) =>
               lead.id === id ? { ...lead, status: next } : lead,
             )
-          : current
-      })
+          : current,
+      )
       setPendingId(id)
       try {
         await updateLeadStatus(id, next)
@@ -75,7 +76,7 @@ export default function AdminPage() {
         setPendingId(null)
       }
     },
-    [],
+    [leads],
   )
 
   const derived = useMemo(() => {

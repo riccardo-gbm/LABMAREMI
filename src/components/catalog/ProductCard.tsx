@@ -21,7 +21,7 @@ function ProductCard({ product }: ProductCardProps) {
   const Icon = getCategoryIcon(product.categoryId)
 
   return (
-    <Card className="group flex w-full flex-col overflow-hidden transition-all hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
+    <Card className="group flex w-full flex-col overflow-hidden transition hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
       {/* No image yet → the category icon placeholder, not a stock photo of
           something that isn't this product. */}
       <MediaFrame

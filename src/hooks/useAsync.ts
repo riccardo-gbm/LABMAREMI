@@ -51,18 +51,29 @@ export function useAsync<T>(
     setLoading(true)
     setError(false)
 
-    const settle = (apply: () => void) => {
-      if (!active || settled || id !== runId.current) return
+    // First outcome to arrive wins; the rest are ignored. `claim` returns
+    // whether this call gets to be that outcome.
+    const claim = () => {
+      if (!active || settled || id !== runId.current) return false
       settled = true
-      apply()
+      return true
+    }
+    const succeed = (result: T) => {
+      if (!claim()) return
+      setData(result)
+      setLoading(false)
+    }
+    const fail = () => {
+      if (!claim()) return
+      setError(true)
       setLoading(false)
     }
 
-    const timer = setTimeout(() => settle(() => setError(true)), timeoutMs)
+    const timer = setTimeout(fail, timeoutMs)
 
     fetcher()
-      .then((result) => settle(() => setData(result)))
-      .catch(() => settle(() => setError(true)))
+      .then(succeed)
+      .catch(fail)
       .finally(() => clearTimeout(timer))
 
     return () => {
