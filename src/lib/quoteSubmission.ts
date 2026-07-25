@@ -1,5 +1,3 @@
-import { supabase } from "@/lib/supabase"
-
 /**
  * Public quote-form write path — the counterpart to catalogData.ts's reads.
  *
@@ -22,17 +20,29 @@ export interface QuoteSubmission {
 }
 
 export async function submitQuoteRequest(input: QuoteSubmission): Promise<void> {
-  const { error } = await supabase.rpc("submit_quote_request", {
-    company_name: input.companyName,
-    contact_person: input.contactPerson,
-    phone: input.phone,
-    email: input.email,
-    business_type_id: input.businessTypeId,
-    location: input.location,
-    message: input.message,
-    product_ids: input.productIds,
-    honeypot: input.honeypot,
+  const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/rpc/submit_quote_request`
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+      "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      company_name: input.companyName,
+      contact_person: input.contactPerson,
+      phone: input.phone,
+      email: input.email,
+      business_type_id: input.businessTypeId,
+      location: input.location,
+      message: input.message,
+      product_ids: input.productIds,
+      honeypot: input.honeypot,
+    }),
   })
 
-  if (error) throw error
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}))
+    throw new Error(errorBody.message || `HTTP error ${res.status}`)
+  }
 }

@@ -1,4 +1,3 @@
-import { supabase } from "@/lib/supabase"
 import { getCategoryCode } from "@/lib/catalog"
 
 /**
@@ -43,11 +42,6 @@ export interface CatalogBusinessType {
   description: string
 }
 
-const PRODUCT_SELECT = `
-  id, slug, name, description, presentation, recommended_use, image_url,
-  categories ( slug, name )
-` as const
-
 interface RawProductRow {
   id: string
   slug: string | null
@@ -91,24 +85,30 @@ export interface Catalog {
   products: CatalogProduct[]
 }
 
+const getHeaders = () => ({
+  apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+  Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+})
+
 /** Categories (in sort_order) plus every active product (by name). */
 export async function fetchCatalog(): Promise<Catalog> {
-  const [categoriesResult, productsResult] = await Promise.all([
-    supabase
-      .from("categories")
-      .select("id, slug, name, description, image_url, image_alt")
-      .order("sort_order"),
-    supabase
-      .from("products")
-      .select(PRODUCT_SELECT)
-      .eq("is_active", true)
-      .order("name"),
+  const headers = getHeaders()
+  const baseUrl = import.meta.env.VITE_SUPABASE_URL
+
+  const [categoriesRes, productsRes] = await Promise.all([
+    fetch(`${baseUrl}/rest/v1/categories?select=id,slug,name,description,image_url,image_alt&order=sort_order.asc`, { headers }),
+    fetch(`${baseUrl}/rest/v1/products?select=id,slug,name,description,presentation,recommended_use,image_url,categories(slug,name)&is_active=eq.true&order=name.asc`, { headers })
   ])
 
-  if (categoriesResult.error) throw categoriesResult.error
-  if (productsResult.error) throw productsResult.error
+  if (!categoriesRes.ok) throw new Error(`HTTP error ${categoriesRes.status}`)
+  if (!productsRes.ok) throw new Error(`HTTP error ${productsRes.status}`)
 
-  const categories: CatalogCategory[] = (categoriesResult.data ?? []).map((row) => ({
+  const [categoriesData, productsData] = await Promise.all([
+    categoriesRes.json(),
+    productsRes.json()
+  ])
+
+  const categories: CatalogCategory[] = categoriesData.map((row: any) => ({
     id: row.slug,
     uuid: row.id,
     name: row.name,
@@ -120,7 +120,7 @@ export async function fetchCatalog(): Promise<Catalog> {
   // Codes are per-category positions, so they must be computed over the whole
   // catalog ordered by category — not the flat name order the query returns.
   const bySortOrder = new Map(categories.map((c, i) => [c.id, i]))
-  const rows = (productsResult.data ?? []) as unknown as RawProductRow[]
+  const rows = productsData as RawProductRow[]
   const ordered = [...rows].sort((a, b) => {
     const ai = bySortOrder.get(a.categories?.slug ?? "") ?? Number.MAX_SAFE_INTEGER
     const bi = bySortOrder.get(b.categories?.slug ?? "") ?? Number.MAX_SAFE_INTEGER
@@ -145,26 +145,23 @@ export interface ProductDetail {
 export async function fetchProductBySlug(
   slug: string,
 ): Promise<ProductDetail | null> {
-  const { data, error } = await supabase
-    .from("products")
-    .select("category_id")
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .maybeSingle()
+  const headers = getHeaders()
+  const baseUrl = import.meta.env.VITE_SUPABASE_URL
 
-  if (error) throw error
-  if (!data) return null
+  const res = await fetch(`${baseUrl}/rest/v1/products?select=category_id&slug=eq.${slug}&is_active=eq.true&limit=1`, { headers })
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+  
+  const data = await res.json()
+  if (!data || data.length === 0) return null
+  
+  const categoryId = data[0].category_id
 
-  const { data: siblings, error: siblingsError } = await supabase
-    .from("products")
-    .select(PRODUCT_SELECT)
-    .eq("category_id", data.category_id)
-    .eq("is_active", true)
-    .order("name")
+  const siblingsRes = await fetch(`${baseUrl}/rest/v1/products?select=id,slug,name,description,presentation,recommended_use,image_url,categories(slug,name)&category_id=eq.${categoryId}&is_active=eq.true&order=name.asc`, { headers })
+  if (!siblingsRes.ok) throw new Error(`HTTP error ${siblingsRes.status}`)
+  
+  const siblingsData = await siblingsRes.json()
 
-  if (siblingsError) throw siblingsError
-
-  const all = toProducts((siblings ?? []) as unknown as RawProductRow[])
+  const all = toProducts(siblingsData as RawProductRow[])
   const product = all.find((p) => p.slug === slug)
   if (!product) return null
 
@@ -172,11 +169,12 @@ export async function fetchProductBySlug(
 }
 
 export async function fetchBusinessTypes(): Promise<CatalogBusinessType[]> {
-  const { data, error } = await supabase
-    .from("business_types")
-    .select("id, name, description")
-    .order("name")
-
-  if (error) throw error
+  const headers = getHeaders()
+  const baseUrl = import.meta.env.VITE_SUPABASE_URL
+  
+  const res = await fetch(`${baseUrl}/rest/v1/business_types?select=id,name,description&order=name.asc`, { headers })
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+  
+  const data = await res.json()
   return data ?? []
 }
