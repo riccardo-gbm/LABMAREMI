@@ -35,7 +35,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/catalogo" element={<CatalogPage />} />
-            <Route path="/producto/:id" element={<ProductDetailPage />} />
+            <Route path="/producto/:slug" element={<ProductDetailPage />} />
             <Route path="/cotizacion" element={<QuotePage />} />
             <Route path="/contacto" element={<ContactPage />} />
             <Route path="/nosotros" element={<AboutPage />} />

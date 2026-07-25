@@ -36,20 +36,10 @@ const categoryIcons: Record<string, LucideIcon> = {
   "equipos-proteccion": ShieldCheck,
 }
 
-const businessTypeIcons: Record<string, LucideIcon> = {
-  restaurantes: UtensilsCrossed,
-  hoteles: BedDouble,
-  oficinas: Building2,
-  "instituciones-educativas": GraduationCap,
-  clinicas: Stethoscope,
-  "empresas-limpieza": Sparkles,
-  "tiendas-locales": Store,
-}
-
 /**
- * Business-type icons keyed by display name — for live data (Supabase
- * `business_types` has no slug column, only id + name). Names match the
- * canonical seven segments in src/data/businessTypes.ts.
+ * Business-type icons keyed by display name — Supabase `business_types` has
+ * no slug column, only id + name. Names match the canonical seven segments
+ * seeded by scripts/import-catalog.mjs.
  */
 const businessTypeIconsByName: Record<string, LucideIcon> = {
   Restaurantes: UtensilsCrossed,
@@ -63,10 +53,6 @@ const businessTypeIconsByName: Record<string, LucideIcon> = {
 
 export function getCategoryIcon(categoryId: string): LucideIcon {
   return categoryIcons[categoryId] ?? Package
-}
-
-export function getBusinessTypeIcon(businessTypeId: string): LucideIcon {
-  return businessTypeIcons[businessTypeId] ?? Building2
 }
 
 export function getBusinessTypeIconByName(name: string | null): LucideIcon {

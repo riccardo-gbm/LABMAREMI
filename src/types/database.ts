@@ -21,6 +21,9 @@ export interface Database {
           id: string
           name: string
           slug: string
+          description: string
+          image_url: string | null
+          image_alt: string | null
           sort_order: number
           created_at: string
         }
@@ -28,6 +31,9 @@ export interface Database {
           id?: string
           name: string
           slug: string
+          description?: string
+          image_url?: string | null
+          image_alt?: string | null
           sort_order?: number
           created_at?: string
         }
@@ -35,6 +41,9 @@ export interface Database {
           id?: string
           name?: string
           slug?: string
+          description?: string
+          image_url?: string | null
+          image_alt?: string | null
           sort_order?: number
           created_at?: string
         }
@@ -44,16 +53,19 @@ export interface Database {
         Row: {
           id: string
           name: string
+          description: string
           created_at: string
         }
         Insert: {
           id?: string
           name: string
+          description?: string
           created_at?: string
         }
         Update: {
           id?: string
           name?: string
+          description?: string
           created_at?: string
         }
         Relationships: []
@@ -62,6 +74,7 @@ export interface Database {
         Row: {
           id: string
           name: string
+          slug: string | null
           category_id: string
           description: string
           presentation: string
@@ -73,6 +86,7 @@ export interface Database {
         Insert: {
           id?: string
           name: string
+          slug?: string | null
           category_id: string
           description?: string
           presentation?: string
@@ -84,6 +98,7 @@ export interface Database {
         Update: {
           id?: string
           name?: string
+          slug?: string | null
           category_id?: string
           description?: string
           presentation?: string
@@ -189,7 +204,20 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      submit_quote_request: {
+        Args: {
+          company_name: string
+          contact_person: string
+          phone: string
+          email: string
+          business_type_id: string | null
+          location: string
+          message: string
+          product_ids: string[]
+          honeypot: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       quote_status: QuoteStatus

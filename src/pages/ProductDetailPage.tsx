@@ -1,3 +1,4 @@
+import { useCallback } from "react"
 import { Link, useParams } from "react-router-dom"
 import { ArrowLeft, ChevronRight, PackageX } from "lucide-react"
 
@@ -8,21 +9,65 @@ import { Eyebrow } from "@/components/ui/eyebrow"
 import { MediaFrame } from "@/components/ui/media-frame"
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
+import { Card } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { QueryError } from "@/components/ui/query-error"
 import { ProductCard } from "@/components/catalog/ProductCard"
-import {
-  getCategoryById,
-  getProductById,
-  getProductCode,
-  getRelatedProducts,
-} from "@/lib/catalog"
+import { fetchProductBySlug } from "@/lib/catalogData"
+import { useAsync } from "@/hooks/useAsync"
 import { getCategoryIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
-export default function ProductDetailPage() {
-  const { id } = useParams<{ id: string }>()
-  const product = id ? getProductById(id) : undefined
+/** Spec-sheet placeholder mirroring the two-column detail layout. */
+function DetailSkeleton() {
+  return (
+    <Section className="pt-8 md:pt-10">
+      <div className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
+        <Card className="aspect-square overflow-hidden">
+          <Skeleton className="h-full w-full rounded-none" />
+        </Card>
+        <div className="space-y-4">
+          <Skeleton className="h-3 w-32" />
+          <Skeleton className="h-6 w-28 rounded-full" />
+          <Skeleton className="h-10 w-3/4" />
+          <Skeleton className="h-16 w-full" />
+          <div className="space-y-2 pt-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-14 w-full" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </Section>
+  )
+}
 
-  if (!product) {
+export default function ProductDetailPage() {
+  const { slug } = useParams<{ slug: string }>()
+
+  const fetcher = useCallback(
+    () => (slug ? fetchProductBySlug(slug) : Promise.resolve(null)),
+    [slug],
+  )
+  const { data, loading, error, retry } = useAsync(fetcher)
+
+  if (loading) return <DetailSkeleton />
+
+  if (error) {
+    return (
+      <Section className="pt-8 md:pt-10">
+        <QueryError
+          onRetry={retry}
+          title="No se pudo cargar el producto."
+          description="Verifique su conexión e intente nuevamente."
+        />
+      </Section>
+    )
+  }
+
+  // Distinct from the error state above: the fetch succeeded, the slug just
+  // doesn't match any active product.
+  if (!data) {
     return (
       <Section>
         <div className="flex flex-col items-center rounded-xl border border-dashed px-6 py-20 text-center">
@@ -48,14 +93,13 @@ export default function ProductDetailPage() {
     )
   }
 
-  const category = getCategoryById(product.categoryId)
+  const { product, related } = data
   const Icon = getCategoryIcon(product.categoryId)
-  const code = getProductCode(product)
-  const related = getRelatedProducts(product)
+  const code = product.code
 
   const specRows = [
     { label: "Código", value: code, mono: true },
-    { label: "Categoría", value: category?.name ?? "—", mono: false },
+    { label: "Categoría", value: product.categoryName || "—", mono: false },
     { label: "Presentación", value: product.presentation, mono: false },
     { label: "Uso recomendado", value: product.recommendedUse, mono: false },
   ]
@@ -80,7 +124,7 @@ export default function ProductDetailPage() {
                 to={`/catalogo?categoria=${product.categoryId}`}
                 className="transition-colors hover:text-primary"
               >
-                {category?.name ?? "Categoría"}
+                {product.categoryName || "Categoría"}
               </Link>
             </li>
             <li aria-hidden="true">
@@ -98,8 +142,8 @@ export default function ProductDetailPage() {
         <div className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
           <Reveal direction="right">
             <MediaFrame
-              src={product.imageUrl ?? category?.imageUrl}
-              alt={product.imageAlt ?? category?.imageAlt ?? product.name}
+              src={product.imageUrl}
+              alt={product.name}
               fallbackLabel="Imagen referencial del producto"
               fallbackIcon={Icon}
               badge={code}
@@ -111,9 +155,9 @@ export default function ProductDetailPage() {
           <Reveal direction="left" delay={0.08}>
           <div>
             <Eyebrow>Ficha de producto</Eyebrow>
-            {category ? (
+            {product.categoryName ? (
               <Badge variant="secondary" className="mt-5">
-                {category.name}
+                {product.categoryName}
               </Badge>
             ) : null}
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
@@ -146,7 +190,7 @@ export default function ProductDetailPage() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <InteractiveHoverLink
-                to={`/cotizacion?productos=${product.id}`}
+                to={`/cotizacion?productos=${product.slug}`}
                 text="Solicitar cotización de este producto"
                 size="lg"
               />

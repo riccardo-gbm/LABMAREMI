@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import type { LucideIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -21,6 +22,15 @@ function MediaFrame({
   imageClassName,
   badge,
 }: MediaFrameProps) {
+  // A product with no photo yet arrives as src=undefined; a product whose
+  // stored image_url 404s fails at load time. Both must land on the same
+  // icon placeholder rather than a broken-image glyph.
+  const [failed, setFailed] = useState(false)
+  useEffect(() => {
+    setFailed(false)
+  }, [src])
+  const showImage = Boolean(src) && !failed
+
   return (
     <div
       className={cn(
@@ -28,11 +38,12 @@ function MediaFrame({
         className
       )}
     >
-      {src ? (
+      {showImage ? (
         <img
           src={src}
           alt={alt ?? fallbackLabel}
           loading="lazy"
+          onError={() => setFailed(true)}
           className={cn(
             "h-full w-full object-cover transition-transform duration-500 ease-out group-hover/media:scale-[1.03]",
             imageClassName

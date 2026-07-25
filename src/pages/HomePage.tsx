@@ -30,10 +30,12 @@ import {
   PHONE_DISPLAY,
   WHATSAPP_HREF,
 } from "@/lib/contact"
-import { getBusinessTypeIcon, getCategoryIcon } from "@/lib/icons"
+import { getBusinessTypeIconByName, getCategoryIcon } from "@/lib/icons"
 import { HeroSection } from "@/components/hero/HeroSection"
-import { categories } from "@/data/categories"
-import { businessTypes } from "@/data/businessTypes"
+import { Skeleton } from "@/components/ui/skeleton"
+import { QueryError } from "@/components/ui/query-error"
+import { fetchBusinessTypes, fetchCatalog } from "@/lib/catalogData"
+import { useAsync } from "@/hooks/useAsync"
 
 const reasons = [
     {
@@ -89,7 +91,20 @@ const procurementTiles = [
   },
 ]
 
+function fetchHomeData() {
+  return Promise.all([fetchCatalog(), fetchBusinessTypes()]).then(
+    ([catalog, businessTypes]) => ({
+      categories: catalog.categories,
+      businessTypes,
+    }),
+  )
+}
+
 export default function HomePage() {
+  // The hero and every static band render immediately; only the two
+  // data-driven grids below wait on this.
+  const { data, loading, error, retry } = useAsync(fetchHomeData)
+
   return (
     <>
       <HeroSection />
@@ -170,8 +185,24 @@ export default function HomePage() {
           </Link>
         </Reveal>
 
+        {loading ? (
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Card key={i} className="overflow-hidden">
+                <Skeleton className="aspect-[16/10] w-full rounded-none" />
+                <div className="space-y-3 p-5">
+                  <Skeleton className="h-5 w-2/3" />
+                  <Skeleton className="h-12 w-full" />
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : null}
+
+        {error ? <QueryError className="mt-12" onRetry={retry} /> : null}
+
         <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => {
+          {(data?.categories ?? []).map((category) => {
             const Icon = getCategoryIcon(category.id)
             return (
               <RevealItem key={category.id} className="flex">
@@ -215,12 +246,22 @@ export default function HomePage() {
           Entendemos las exigencias de cada sector y adaptamos el abastecimiento
           a su ritmo de trabajo.
         </p>
+        {loading ? (
+          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Skeleton key={i} className="h-[74px] w-full rounded-xl" />
+            ))}
+          </div>
+        ) : null}
+
         <RevealGroup
           className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
           stagger={0.05}
         >
-          {businessTypes.map((type) => {
-            const Icon = getBusinessTypeIcon(type.id)
+          {(data?.businessTypes ?? []).map((type) => {
+            // DB business_types has no slug column, so the icon map is
+            // keyed by display name.
+            const Icon = getBusinessTypeIconByName(type.name)
             return (
               <RevealItem
                 key={type.id}

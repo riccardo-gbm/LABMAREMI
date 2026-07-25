@@ -9,17 +9,51 @@ import { Input } from "@/components/ui/input"
 import { PageHeader } from "@/components/ui/page-header"
 import { Reveal } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
+import { Skeleton } from "@/components/ui/skeleton"
+import { QueryError } from "@/components/ui/query-error"
 import { ProductCard } from "@/components/catalog/ProductCard"
-import { categories } from "@/data/categories"
-import { products } from "@/data/products"
+import { fetchCatalog } from "@/lib/catalogData"
+import { useAsync } from "@/hooks/useAsync"
 import { getCategoryCode, matchesQuery } from "@/lib/catalog"
 import { cn } from "@/lib/utils"
 
 const CATEGORY_PARAM = "categoria"
 
+/** Filter bar + card grid placeholders, matching the loaded layout. */
+function CatalogSkeleton() {
+  return (
+    <Section className="pt-8 md:pt-10">
+      <Card className="space-y-5 p-4 md:p-5">
+        <Skeleton className="h-11 w-full max-w-[360px]" />
+        <div className="flex flex-wrap gap-2 border-t pt-4">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <Skeleton key={i} className="h-8 w-32 rounded-full" />
+          ))}
+        </div>
+      </Card>
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Card key={i} className="overflow-hidden">
+            <Skeleton className="aspect-[4/3] w-full rounded-none" />
+            <div className="space-y-3 p-5">
+              <Skeleton className="h-5 w-28 rounded-full" />
+              <Skeleton className="h-5 w-3/4" />
+              <Skeleton className="h-16 w-full" />
+            </div>
+          </Card>
+        ))}
+      </div>
+    </Section>
+  )
+}
+
 export default function CatalogPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [query, setQuery] = useState("")
+  const { data, loading, error, retry } = useAsync(fetchCatalog)
+
+  const categories = data?.categories ?? []
+  const products = data?.products ?? []
 
   const rawCategory = searchParams.get(CATEGORY_PARAM)
   // Ignore unknown category ids in the URL instead of showing zero results.
@@ -27,6 +61,8 @@ export default function CatalogPage() {
     ? rawCategory
     : null
 
+  // Client-side: 138 products is one small fetch, and matchesQuery is
+  // accent-insensitive in a way Postgres ilike is not without `unaccent`.
   const filtered = useMemo(
     () =>
       products.filter(
@@ -34,7 +70,7 @@ export default function CatalogPage() {
           (!activeCategory || product.categoryId === activeCategory) &&
           matchesQuery(product, query)
       ),
-    [activeCategory, query]
+    [products, activeCategory, query]
   )
 
   const selectCategory = (categoryId: string | null) => {
@@ -58,12 +94,40 @@ export default function CatalogPage() {
 
   const hasActiveFilters = Boolean(activeCategory || query.trim())
 
+  const header = (
+    <PageHeader
+      title="Catálogo de productos"
+      description="Explore nuestro catálogo de limpieza, desinfección, protección e higiene. Seleccione una categoría o busque un producto específico."
+    />
+  )
+
+  if (loading) {
+    return (
+      <>
+        {header}
+        <CatalogSkeleton />
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        {header}
+        <Section className="pt-8 md:pt-10">
+          <QueryError
+            onRetry={retry}
+            title="No se pudo cargar el catálogo."
+            description="Verifique su conexión e intente nuevamente."
+          />
+        </Section>
+      </>
+    )
+  }
+
   return (
     <>
-      <PageHeader
-        title="Catálogo de productos"
-        description="Explore nuestro catálogo de limpieza, desinfección, protección e higiene. Seleccione una categoría o busque un producto específico."
-      />
+      {header}
 
       <Section className="pt-8 md:pt-10">
         <Reveal>
