@@ -13,9 +13,10 @@ interface QuoteSuccessProps {
 }
 
 /**
- * Post-submit confirmation. Phase 1 has no backend, so copy is careful to
- * read as "we received this and will follow up" rather than implying the
- * request was saved anywhere. The reference code is a cosmetic UI touch.
+ * Post-submit confirmation, shown only after the lead has been persisted via
+ * the submit_quote_request RPC (P6). The copy reads as "we received this and
+ * will follow up," which is now literally true. The reference code stays a
+ * cosmetic UI touch — the RPC returns void, so it is not the DB id.
  */
 function QuoteSuccess({
   companyName,

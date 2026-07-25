@@ -3,13 +3,15 @@ import { AnimatePresence, m } from "framer-motion"
 import { Search, X } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
-import { categories } from "@/data/categories"
-import { products } from "@/data/products"
-import { getCategoryCode, getProductById, matchesQuery } from "@/lib/catalog"
+import type { CatalogCategory, CatalogProduct } from "@/lib/catalogData"
+import { getCategoryCode, matchesQuery } from "@/lib/catalog"
 import { getCategoryIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 interface ProductPickerProps {
+  categories: CatalogCategory[]
+  products: CatalogProduct[]
+  /** Selected product ids (DB uuids). */
   value: string[]
   onChange: (next: string[]) => void
   /** id used to associate an external error message via aria-describedby */
@@ -21,22 +23,28 @@ interface ProductPickerProps {
  * matching the catalog's filter-chip language. Selected items also surface as
  * a removable summary row so the choice stays visible while scrolling.
  */
-function ProductPicker({ value, onChange, errorId }: ProductPickerProps) {
+function ProductPicker({
+  categories,
+  products,
+  value,
+  onChange,
+  errorId,
+}: ProductPickerProps) {
   const [query, setQuery] = useState("")
 
   // Set for O(1) membership checks — the selection is read once per rendered
   // chip, which would otherwise re-scan the array for every product.
   const selectedIds = useMemo(() => new Set(value), [value])
 
-  const selectedProducts = useMemo(
-    () => value.map((id) => getProductById(id)).filter((p) => p !== undefined),
-    [value]
-  )
+  const selectedProducts = useMemo(() => {
+    const byId = new Map(products.map((p) => [p.id, p]))
+    return value.map((id) => byId.get(id)).filter((p) => p !== undefined)
+  }, [products, value])
 
   const groupedFiltered = useMemo(() => {
     // Single pass over categories: build each group's items and keep only the
     // non-empty groups, instead of a separate .map().filter() chain.
-    const groups: { category: (typeof categories)[number]; items: typeof products }[] = []
+    const groups: { category: CatalogCategory; items: CatalogProduct[] }[] = []
     for (const category of categories) {
       const items = products.filter(
         (product) =>
@@ -45,7 +53,7 @@ function ProductPicker({ value, onChange, errorId }: ProductPickerProps) {
       if (items.length > 0) groups.push({ category, items })
     }
     return groups
-  }, [query])
+  }, [categories, products, query])
 
   const toggle = (productId: string) => {
     if (selectedIds.has(productId)) {

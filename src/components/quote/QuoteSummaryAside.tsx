@@ -1,17 +1,14 @@
 import { AnimatePresence, m } from "framer-motion"
 import { CheckCircle2, Clock, FileText, PackageCheck } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { Reveal } from "@/components/ui/reveal"
-import { getProductById, getProductCode } from "@/lib/catalog"
-
-type SelectedProduct = NonNullable<ReturnType<typeof getProductById>>
+import type { CatalogProduct } from "@/lib/catalogData"
 
 interface QuoteSummaryAsideProps {
   productSummary: number
-  selectedProducts: SelectedProduct[]
+  selectedProducts: CatalogProduct[]
 }
 
 /** Sticky sidebar on the quote form: live selection summary + next steps. */
@@ -51,7 +48,7 @@ function QuoteSummaryAside({
                           {product.name}
                         </p>
                         <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ring">
-                          {getProductCode(product)}
+                          {product.code}
                         </span>
                       </div>
                       <p className="mt-1 text-xs text-muted-foreground">
@@ -89,9 +86,6 @@ function QuoteSummaryAside({
               Coordinamos seguimiento por WhatsApp o correo.
             </li>
           </ul>
-          <Badge variant="secondary" className="mt-5">
-            Demo Fase 1 · sin persistencia real
-          </Badge>
         </Card>
       </aside>
     </Reveal>

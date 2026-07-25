@@ -15,8 +15,16 @@ import { Textarea } from "@/components/ui/textarea"
 import { ProductPicker } from "@/components/quote/ProductPicker"
 import { QuoteSuccess } from "@/components/quote/QuoteSuccess"
 import { QuoteSummaryAside } from "@/components/quote/QuoteSummaryAside"
-import { businessTypes } from "@/data/businessTypes"
-import { getProductById } from "@/lib/catalog"
+import { Skeleton } from "@/components/ui/skeleton"
+import { QueryError } from "@/components/ui/query-error"
+import {
+  fetchBusinessTypes,
+  fetchCatalog,
+  type Catalog,
+  type CatalogBusinessType,
+} from "@/lib/catalogData"
+import { submitQuoteRequest } from "@/lib/quoteSubmission"
+import { useAsync } from "@/hooks/useAsync"
 
 const PRODUCTS_PARAM = "productos"
 
@@ -27,11 +35,32 @@ function generateReferenceCode(): string {
   return `SOL-${datePart}-${randomPart}`
 }
 
-function parseInitialProducts(raw: string | null): string[] {
+interface QuoteData {
+  catalog: Catalog
+  businessTypes: CatalogBusinessType[]
+}
+
+function fetchQuoteData(): Promise<QuoteData> {
+  return Promise.all([fetchCatalog(), fetchBusinessTypes()]).then(
+    ([catalog, businessTypes]) => ({ catalog, businessTypes }),
+  )
+}
+
+/**
+ * `?productos=` carries slugs (readable deep links from the catalog), but the
+ * form tracks product uuids — so this can only resolve once the catalog is
+ * loaded, which is why the form mounts behind the fetch rather than
+ * initialising from the URL synchronously.
+ */
+function resolveInitialProducts(
+  raw: string | null,
+  products: Catalog["products"],
+): string[] {
+  const bySlug = new Map(products.map((p) => [p.slug, p.id]))
   return (raw ?? "")
     .split(",")
-    .map((id) => id.trim())
-    .filter((id) => getProductById(id) !== undefined)
+    .map((slug) => bySlug.get(slug.trim()))
+    .filter((id) => id !== undefined)
 }
 
 interface QuoteFormState {
@@ -55,7 +84,7 @@ type QuoteFormAction =
   | { type: "setProducts"; value: string[] }
   | { type: "reset" }
 
-function createInitialFormState(rawProducts: string | null): QuoteFormState {
+function createInitialFormState(productsOfInterest: string[]): QuoteFormState {
   return {
     companyName: "",
     contactPerson: "",
@@ -63,7 +92,7 @@ function createInitialFormState(rawProducts: string | null): QuoteFormState {
     email: "",
     businessTypeId: "",
     location: "",
-    productsOfInterest: parseInitialProducts(rawProducts),
+    productsOfInterest,
     message: "",
   }
 }
@@ -78,24 +107,84 @@ function quoteFormReducer(
     case "setProducts":
       return { ...state, productsOfInterest: action.value }
     case "reset":
-      return createInitialFormState(null)
+      return createInitialFormState([])
     default:
       return state
   }
 }
 
+const PAGE_TITLE = "Solicitar cotización"
+const PAGE_DESCRIPTION =
+  "Complete el formulario y nuestro equipo le enviará una propuesta a la medida de su negocio."
+
+/** Form-shaped placeholder so the page never flashes empty. */
+function QuoteFormSkeleton() {
+  return (
+    <Section className="pt-8 md:pt-10">
+      <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
+        <Card className="space-y-5 p-6 md:p-8">
+          <Skeleton className="h-3 w-40" />
+          <div className="grid gap-5 sm:grid-cols-2">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
+          </div>
+          <Skeleton className="h-64 w-full" />
+        </Card>
+        <Card className="p-6">
+          <Skeleton className="h-3 w-36" />
+          <Skeleton className="mt-4 h-40 w-full" />
+        </Card>
+      </div>
+    </Section>
+  )
+}
+
 export default function QuotePage() {
+  const { data, loading, error, retry } = useAsync(fetchQuoteData)
+
+  return (
+    <>
+      <PageHeader title={PAGE_TITLE} description={PAGE_DESCRIPTION} />
+      {loading ? <QuoteFormSkeleton /> : null}
+      {error ? (
+        <Section className="pt-8 md:pt-10">
+          <QueryError
+            onRetry={retry}
+            title="No se pudo cargar el formulario."
+            description="No pudimos obtener el catálogo ni los tipos de negocio. Intente nuevamente."
+          />
+        </Section>
+      ) : null}
+      {data ? (
+        <QuoteForm catalog={data.catalog} businessTypes={data.businessTypes} />
+      ) : null}
+    </>
+  )
+}
+
+interface QuoteFormProps {
+  catalog: Catalog
+  businessTypes: CatalogBusinessType[]
+}
+
+function QuoteForm({ catalog, businessTypes }: QuoteFormProps) {
   const [searchParams] = useSearchParams()
   const productsErrorId = useId()
 
   const [form, dispatch] = useReducer(
     quoteFormReducer,
-    searchParams.get(PRODUCTS_PARAM),
+    resolveInitialProducts(searchParams.get(PRODUCTS_PARAM), catalog.products),
     createInitialFormState
   )
 
   const [productsError, setProductsError] = useState(false)
   const productsPickerRef = useRef<HTMLDivElement>(null)
+  // Uncontrolled honeypot: real users never see or fill it; a value means a bot.
+  const honeypotRef = useRef<HTMLInputElement>(null)
+
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState(false)
 
   const [submission, setSubmission] = useState<{
     companyName: string
@@ -108,13 +197,12 @@ export default function QuotePage() {
     [form.productsOfInterest]
   )
 
-  const selectedProducts = useMemo(
-    () =>
-      form.productsOfInterest
-        .map((productId) => getProductById(productId))
-        .filter((product) => product !== undefined),
-    [form.productsOfInterest]
-  )
+  const selectedProducts = useMemo(() => {
+    const byId = new Map(catalog.products.map((p) => [p.id, p]))
+    return form.productsOfInterest
+      .map((productId) => byId.get(productId))
+      .filter((product) => product !== undefined)
+  }, [catalog.products, form.productsOfInterest])
 
   const setField = (field: QuoteTextField) => (
     event: { target: { value: string } }
@@ -123,11 +211,20 @@ export default function QuotePage() {
   const resetForm = () => {
     dispatch({ type: "reset" })
     setProductsError(false)
+    setSubmitError(false)
     setSubmission(null)
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const showSuccess = () =>
+    setSubmission({
+      companyName: form.companyName,
+      productCount: productSummary,
+      referenceCode: generateReferenceCode(),
+    })
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    if (submitting) return
 
     // Native HTML5 constraints (required, type="email", type="tel" + pattern)
     // already cover the plain text fields — reportValidity() surfaces the
@@ -137,7 +234,9 @@ export default function QuotePage() {
       return
     }
 
-    if (form.productsOfInterest.length === 0) {
+    // A request needs *something* to act on: at least one product, or a written
+    // message describing what they need. Only block when both are empty.
+    if (form.productsOfInterest.length === 0 && form.message.trim() === "") {
       setProductsError(true)
       productsPickerRef.current?.scrollIntoView({
         behavior: "smooth",
@@ -146,42 +245,53 @@ export default function QuotePage() {
       return
     }
 
-    setSubmission({
-      companyName: form.companyName,
-      productCount: productSummary,
-      referenceCode: generateReferenceCode(),
-    })
+    // Bot trap: if the hidden field was filled, accept silently without writing
+    // anything — the bot sees the same success screen a person would.
+    if (honeypotRef.current?.value) {
+      showSuccess()
+      return
+    }
+
+    setSubmitError(false)
+    setSubmitting(true)
+    try {
+      await submitQuoteRequest({
+        companyName: form.companyName,
+        contactPerson: form.contactPerson,
+        phone: form.phone,
+        email: form.email,
+        businessTypeId: form.businessTypeId,
+        location: form.location,
+        message: form.message,
+        productIds: form.productsOfInterest,
+        honeypot: honeypotRef.current?.value ?? "",
+      })
+      showSuccess()
+    } catch {
+      // Keep the form intact and surface a real error — never a false success.
+      setSubmitError(true)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (submission) {
     return (
-      <>
-        <PageHeader
-          title="Solicitar cotización"
-          description="Complete el formulario y nuestro equipo le enviará una propuesta a la medida de su negocio."
-        />
-        <Section className="pt-8 md:pt-10">
-          <div className="mx-auto max-w-2xl">
-            <QuoteSuccess
-              companyName={submission.companyName}
-              productCount={submission.productCount}
-              referenceCode={submission.referenceCode}
-              onReset={resetForm}
-            />
-          </div>
-        </Section>
-      </>
+      <Section className="pt-8 md:pt-10">
+        <div className="mx-auto max-w-2xl">
+          <QuoteSuccess
+            companyName={submission.companyName}
+            productCount={submission.productCount}
+            referenceCode={submission.referenceCode}
+            onReset={resetForm}
+          />
+        </div>
+      </Section>
     )
   }
 
   return (
-    <>
-      <PageHeader
-        title="Solicitar cotización"
-        description="Complete el formulario y nuestro equipo le enviará una propuesta a la medida de su negocio."
-      />
-
-      <Section className="pt-8 md:pt-10">
+    <Section className="pt-8 md:pt-10">
         <form
           noValidate={false}
           onSubmit={handleSubmit}
@@ -279,6 +389,8 @@ export default function QuotePage() {
                   Productos de interés *
                 </Label>
                 <ProductPicker
+                  categories={catalog.categories}
+                  products={catalog.products}
                   value={form.productsOfInterest}
                   onChange={(next) => {
                     dispatch({ type: "setProducts", value: next })
@@ -297,7 +409,8 @@ export default function QuotePage() {
                     role="alert"
                     className="text-sm font-medium text-destructive"
                   >
-                    Seleccione al menos un producto de interés.
+                    Seleccione al menos un producto o describa su solicitud en
+                    el mensaje.
                   </m.p>
                 ) : null}
                 </AnimatePresence>
@@ -315,14 +428,50 @@ export default function QuotePage() {
               </div>
             </div>
 
+            {/*
+              Honeypot: hidden off-screen (not display:none, which some bots
+              skip) and out of the tab order. A real user never fills it; a
+              value here means an automated submission, rejected on submit.
+            */}
+            <div className="absolute -left-[9999px]" aria-hidden="true">
+              <label htmlFor="website">No completar este campo</label>
+              <input
+                ref={honeypotRef}
+                id="website"
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                defaultValue=""
+              />
+            </div>
+
             <p className="mt-6 text-xs text-muted-foreground">
               * Campos obligatorios
             </p>
 
+            <AnimatePresence>
+              {submitError ? (
+                <m.p
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  role="alert"
+                  className="mt-4 text-sm font-medium text-destructive"
+                >
+                  No se pudo enviar la solicitud. Verifique su conexión e intente
+                  nuevamente.
+                </m.p>
+              ) : null}
+            </AnimatePresence>
+
             <InteractiveHoverButton
               type="submit"
-              text="Enviar solicitud"
+              text={submitting ? "Enviando…" : "Enviar solicitud"}
               size="lg"
+              disabled={submitting}
+              aria-busy={submitting}
               className="mt-6 w-full sm:w-auto"
             />
           </Card>
@@ -333,7 +482,6 @@ export default function QuotePage() {
             selectedProducts={selectedProducts}
           />
         </form>
-      </Section>
-    </>
+    </Section>
   )
 }
