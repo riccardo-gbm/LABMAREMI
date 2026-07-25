@@ -1,71 +1,129 @@
-# LABMAREMI — Phase 1 Frontend Demo
+# LABMAREMI — B2B Supply & Distribution Platform
 
-A professional, clickable frontend demo for **LABMAREMI Cía. Ltda.**, a family-run B2B distributor of cleaning, disinfection, protection, and hygiene supplies based in Quito, Ecuador. The demo presents the business, its product catalog, and a quote-request flow, plus a preview of the internal lead dashboard — all running on realistic mock data, with no backend.
+A modern B2B digital catalog and quotation platform built for **LABMAREMI Cía. Ltda.**, a distributor of cleaning, disinfection, protection, and hygiene supplies based in Quito, Ecuador. Serving restaurants, hotels, offices, clinics, educational institutions, and cleaning service providers.
 
-The full Phase 1 specification lives in [`docs/00-phase-1-scope.md`](docs/00-phase-1-scope.md).
+---
 
-## Tech stack
+## 🚀 Features
 
-- [React](https://react.dev/) + [Vite](https://vite.dev/) + [TypeScript](https://www.typescriptlang.org/) (strict)
-- [Tailwind CSS v4](https://tailwindcss.com/) (CSS-first config) + [shadcn/ui](https://ui.shadcn.com/)-style primitives
-- [React Router](https://reactrouter.com/) v7
-- [framer-motion](https://motion.dev/) — Home hero floating-image canvas and reveal helpers
-- [lucide-react](https://lucide.dev/) icons · Manrope + IBM Plex Mono via Google Fonts
+- **Interactive Product Catalog (`/catalogo`)**: Real-time multi-category filtering, instant search, and detailed specification sheets with presentation formats and recommended usage.
+- **B2B Quote Request Flow (`/cotizacion`)**: Multi-product picker with URL parameter pre-selection (`?productos=<ids>`), real-time quote summary, and honeypot spam protection.
+- **Real-time Supabase Integration**:
+  - Secure Security Definer RPC (`submit_quote_request`) for atomic quote submission.
+  - Automatic fallback to structured mock data when offline or in demonstration mode.
+- **Protected Admin Portal (`/admin`)**:
+  - Role-based access control backed by Supabase Auth and server-side RPC verification (`is_admin`).
+  - Interactive lead management dashboard with status tracking (`nuevo`, `contactado`, `interesado`, `cliente`, `rechazado`).
+  - Business intelligence panels displaying top-requested products, customer activity, and lead conversion metrics.
+- **Company & Operations Showcase**:
+  - `/nosotros`: Interactive company history timeline.
+  - `/platform`: Visualizer of B2B distribution workflow.
+  - Floating glassmorphism hero and floating elements built with Framer Motion.
+  - Direct WhatsApp integration widget for instant customer inquiries.
 
-## Run locally
+---
 
-Requires Node.js 20+.
+## 🛠️ Tech Stack
 
-```bash
-npm install
-npm run dev        # dev server at http://localhost:5173
-npm run build      # type-check + production build to dist/
-npm run preview    # serve the production build
+- **Frontend**: [React 19](https://react.dev/) + [Vite 6](https://vite.dev/) + [TypeScript](https://www.typescriptlang.org/) (strict mode)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)-style primitives (`class-variance-authority`, `clsx`, `tailwind-merge`)
+- **Routing**: [React Router v7](https://reactrouter.com/) (with lazy-loaded admin routes & Vercel SPA rewrites)
+- **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL, Row-Level Security, RPCs, Storage)
+- **Animations & Icons**: [Framer Motion](https://motion.dev/) + [Lucide React](https://lucide.dev/)
+
+---
+
+## 📁 Repository Structure
+
+```text
+├── src/
+│   ├── components/
+│   │   ├── about/       # Timeline & team components
+│   │   ├── admin/       # Dashboard tables, status selectors & analytics
+│   │   ├── auth/        # AuthProvider context & ProtectedRoute guards
+│   │   ├── catalog/     # Product cards & filters
+│   │   ├── hero/        # Interactive hero animations & canvas
+│   │   ├── layout/      # Header, Footer, WhatsApp widget & page layouts
+│   │   ├── quote/       # Product picker, quote summary & success states
+│   │   └── ui/          # Reusable UI primitives (Button, Card, Badge, PageHeader, etc.)
+│   ├── hooks/           # Custom React hooks (useAsync, useRevealOnMount)
+│   ├── lib/             # Supabase client, catalog logic, quote submissions & admin helpers
+│   ├── pages/           # Application route pages
+│   ├── types/           # Database & application TypeScript interfaces
+│   ├── App.tsx          # Router configuration & protected routes
+│   └── index.css        # Tailwind v4 configuration & global styles
+├── supabase/
+│   └── migrations/      # Production SQL database schema, RLS policies & RPC functions
+├── scripts/             # Automated data importers & RLS test suites
+└── vercel.json          # Production Vercel SPA rewrite rules
 ```
 
-## Pages
+---
 
-| Route | Page |
-|---|---|
-| `/` | Home — hero, categories, sectors, coverage, contact CTA, map |
-| `/catalogo` | Product catalog — search + category filter |
-| `/producto/:id` | Product detail (spec sheet) |
-| `/cotizacion` | Quote request form (supports `?productos=<ids>` pre-selection) |
-| `/contacto` | Contact — WhatsApp / phone / email, service area |
-| `/nosotros` | About us — family history timeline, team |
-| `/admin` | Admin dashboard **preview** (footer link) |
-| `/platform` | Business flow visualizer (footer link) |
+## ⚙️ Getting Started
 
-## Project structure
+### Prerequisites
 
-```
-src/
-  components/
-    ui/         # shared primitives and the glassmorphism trust hero
-    layout/     # Header, Footer, Layout shell
-    hero/       # Home hero wrapper and animated background
-    catalog/    # ProductCard
-    quote/      # ProductPicker, QuoteSuccess
-    admin/      # StatusBadge
-    about/      # Timeline
-  pages/        # one component per route
-  data/         # mock data (products, categories, businessTypes, leads)
-  types/        # shared TypeScript interfaces
-  lib/          # helpers (catalog lookups, admin stats, icons, contact info)
-docs/           # Phase 1 scope document
-graphify-out/   # generated knowledge graph of this codebase (not app code)
-```
+- **Node.js**: v20 or higher
+- **npm**: v10 or higher
 
-## What's mocked vs. real
+### Installation
 
-Everything you see runs entirely in the browser — **there is no backend in Phase 1**:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/riccardo-gbm/LABMAREMI.git
+   cd LABMAREMI
+   ```
 
-- **Products, categories, business types, and leads** are static TypeScript files in `src/data/`. All company names, contacts, phones, and emails in the lead data are fictional.
-- **The quote form** validates and shows a polished success state, but nothing is persisted — the reference number is cosmetic.
-- **The admin dashboard** is a visual preview: every metric is derived at render time from the mock leads.
-- **Contact details** (WhatsApp, phone, email) and the map location are placeholders.
-- **Hero imagery** is verified Unsplash stock, to be swapped for real LABMAREMI product photography.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Phase 2 (planned)
+3. Set up environment variables:
+   Copy `.env.example` to `.env` and fill in your Supabase credentials:
+   ```bash
+   cp .env.example .env
+   ```
+   ```env
+   VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+   VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+   ```
 
-Supabase backend: real product management, quote persistence, and authentication; the admin preview becomes a live internal tool for the sales team. Real product photos (and optionally a Spline 3D hero scene), plus deployment hardening. The mock data files were shaped to match the future database schema so migration is straightforward.
+4. Run locally:
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+## 📜 Available Scripts
+
+- `npm run dev` — Launches the Vite development server.
+- `npm run build` — Runs TypeScript type-checks (`tsc -b`) and generates the production build in `dist/`.
+- `npm run preview` — Serves the production build locally.
+- `npm run doctor` — Diagnostic utility for checking React components.
+
+---
+
+## 🌐 Deployment (Vercel)
+
+This repository includes a preconfigured [vercel.json](vercel.json) for single-page application (SPA) client-side routing.
+
+1. Connect the GitHub repository to Vercel.
+2. Ensure Framework Preset is set to **Vite**.
+3. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` in **Project Settings -> Environment Variables**.
+4. Deploy!
+
+---
+
+## 🔒 Database & Security Schema
+
+The database architecture is managed under `supabase/migrations/` and includes:
+
+- **Tables**: `products`, `categories`, `business_types`, `quote_requests`, `quote_request_items`, `customers`, `admin_users`.
+- **Row-Level Security (RLS)**: Public read access for active catalog items; strict admin-only read/write access for quotes and customer data.
+- **RPC Functions**:
+  - `submit_quote_request`: Atomic creation of quotes and line items with honeypot validation.
+  - `is_admin`: Server-side roster check to verify admin privileges.
