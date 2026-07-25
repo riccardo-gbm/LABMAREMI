@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect } from "react"
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
 
+import { Analytics } from "@vercel/analytics/react"
 import { AuthProvider } from "@/components/auth/AuthProvider"
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute"
 import { Layout } from "@/components/layout/Layout"
@@ -51,6 +52,7 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
+        <Analytics />
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
