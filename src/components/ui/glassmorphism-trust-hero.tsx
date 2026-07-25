@@ -30,17 +30,17 @@ export default function GlassmorphismTrustHero() {
         <HeroFloatingCanvas />
       </div>
 
-      <div className="relative z-20 mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-6xl flex-col gap-0 px-4 pt-32 pb-4 sm:px-6 md:pt-40 md:pb-8 lg:px-8">
+      <div className="relative z-20 mx-auto flex min-h-[calc(100dvh-4rem)] sm:min-h-[calc(100vh-4rem)] w-full max-w-6xl flex-col gap-0 px-4 pt-20 pb-4 sm:px-6 md:pt-36 md:pb-8 lg:px-8">
         {/* Centered wordmark + CTAs */}
         <div className="flex flex-1 items-center justify-center pb-2 sm:pb-3 md:pb-4">
-          <div className="relative flex flex-col items-center justify-center space-y-3 p-6 text-center md:p-8">
+          <div className="relative flex flex-col items-center justify-center space-y-3 p-4 text-center sm:p-6 md:p-8">
 
 
             {/* div, not p: TextLoop renders block-level divs, invalid inside <p> */}
-            <div className="labmaremi-hero-fade-in labmaremi-hero-delay-100 flex flex-wrap items-baseline justify-center gap-x-1.5 text-base font-semibold text-foreground/80 sm:text-lg md:text-xl">
+            <div className="labmaremi-hero-fade-in labmaremi-hero-delay-100 flex flex-wrap items-baseline justify-center gap-x-1.5 text-sm font-semibold text-foreground/80 sm:text-lg md:text-xl">
               Entregas
               <TextLoop
-                className="w-[130px] text-left font-bold text-black sm:w-[150px] md:w-[170px]"
+                className="w-[110px] text-left font-bold text-black sm:w-[150px] md:w-[170px]"
                 interval={2.5}
                 transition={{ duration: 0.4, ease: "easeInOut" }}
                 trigger={!reduceMotion}
@@ -53,34 +53,34 @@ export default function GlassmorphismTrustHero() {
             </div>
 
             <div className="labmaremi-hero-fade-in labmaremi-hero-delay-200 flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-4">
-              <h1 className="text-5xl font-goodtimes font-bold leading-none text-[#0066cc] sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight">
+              <h1 className="text-4xl font-goodtimes font-bold leading-none text-[#0066cc] sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight break-words">
                 LABMAREMI
               </h1>
             </div>
 
-            <div className="labmaremi-hero-fade-in labmaremi-hero-delay-400 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <div className="labmaremi-hero-fade-in labmaremi-hero-delay-400 flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-3">
               <InteractiveHoverLink
                 to="/cotizacion"
                 text="Solicitar cotización"
-                size="lg"
-                className="bg-blue-600 px-8 py-6 text-white shadow-md hover:bg-blue-700 transition-colors"
-                dotClassName="left-3.5"
+                size="sm"
+                className="w-[195px] sm:w-auto justify-center bg-blue-600 px-4 py-2.5 text-xs sm:text-sm sm:px-8 sm:py-6 text-white shadow-md hover:bg-blue-700 transition-colors"
+                dotClassName="left-3"
               />
               <InteractiveHoverLink
                 to="/catalogo"
                 text="Ver catálogo"
                 variant="outline"
-                size="lg"
-                className="border border-primary/20 bg-white px-8 py-6 text-primary hover:bg-primary/5 transition-colors shadow-sm"
-                dotClassName="left-3.5"
+                size="sm"
+                className="w-[195px] sm:w-auto justify-center border border-primary/20 bg-white px-4 py-2.5 text-xs sm:text-sm sm:px-8 sm:py-6 text-primary hover:bg-primary/5 transition-colors shadow-sm"
+                dotClassName="left-3"
               />
             </div>
           </div>
         </div>
 
-        {/* Bottom: sector marquee panel fills the full width */}
-        <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 relative flex w-full flex-col justify-center overflow-hidden rounded-xl border border-slate-200 bg-white py-4 shadow-sm">
-          <h2 className="mb-2 px-6 text-[15px] font-semibold tracking-wider text-muted-foreground md:px-8">
+        {/* Bottom: sector marquee panel. Shortened on mobile to make room for WhatsApp widget. */}
+        <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 relative flex w-[calc(100%-4.5rem)] sm:w-full self-start flex-col justify-center overflow-hidden rounded-xl border border-slate-200 bg-white py-3 sm:py-4 shadow-sm">
+          <h2 className="mb-2 px-4 text-xs font-semibold tracking-wider text-muted-foreground sm:px-6 sm:text-[15px] md:px-8">
             Atendemos sectores como:
           </h2>
 
