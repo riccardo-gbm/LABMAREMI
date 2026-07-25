@@ -6,6 +6,14 @@ import {
   useReducedMotion,
   type Variants,
 } from "framer-motion"
+import { useRevealOnMount } from "@/hooks/useRevealOnMount"
+
+/**
+ * Set by a RevealGroup that gave up on animating (see below) so its items skip
+ * their entrance too — otherwise the children would stay hidden inside a
+ * visible container.
+ */
+const RevealBypass = React.createContext(false)
 
 /**
  * Shared scroll-reveal primitives. Subtle fade + directional lift as content
@@ -94,9 +102,24 @@ function RevealGroup({
   amount = GROUP_VIEWPORT.amount,
 }: RevealGroupProps) {
   const reduceMotion = useReducedMotion()
+  const { ref, revealNow } = useRevealOnMount<HTMLDivElement>(
+    React.Children.count(children),
+  )
 
-  if (reduceMotion) {
-    return <div className={className}>{children}</div>
+  // `whileInView` cannot fire for a group already on screen when it mounts —
+  // no observer crossing ever happens — and neither `animate` nor a swapped
+  // trigger propagates to the items once that state has settled. So when the
+  // group is already visible, drop the entrance entirely and render it plainly
+  // rather than leaving readable content stuck at opacity 0. Below-the-fold
+  // groups are unaffected and still stagger in on scroll.
+  if (reduceMotion || revealNow) {
+    return (
+      <RevealBypass.Provider value>
+        <div ref={ref} className={className}>
+          {children}
+        </div>
+      </RevealBypass.Provider>
+    )
   }
 
   const groupVariants: Variants = {
@@ -106,6 +129,7 @@ function RevealGroup({
 
   return (
     <m.div
+      ref={ref}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount }}
@@ -132,8 +156,9 @@ function RevealItem({
   duration = 0.45,
 }: RevealItemProps) {
   const reduceMotion = useReducedMotion()
+  const bypass = React.useContext(RevealBypass)
 
-  if (reduceMotion) {
+  if (reduceMotion || bypass) {
     return <div className={className}>{children}</div>
   }
 
