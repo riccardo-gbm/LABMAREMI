@@ -48,7 +48,7 @@ export default function GlassmorphismTrustHero() {
                 <span>inmediatas</span>
                 <span>el mismo día</span>
                 <span>en Quito</span>
-                <span>y provincias cercanas</span>
+                <span>en provincias cercanas</span>
               </TextLoop>
             </div>
 
