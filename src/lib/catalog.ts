@@ -1,11 +1,18 @@
-import { categories } from "@/data/categories"
-import { products } from "@/data/products"
-import type { Category, Product } from "@/types"
+/**
+ * Pure catalog helpers — no data source.
+ *
+ * Product/category lookups used to live here over the mock arrays; they now
+ * come from src/lib/catalogData.ts (Supabase). What remains is the display
+ * taxonomy and the search predicate, both of which are pure functions of
+ * their arguments.
+ */
 
 /**
- * Explicit three-letter spec codes per category. `id.slice(0, 3)` collides
+ * Explicit three-letter spec codes per category. `slug.slice(0, 3)` collides
  * (desinfectantes / desengrasantes → "DES"), so codes are assigned by hand.
  * EPP is the standard Spanish acronym for personal protective equipment.
+ *
+ * Keyed by the DB `categories.slug`.
  */
 const categoryCodes: Record<string, string> = {
   desinfectantes: "DSF",
@@ -19,34 +26,8 @@ const categoryCodes: Record<string, string> = {
   "equipos-proteccion": "EPP",
 }
 
-export function getCategoryCode(categoryId: string): string {
-  return categoryCodes[categoryId] ?? categoryId.slice(0, 3).toUpperCase()
-}
-
-/**
- * Stable datasheet-style code for a product (e.g. "DSF-03"), derived from
- * its category code and position within the category. Display-only — ids
- * remain the canonical keys.
- */
-export function getProductCode(product: Product): string {
-  const siblings = products.filter((p) => p.categoryId === product.categoryId)
-  const index = siblings.findIndex((p) => p.id === product.id)
-  const position = String(index + 1).padStart(2, "0")
-  return `${getCategoryCode(product.categoryId)}-${position}`
-}
-
-export function getProductById(id: string): Product | undefined {
-  return products.find((product) => product.id === id)
-}
-
-export function getCategoryById(id: string): Category | undefined {
-  return categories.find((category) => category.id === id)
-}
-
-export function getRelatedProducts(product: Product, limit = 3): Product[] {
-  return products
-    .filter((p) => p.categoryId === product.categoryId && p.id !== product.id)
-    .slice(0, limit)
+export function getCategoryCode(categorySlug: string): string {
+  return categoryCodes[categorySlug] ?? categorySlug.slice(0, 3).toUpperCase()
 }
 
 /**
@@ -60,7 +41,12 @@ export function normalizeText(text: string): string {
     .replace(/\p{Diacritic}/gu, "")
 }
 
-export function matchesQuery(product: Product, query: string): boolean {
+interface Searchable {
+  name: string
+  description: string
+}
+
+export function matchesQuery(product: Searchable, query: string): boolean {
   const normalizedQuery = normalizeText(query.trim())
   if (!normalizedQuery) return true
   const haystack = normalizeText(`${product.name} ${product.description}`)
