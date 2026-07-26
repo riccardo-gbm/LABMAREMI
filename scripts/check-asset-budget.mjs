@@ -23,8 +23,21 @@ const DIST_ASSETS = path.join(ROOT, "dist", "assets")
 const MAX_FILE_KB = 150
 /** Everything in public/ combined. */
 const MAX_TOTAL_KB = 500
-/** Gzipped entry chunk — the JS every visitor parses before interaction. */
-const MAX_ENTRY_GZIP_KB = 120
+
+/**
+ * Gzipped ceilings for every chunk on the eager critical path — the JS a
+ * visitor downloads and parses before the landing route is interactive. The
+ * old check measured only the entry chunk with 36 KB of headroom, which is
+ * how the eagerly modulepreloaded motion chunk (~48 KB gzip) went unnoticed.
+ * Budgets sit ~10% above 2026-07 measured sizes so drift fails loudly.
+ */
+const CHUNK_BUDGETS = [
+  { pattern: /^index-.*\.js$/, label: "entry", maxKb: 90 }, // 83.4 measured
+  { pattern: /^react-.*\.js$/, label: "react", maxKb: 25 }, // 17.3 measured
+  { pattern: /^motion-.*\.js$/, label: "motion", maxKb: 55 }, // 48.1 measured
+]
+/** Sum of the chunks above. ~148.8 KB measured 2026-07. */
+const MAX_CRITICAL_GZIP_KB = 155
 
 const kb = (bytes) => bytes / 1024
 const fmt = (n) => n.toLocaleString("en-US", { maximumFractionDigits: 1 })
@@ -80,25 +93,37 @@ if (embedded.length) {
   notes.push(`no base64 payloads in ${svgFiles.length} SVG file(s)`)
 }
 
-// ── 4. Entry chunk gzip size (only if dist/ was built) ──────────────────────
+// ── 4. Eager critical-path JS, gzipped (only if dist/ was built) ────────────
 if (fs.existsSync(DIST_ASSETS)) {
-  const entry = fs
-    .readdirSync(DIST_ASSETS)
-    .filter((f) => /^index-.*\.js$/.test(f))
-    .map((f) => path.join(DIST_ASSETS, f))[0]
+  const distFiles = fs.readdirSync(DIST_ASSETS)
+  let criticalKb = 0
 
-  if (entry) {
-    const gzipKb = kb(zlib.gzipSync(fs.readFileSync(entry)).length)
-    if (gzipKb > MAX_ENTRY_GZIP_KB) {
+  for (const { pattern, label, maxKb } of CHUNK_BUDGETS) {
+    const file = distFiles.filter((f) => pattern.test(f)).map((f) => path.join(DIST_ASSETS, f))[0]
+    if (!file) {
+      failures.push(`no dist/assets file matches ${pattern} — chunk layout changed, update CHUNK_BUDGETS`)
+      continue
+    }
+    const gzipKb = kb(zlib.gzipSync(fs.readFileSync(file)).length)
+    criticalKb += gzipKb
+    if (gzipKb > maxKb) {
       failures.push(
-        `entry chunk ${path.basename(entry)} is ${fmt(gzipKb)} KB gzipped, budget is ${MAX_ENTRY_GZIP_KB} KB`,
+        `${label} chunk ${path.basename(file)} is ${fmt(gzipKb)} KB gzipped, budget is ${maxKb} KB`,
       )
     } else {
-      notes.push(`entry chunk ${fmt(gzipKb)} KB gzipped (budget ${MAX_ENTRY_GZIP_KB} KB)`)
+      notes.push(`${label} chunk ${fmt(gzipKb)} KB gzipped (budget ${maxKb} KB)`)
     }
   }
+
+  if (criticalKb > MAX_CRITICAL_GZIP_KB) {
+    failures.push(
+      `eager critical path totals ${fmt(criticalKb)} KB gzipped, budget is ${MAX_CRITICAL_GZIP_KB} KB`,
+    )
+  } else {
+    notes.push(`eager critical path ${fmt(criticalKb)} KB gzipped (budget ${MAX_CRITICAL_GZIP_KB} KB)`)
+  }
 } else {
-  notes.push("dist/ not built — skipped entry chunk check (run `npm run build` first)")
+  notes.push("dist/ not built — skipped critical-path JS check (run `npm run build` first)")
 }
 
 // ── Report ──────────────────────────────────────────────────────────────────
