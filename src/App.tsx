@@ -4,14 +4,18 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import { Layout } from "@/components/layout/Layout"
+// HomePage stays eager — it is the landing route and lazying it would just add
+// a round trip before the LCP paint. Every other public page is split out so
+// the entry chunk carries one page's worth of code, not eight.
 import HomePage from "@/pages/HomePage"
-import CatalogPage from "@/pages/CatalogPage"
-import ProductDetailPage from "@/pages/ProductDetailPage"
-import QuotePage from "@/pages/QuotePage"
-import ContactPage from "@/pages/ContactPage"
-import AboutPage from "@/pages/AboutPage"
-import PlatformPage from "@/pages/PlatformPage"
-import NotFoundPage from "@/pages/NotFoundPage"
+
+const CatalogPage = lazy(() => import("@/pages/CatalogPage"))
+const ProductDetailPage = lazy(() => import("@/pages/ProductDetailPage"))
+const QuotePage = lazy(() => import("@/pages/QuotePage"))
+const ContactPage = lazy(() => import("@/pages/ContactPage"))
+const AboutPage = lazy(() => import("@/pages/AboutPage"))
+const PlatformPage = lazy(() => import("@/pages/PlatformPage"))
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"))
 
 // Admin is lazy-loaded so its data layer — the quote_requests/customers query
 // shapes and lead-status maps — ships in a separate chunk instead of the public
