@@ -136,6 +136,16 @@ export interface ProductDetail {
 }
 
 /**
+ * Exactly what scripts/slugify.mjs can emit: lowercase alphanumerics in
+ * hyphen-joined runs, never leading, trailing or doubled (the generator
+ * collapses every other character run to a single "-" and trims the ends).
+ *
+ * Defense in depth only — the query below is already parameter-encoded. This
+ * exists so a hostile /producto/:slug never reaches the network at all.
+ */
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+
+/**
  * One product by slug, plus its category siblings — needed both for the
  * "productos relacionados" row and to derive the product's own spec code.
  *
@@ -145,6 +155,11 @@ export interface ProductDetail {
 export async function fetchProductBySlug(
   slug: string,
 ): Promise<ProductDetail | null> {
+  // A slug that can't have come from the generator can't match a row, so this
+  // is "no encontrado" — not a failure. Returning null keeps the caller's two
+  // states honest instead of surfacing a retry button for an unretryable URL.
+  if (!SLUG_PATTERN.test(slug)) return null
+
   const headers = getHeaders()
   const baseUrl = import.meta.env.VITE_SUPABASE_URL
 
