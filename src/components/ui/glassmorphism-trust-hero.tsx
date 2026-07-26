@@ -58,7 +58,10 @@ export default function GlassmorphismTrustHero() {
               </TextLoop>
             </div>
 
-            <div className="labmaremi-hero-fade-in labmaremi-hero-delay-200 flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-4">
+            {/* No fade classes here: the h1 is the LCP element and must paint
+                immediately. The cascade around it (tagline, CTAs, marquee)
+                keeps the entrance choreography. */}
+            <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-4">
               <h1 className="text-4xl font-goodtimes font-bold leading-none text-[#0066cc] sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight break-words">
                 LABMAREMI
               </h1>
