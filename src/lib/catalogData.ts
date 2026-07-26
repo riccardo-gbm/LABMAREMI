@@ -148,17 +148,36 @@ export async function fetchProductBySlug(
   const headers = getHeaders()
   const baseUrl = import.meta.env.VITE_SUPABASE_URL
 
-  const res = await fetch(`${baseUrl}/rest/v1/products?select=category_id&slug=eq.${slug}&is_active=eq.true&limit=1`, { headers })
+  // URLSearchParams percent-encodes every value, so a slug carrying "&" or "="
+  // lands as one opaque filter value instead of grafting extra PostgREST
+  // params (select / or / limit / order) onto the request.
+  const productQuery = new URLSearchParams({
+    select: "category_id",
+    slug: `eq.${slug}`,
+    is_active: "eq.true",
+    limit: "1",
+  })
+
+  const res = await fetch(`${baseUrl}/rest/v1/products?${productQuery}`, { headers })
   if (!res.ok) throw new Error(`HTTP error ${res.status}`)
-  
+
   const data = await res.json()
   if (!data || data.length === 0) return null
-  
+
   const categoryId = data[0].category_id
 
-  const siblingsRes = await fetch(`${baseUrl}/rest/v1/products?select=id,slug,name,description,presentation,recommended_use,image_url,categories(slug,name)&category_id=eq.${categoryId}&is_active=eq.true&order=name.asc`, { headers })
+  // categoryId comes from the row above, not the URL, but it is encoded on the
+  // same footing so no future reader has to trace its provenance to feel safe.
+  const siblingsQuery = new URLSearchParams({
+    select: "id,slug,name,description,presentation,recommended_use,image_url,categories(slug,name)",
+    category_id: `eq.${categoryId}`,
+    is_active: "eq.true",
+    order: "name.asc",
+  })
+
+  const siblingsRes = await fetch(`${baseUrl}/rest/v1/products?${siblingsQuery}`, { headers })
   if (!siblingsRes.ok) throw new Error(`HTTP error ${siblingsRes.status}`)
-  
+
   const siblingsData = await siblingsRes.json()
 
   const all = toProducts(siblingsData as RawProductRow[])
