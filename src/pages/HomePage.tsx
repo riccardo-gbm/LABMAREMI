@@ -34,7 +34,7 @@ import { getBusinessTypeIconByName, getCategoryIcon } from "@/lib/icons"
 import { HeroSection } from "@/components/hero/HeroSection"
 import { Skeleton } from "@/components/ui/skeleton"
 import { QueryError } from "@/components/ui/query-error"
-import { fetchBusinessTypes, fetchCatalog } from "@/lib/catalogData"
+import { fetchBusinessTypes, fetchCategories } from "@/lib/catalogData"
 import { useAsync } from "@/hooks/useAsync"
 
 const reasons = [
@@ -92,9 +92,11 @@ const procurementTiles = [
 ]
 
 function fetchHomeData() {
-  return Promise.all([fetchCatalog(), fetchBusinessTypes()]).then(
-    ([catalog, businessTypes]) => ({
-      categories: catalog.categories,
+  // Categories only — the full catalog fetch pulled ~138 product rows onto the
+  // landing route's critical path just to discard them.
+  return Promise.all([fetchCategories(), fetchBusinessTypes()]).then(
+    ([categories, businessTypes]) => ({
+      categories,
       businessTypes,
     }),
   )

@@ -90,6 +90,43 @@ const getHeaders = () => ({
   Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
 })
 
+interface RawCategoryRow {
+  id: string
+  slug: string
+  name: string
+  description: string
+  image_url: string | null
+  image_alt: string | null
+}
+
+function toCategories(rows: RawCategoryRow[]): CatalogCategory[] {
+  return rows.map((row) => ({
+    id: row.slug,
+    uuid: row.id,
+    name: row.name,
+    description: row.description,
+    imageUrl: row.image_url ?? undefined,
+    imageAlt: row.image_alt ?? undefined,
+  }))
+}
+
+/**
+ * Categories only (in sort_order). The home page needs nothing else — fetching
+ * the full catalog there put ~138 product rows plus a locale sort on the
+ * landing route's critical path only to be thrown away.
+ */
+export async function fetchCategories(): Promise<CatalogCategory[]> {
+  const baseUrl = import.meta.env.VITE_SUPABASE_URL
+
+  const res = await fetch(
+    `${baseUrl}/rest/v1/categories?select=id,slug,name,description,image_url,image_alt&order=sort_order.asc`,
+    { headers: getHeaders() },
+  )
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+
+  return toCategories(await res.json())
+}
+
 /** Categories (in sort_order) plus every active product (by name). */
 export async function fetchCatalog(): Promise<Catalog> {
   const headers = getHeaders()
@@ -108,14 +145,7 @@ export async function fetchCatalog(): Promise<Catalog> {
     productsRes.json()
   ])
 
-  const categories: CatalogCategory[] = categoriesData.map((row: any) => ({
-    id: row.slug,
-    uuid: row.id,
-    name: row.name,
-    description: row.description,
-    imageUrl: row.image_url ?? undefined,
-    imageAlt: row.image_alt ?? undefined,
-  }))
+  const categories = toCategories(categoriesData as RawCategoryRow[])
 
   // Codes are per-category positions, so they must be computed over the whole
   // catalog ordered by category — not the flat name order the query returns.
