@@ -40,3 +40,9 @@ CLAUDE.md
 # Supabase CLI local state (created by `supabase link`)
 supabase
 
+# Source art for scripts/optimize-images.mjs. Not tracked: these are the same
+# base64-in-SVG files this branch removes from public/, so they already live in
+# git history. Recover one with:
+#   git show <commit-before-this-branch>:public/photo4.svg > design-assets/originals/photo4.svg
+design-assets
+

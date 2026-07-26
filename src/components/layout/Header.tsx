@@ -30,7 +30,15 @@ function Header() {
           className="flex items-center gap-2"
           onClick={() => setMobileOpen(false)}
         >
-          <img src="/logo1.svg" alt="LABMAREMI" className="h-15 w-15 object-contain" />
+          <img
+            src="/logo1.webp"
+            alt="LABMAREMI"
+            width={192}
+            height={192}
+            fetchPriority="high"
+            decoding="async"
+            className="h-15 w-15 object-contain"
+          />
           <span className="font-goodtimes text-lg font-bold tracking-tight text-[#0066cc]">
             LABMAREMI
           </span>

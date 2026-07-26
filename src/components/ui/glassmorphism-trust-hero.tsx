@@ -1,3 +1,4 @@
+import { Suspense, lazy } from "react"
 import { useReducedMotion } from "framer-motion"
 import {
   Briefcase,
@@ -8,7 +9,10 @@ import {
   Utensils,
 } from "lucide-react"
 
-import HeroFloatingCanvas from "@/components/hero/HeroFloatingCanvas"
+// The canvas is purely decorative (aria-hidden below) and is the only thing on
+// the public critical path pulling in framer-motion's animation runtime. Lazy
+// so the h1 — the LCP element — paints before it loads.
+const HeroFloatingCanvas = lazy(() => import("@/components/hero/HeroFloatingCanvas"))
 import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
 import { TextLoop } from "@/components/ui/text-loop"
 
@@ -27,7 +31,9 @@ export default function GlassmorphismTrustHero() {
   return (
     <section className="relative w-full overflow-hidden border-b bg-background text-foreground">
       <div className="absolute inset-0 z-0 opacity-90" aria-hidden="true">
-        <HeroFloatingCanvas />
+        <Suspense fallback={null}>
+          <HeroFloatingCanvas />
+        </Suspense>
       </div>
 
       <div className="relative z-20 mx-auto flex min-h-[calc(100dvh-4rem)] sm:min-h-[calc(100vh-4rem)] w-full max-w-6xl flex-col gap-0 px-4 pt-20 pb-4 sm:px-6 md:pt-36 md:pb-8 lg:px-8">

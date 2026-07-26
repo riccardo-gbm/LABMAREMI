@@ -64,8 +64,12 @@ function Footer() {
           <div>
             <div className="flex items-center gap-2">
               <m.img
-                src="/logo1.svg"
+                src="/logo1.webp"
                 alt="LABMAREMI"
+                width={192}
+                height={192}
+                loading="lazy"
+                decoding="async"
                 initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.7 }}

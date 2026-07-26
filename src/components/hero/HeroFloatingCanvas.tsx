@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import {
   m,
+  motionValue,
   useAnimationFrame,
   useMotionValue,
   useReducedMotion,
@@ -10,91 +11,93 @@ import {
 
 const TWO_PI = Math.PI;
 
-// Exactly 12 clouds around the wordmark: the 5 local product illustrations plus
-// 4 verified Unsplash stock photos (cleaning/protection subjects) sized small
-// via "?q=80&w=500". Swap in real LABMAREMI product photos later; only this
-// array needs to change. Odd indices are hidden on mobile so the 5 that remain
-// stay evenly spread around the ring.
+/**
+ * Supplier brand logos for the lines LABMAREMI distributes, drifting around the
+ * wordmark. Decorative only — the whole canvas is aria-hidden in the hero, so
+ * every img carries an empty alt.
+ *
+ * Assets are WebP at 240px, generated from the originals in design-assets/ by
+ * scripts/optimize-images.mjs. They used to be base64-encoded PNGs wrapped in
+ * SVG totalling 9.2 MB (one was 5.2 MB for a 110px slot), which is what pushed
+ * mobile LCP to 3.94s. Do not add art here without checking its byte size —
+ * scripts/check-asset-budget.mjs enforces the ceiling.
+ *
+ * All twelve render on every viewport, including mobile — the full ring is the
+ * intended design. That is affordable now that the set weighs ~110 KB instead
+ * of 8.3 MB and a single rAF loop drives every cloud.
+ */
 const images = [
-  // Blue nitrile gloves forming a heart
-  { src: "/photo1.svg", shape: "rectangular", size: "w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] md:w-[105px] md:h-[105px]", rotate: -4 },
-  // Amber "kitchen/bathroom cleaner" spray bottles with brush
-  { src: "/photo2.svg", shape: "rectangular", size: "w-[80px] h-[80px] sm:w-[95px] sm:h-[95px] md:w-[120px] md:h-[120px]", rotate: 5 },
-  // Rubber glove holding a yellow spray bottle
-  { src: "/photo3.svg", shape: "rectangular", size: "w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] md:w-[100px] md:h-[100px]", rotate: -5 },
-  // Gloved hands disinfecting a surface with spray + paper towel
-  { src: "/photo4.svg", shape: "rectangular", size: "w-[75px] h-[75px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]", rotate: 4 },
-  // Putting on blue nitrile gloves
-  { src: "/photo5.svg", shape: "rectangular", size: "w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] md:w-[105px] md:h-[105px]", rotate: 3 },
-  // Natural cleaner spray bottle with lemons
-  { src: "/photo6.svg", shape: "rectangular", size: "w-[75px] h-[75px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]", rotate: -3 },
-  // Hand sanitizer bottle with face mask
-  { src: "/photo7.svg", shape: "rectangular", size: "w-[75px] h-[75px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]", rotate: 6 },
-  // Worker with mask, goggles and gloves cleaning window shutters
-  { src: "/photo8.svg", shape: "rectangular", size: "w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] md:w-[105px] md:h-[105px]", rotate: -6 },
-  // Blue glass-cleaner spray bottle with paper towel roll
-  { src: "/photo9.svg", shape: "rectangular", size: "w-[75px] h-[75px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]", rotate: 4 },
-  // Additional photo
-  { src: "/photo10.svg", shape: "rectangular", size: "w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] md:w-[105px] md:h-[105px]", rotate: 2 },
-  { src: "/photo11.svg", shape: "rectangular", size: "w-[75px] h-[75px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]", rotate: -3 },
-  { src: "/photo12.svg", shape: "rectangular", size: "w-[80px] h-[80px] sm:w-[95px] sm:h-[95px] md:w-[115px] md:h-[115px]", rotate: 5 },
+  { src: "/photo1.webp", brand: "Krik", size: "w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] md:w-[105px] md:h-[105px]", rotate: -4 },
+  { src: "/photo2.webp", brand: "Familia", size: "w-[80px] h-[80px] sm:w-[95px] sm:h-[95px] md:w-[120px] md:h-[120px]", rotate: 5 },
+  { src: "/photo3.webp", brand: "Tork", size: "w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] md:w-[100px] md:h-[100px]", rotate: -5 },
+  { src: "/photo4.webp", brand: "Scott", size: "w-[75px] h-[75px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]", rotate: 4 },
+  { src: "/photo5.webp", brand: "Master", size: "w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] md:w-[105px] md:h-[105px]", rotate: 3 },
+  { src: "/photo6.webp", brand: "ISO", size: "w-[75px] h-[75px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]", rotate: -3 },
+  { src: "/photo7.webp", brand: "Microlimpia", size: "w-[75px] h-[75px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]", rotate: 6 },
+  { src: "/photo8.webp", brand: "Tips", size: "w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] md:w-[105px] md:h-[105px]", rotate: -6 },
+  { src: "/photo9.webp", brand: "Lava", size: "w-[75px] h-[75px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]", rotate: 4 },
+  { src: "/photo10.webp", brand: "3M", size: "w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] md:w-[105px] md:h-[105px]", rotate: 2 },
+  { src: "/photo11.webp", brand: "Estrella", size: "w-[75px] h-[75px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]", rotate: -3 },
+  { src: "/photo12.webp", brand: "WypAll", size: "w-[80px] h-[80px] sm:w-[95px] sm:h-[95px] md:w-[115px] md:h-[115px]", rotate: 5 },
 ];
 
-interface FloatingCloudProps {
-  img: (typeof images)[number];
-  index: number;
-  parallaxX: MotionValue<number>;
-  parallaxY: MotionValue<number>;
-  staticOnly: boolean;
-  position: { left: string; top: string };
+/** Per-cloud drift parameters, derived once from the index. */
+function driftParams(index: number, ampScale: number) {
+  return {
+    ampX1: (9 + (index % 3) * 3) * ampScale,
+    ampX2: (4 + (index % 2) * 2) * ampScale,
+    ampY1: (10 + ((index + 1) % 3) * 3.5) * ampScale,
+    ampY2: 5 * ampScale,
+    periodX1: 10 + (index % 4) * 1.5,
+    periodX2: 6 + (index % 3),
+    periodY1: 9 + ((index * 2) % 5),
+    periodY2: 5.5 + (index % 2) * 1.5,
+    periodRot: 11 + (index % 3),
+    phase1: index * 1.7,
+    phase2: index * 2.3,
+    phase3: index * 2.9,
+    phase4: index * 1.3,
+    // Cursor-follow depth: 5-12.5px max offset, so the parallax stays subtle.
+    depth: 5 + (index % 4) * 2.5,
+  };
 }
 
-function FloatingCloud({ img, index, parallaxX, parallaxY, staticOnly, position }: FloatingCloudProps) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotate = useMotionValue(img.rotate);
+interface Cloud {
+  img: (typeof images)[number];
+  index: number;
+  x: MotionValue<number>;
+  y: MotionValue<number>;
+  rotate: MotionValue<number>;
+  params: ReturnType<typeof driftParams>;
+}
 
-  // Per-cloud deterministic drift parameters. On mobile, scale amplitude down
-  // so floating logos never collide or drift into neighboring elements.
-  const isMobileDevice = typeof window !== "undefined" && window.innerWidth < 640;
-  const ampScale = isMobileDevice ? 0.35 : 1.0;
-
-  const ampX1 = (9 + (index % 3) * 3) * ampScale;
-  const ampX2 = (4 + (index % 2) * 2) * ampScale;
-  const ampY1 = (10 + ((index + 1) % 3) * 3.5) * ampScale;
-  const ampY2 = 5 * ampScale;
-  const periodX1 = 10 + (index % 4) * 1.5;
-  const periodX2 = 6 + (index % 3);
-  const periodY1 = 9 + ((index * 2) % 5);
-  const periodY2 = 5.5 + (index % 2) * 1.5;
-  const periodRot = 11 + (index % 3);
-  const phase1 = index * 1.7;
-  const phase2 = index * 2.3;
-  const phase3 = index * 2.9;
-  const phase4 = index * 1.3;
-  // Cursor-follow depth: 5–12.5px max offset, so the parallax stays subtle.
-  const depth = 5 + (index % 4) * 2.5;
-
-  useAnimationFrame((time) => {
-    if (staticOnly) return;
-    const t = time / 1000;
-    const floatX =
-      Math.sin((t / periodX1) * TWO_PI + phase1) * ampX1 +
-      Math.cos((t / periodX2) * TWO_PI + phase2) * ampX2;
-    const floatY =
-      Math.cos((t / periodY1) * TWO_PI + phase3) * ampY1 +
-      Math.sin((t / periodY2) * TWO_PI + phase4) * ampY2;
-    x.set(floatX + parallaxX.get() * depth);
-    y.set(floatY + parallaxY.get() * depth);
-    rotate.set(img.rotate + Math.sin((t / periodRot) * TWO_PI + index) * 2.5);
-  });
-
+function FloatingCloud({
+  cloud,
+  position,
+}: {
+  cloud: Cloud;
+  position: { left: string; top: string };
+}) {
+  const { img, x, y, rotate } = cloud;
   return (
     <m.div
-      className={`absolute ${img.shape} ${img.size}`}
+      className={`absolute ${img.size}`}
       style={{ ...position, x, y, z: 0, rotate }}
     >
-      <img src={img.src} alt="" loading="lazy" className="w-full h-full object-contain pointer-events-none" style={{ WebkitTransform: "translateZ(0)" }} draggable={false} />
+      {/* Above the fold: no loading="lazy". Lazy images are invisible to the
+          preload scanner and are only requested after layout, which delays the
+          very paint this hero is measured on. */}
+      <img
+        src={img.src}
+        alt=""
+        width={240}
+        height={240}
+        decoding="async"
+        fetchPriority={cloud.index < 4 ? "high" : "auto"}
+        className="w-full h-full object-contain pointer-events-none"
+        style={{ WebkitTransform: "translateZ(0)" }}
+        draggable={false}
+      />
     </m.div>
   );
 }
@@ -130,12 +133,31 @@ export default function HeroFloatingCanvas() {
     return () => observer.disconnect();
   }, []);
 
+  const isMobileScreen = dimensions.width > 0 && dimensions.width < 640;
+
+  // Motion values are created outside the render tree (motionValue(), not
+  // useMotionValue) so a single parent rAF loop can drive all of them. Twelve
+  // components each running their own useAnimationFrame meant 36 motion-value
+  // writes per frame across twelve callbacks — a measurable share of the 192ms
+  // input delay this hero was posting on mobile.
+  const clouds = useMemo<Cloud[]>(() => {
+    const ampScale = isMobileScreen ? 0.35 : 1.0;
+    return images.map((img, index) => ({
+      img,
+      index,
+      x: motionValue(0),
+      y: motionValue(0),
+      rotate: motionValue(img.rotate),
+      params: driftParams(index, ampScale),
+    }));
+  }, [isMobileScreen]);
+
   const positions = useMemo(() => {
     const isMobile = dimensions.width < 640;
     const K = dimensions.height > 0 ? dimensions.width / dimensions.height : 2.0;
 
-    // Expand horizontal radius on mobile to 39% to maximize central space
-    // without causing the logos to be heavily cropped by the screen edges.
+    // Expand horizontal radius on mobile to maximize central space without
+    // heavy cropping at the screen edges.
     const rx = isMobile ? 40 : 35;
     const ry = isMobile ? 35 : 30;
 
@@ -143,7 +165,7 @@ export default function HeroFloatingCanvas() {
     const rxEff = rx * K;
     const ryEff = ry;
 
-    // 360 degrees (0 to 2*PI) on mobile, top arch (40 to -220 deg) on desktop
+    // 360 degrees on mobile, top arch (40 to -220 deg) on desktop
     const thetaStart = isMobile ? 0 : (40 * Math.PI) / 180;
     const thetaEnd = isMobile ? 2 * Math.PI : (-220 * Math.PI) / 180;
 
@@ -165,10 +187,11 @@ export default function HeroFloatingCanvas() {
       arcLengths.push(totalLength);
     }
 
-    const positionsArray = [];
-    // Closed ring (360 deg) on mobile needs N equal segments so index N-1 (330 deg) doesn't overlap index 0 (0 deg)
+    // A closed ring (mobile, 360deg) needs N equal segments so the last logo
+    // doesn't overlap the first. The desktop arch is open, so it needs N-1.
     const numSegments = isMobile ? images.length : images.length - 1;
 
+    const positionsArray = [];
     for (let i = 0; i < images.length; i++) {
       const targetLen = i * (totalLength / numSegments);
 
@@ -189,12 +212,12 @@ export default function HeroFloatingCanvas() {
       const leftPercent = 50 + rx * Math.cos(theta);
       const topPercent = 44 + ry * Math.sin(theta);
 
-      // Offset by half the average logo width/height to perfectly center the logo on its coordinate
+      // Offset by half the average logo size to center it on its coordinate
       const offset = isMobile ? 38 : 50;
 
       positionsArray.push({
         left: `calc(${leftPercent}% - ${offset}px)`,
-        top: `calc(${topPercent}% - ${offset}px)`
+        top: `calc(${topPercent}% - ${offset}px)`,
       });
     }
 
@@ -202,12 +225,11 @@ export default function HeroFloatingCanvas() {
   }, [dimensions]);
 
   const reduceMotion = useReducedMotion();
-  const isMobileScreen = dimensions.width > 0 && dimensions.width < 640;
   // Disable heavy blur animations on mobile to prevent GPU performance drops
   const blobsAnimate = !reduceMotion && inView && !isMobileScreen;
 
   // Cursor-follow parallax: normalized viewport position smoothed by a soft
-  // spring, applied per cloud inside its animation frame.
+  // spring, applied per cloud inside the shared animation frame.
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const parallaxX = useSpring(mouseX, { stiffness: 40, damping: 25, mass: 1.2 });
@@ -215,13 +237,40 @@ export default function HeroFloatingCanvas() {
 
   useEffect(() => {
     if (reduceMotion) return;
+    // Pointer parallax is a no-op on touch devices — skip the listener there so
+    // mobile never pays for scroll-adjacent pointer events.
+    if (typeof window !== "undefined" && !window.matchMedia("(pointer: fine)").matches) return;
     const handleMove = (e: MouseEvent) => {
       mouseX.set((e.clientX / window.innerWidth - 0.5) * 2);
       mouseY.set((e.clientY / window.innerHeight - 0.5) * 2);
     };
-    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("mousemove", handleMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMove);
   }, [mouseX, mouseY, reduceMotion]);
+
+  // One loop for every cloud, instead of one loop per cloud.
+  const staticOnly = (reduceMotion ?? false) || !inView;
+  useAnimationFrame((time) => {
+    if (staticOnly) return;
+    const t = time / 1000;
+    const px = parallaxX.get();
+    const py = parallaxY.get();
+
+    for (const cloud of clouds) {
+      const p = cloud.params;
+      const floatX =
+        Math.sin((t / p.periodX1) * TWO_PI + p.phase1) * p.ampX1 +
+        Math.cos((t / p.periodX2) * TWO_PI + p.phase2) * p.ampX2;
+      const floatY =
+        Math.cos((t / p.periodY1) * TWO_PI + p.phase3) * p.ampY1 +
+        Math.sin((t / p.periodY2) * TWO_PI + p.phase4) * p.ampY2;
+      cloud.x.set(floatX + px * p.depth);
+      cloud.y.set(floatY + py * p.depth);
+      cloud.rotate.set(
+        cloud.img.rotate + Math.sin((t / p.periodRot) * TWO_PI + cloud.index) * 2.5
+      );
+    }
+  });
 
   return (
     <div ref={containerRef} className="relative h-full w-full overflow-hidden">
@@ -255,17 +304,13 @@ export default function HeroFloatingCanvas() {
         }}
       />
 
-      {/* Floating product imagery */}
+      {/* Floating brand imagery */}
       <div className="absolute inset-0 z-20">
-        {images.map((img, i) => (
+        {clouds.map((cloud) => (
           <FloatingCloud
-            key={img.src}
-            img={img}
-            index={i}
-            parallaxX={parallaxX}
-            parallaxY={parallaxY}
-            staticOnly={(reduceMotion ?? false) || !inView}
-            position={positions[i] || { left: "0%", top: "0%" }}
+            key={cloud.img.src}
+            cloud={cloud}
+            position={positions[cloud.index] || { left: "0%", top: "0%" }}
           />
         ))}
       </div>

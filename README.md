@@ -10,7 +10,7 @@ A modern B2B digital catalog and quotation platform built for **LABMAREMI Cía. 
 - **B2B Quote Request Flow (`/cotizacion`)**: Multi-product picker with URL parameter pre-selection (`?productos=<ids>`), real-time quote summary, and honeypot spam protection.
 - **Real-time Supabase Integration**:
   - Secure Security Definer RPC (`submit_quote_request`) for atomic quote submission.
-  - Automatic fallback to structured mock data when offline or in demonstration mode.
+  - Catalog reads go straight to the Supabase REST API; a failed request surfaces an explicit error state rather than falling back to stale or placeholder content.
 - **Protected Admin Portal (`/admin`)**:
   - Role-based access control backed by Supabase Auth and server-side RPC verification (`is_admin`).
   - Interactive lead management dashboard with status tracking (`nuevo`, `contactado`, `interesado`, `cliente`, `rechazado`).
@@ -104,6 +104,8 @@ A modern B2B digital catalog and quotation platform built for **LABMAREMI Cía. 
 - `npm run build` — Runs TypeScript type-checks (`tsc -b`) and generates the production build in `dist/`.
 - `npm run preview` — Serves the production build locally.
 - `npm run doctor` — Diagnostic utility for checking React components.
+
+The repository also ships four Node scripts under `scripts/` (catalog import, product-image upload, and two RLS security proofs). They are documented in [docs/CONTRIB.md](docs/CONTRIB.md#4-scripts) — see [docs/RUNBOOK.md](docs/RUNBOOK.md) for when to run them.
 
 ---
 
