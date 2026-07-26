@@ -2,7 +2,12 @@
 
 **Reported (Vercel Analytics, mobile):** LCP 3.94 s (target < 2.5 s) · FID 192 ms (target < 100 ms)
 
-> **Status: implemented 2026-07-25.** All of P0–P2 shipped. `public/` went from
+> **Status: implemented 2026-07-25.** P0, P1-a, P1-c and P2 shipped.
+> **P1-b (mobile cull) was implemented and then reverted at the owner's
+> request — all twelve brand logos render at every breakpoint by design.**
+> That is affordable post-P0: the full set is ~110 KB instead of 8.3 MB, and
+> the twelve clouds now share one rAF loop rather than running twelve.
+> `public/` went from
 > 9,849.6 KB to 113.8 KB (−98.8 %); the entry chunk from 101 KB to 83.9 KB
 > gzipped. `scripts/check-asset-budget.mjs` failed with 3 violations before the
 > change and passes after. Build exits 0, react-doctor 100/100.
@@ -105,9 +110,9 @@ In `HeroFloatingCanvas.tsx:97`: drop `loading="lazy"`, add `decoding="async"`, e
 
 `index.html:10-11` points both `icon` and `apple-touch-icon` at `logo2.svg` (1800×1800, 694 KB) for a 16–32 px slot. Ship a real `favicon.ico`/32 px PNG plus a 180 px apple-touch-icon — roughly 1 KB and 8 KB.
 
-### P1-b — Implement the mobile cull the comment already promises
+### P1-b — ~~Implement the mobile cull the comment already promises~~ (rejected)
 
-Render odd indices only at `sm+`. Halves mobile image bytes and per-frame work, and matches the documented intent.
+~~Render odd indices only at `sm+`.~~ **Not doing this.** The full ring of twelve supplier brands is intentional at every breakpoint. The stale comment claiming otherwise has been corrected in `HeroFloatingCanvas.tsx` rather than implemented. With P0 done the cull buys little: twelve logos cost ~110 KB, and the per-frame saving is already captured by P2-a's shared loop.
 
 ### P1-c — Trim the font payload
 
