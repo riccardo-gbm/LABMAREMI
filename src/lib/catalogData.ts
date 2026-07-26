@@ -136,6 +136,16 @@ export interface ProductDetail {
 }
 
 /**
+ * Exactly what scripts/slugify.mjs can emit: lowercase alphanumerics in
+ * hyphen-joined runs, never leading, trailing or doubled (the generator
+ * collapses every other character run to a single "-" and trims the ends).
+ *
+ * Defense in depth only — the query below is already parameter-encoded. This
+ * exists so a hostile /producto/:slug never reaches the network at all.
+ */
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+
+/**
  * One product by slug, plus its category siblings — needed both for the
  * "productos relacionados" row and to derive the product's own spec code.
  *
@@ -145,20 +155,44 @@ export interface ProductDetail {
 export async function fetchProductBySlug(
   slug: string,
 ): Promise<ProductDetail | null> {
+  // A slug that can't have come from the generator can't match a row, so this
+  // is "no encontrado" — not a failure. Returning null keeps the caller's two
+  // states honest instead of surfacing a retry button for an unretryable URL.
+  if (!SLUG_PATTERN.test(slug)) return null
+
   const headers = getHeaders()
   const baseUrl = import.meta.env.VITE_SUPABASE_URL
 
-  const res = await fetch(`${baseUrl}/rest/v1/products?select=category_id&slug=eq.${slug}&is_active=eq.true&limit=1`, { headers })
+  // URLSearchParams percent-encodes every value, so a slug carrying "&" or "="
+  // lands as one opaque filter value instead of grafting extra PostgREST
+  // params (select / or / limit / order) onto the request.
+  const productQuery = new URLSearchParams({
+    select: "category_id",
+    slug: `eq.${slug}`,
+    is_active: "eq.true",
+    limit: "1",
+  })
+
+  const res = await fetch(`${baseUrl}/rest/v1/products?${productQuery}`, { headers })
   if (!res.ok) throw new Error(`HTTP error ${res.status}`)
-  
+
   const data = await res.json()
   if (!data || data.length === 0) return null
-  
+
   const categoryId = data[0].category_id
 
-  const siblingsRes = await fetch(`${baseUrl}/rest/v1/products?select=id,slug,name,description,presentation,recommended_use,image_url,categories(slug,name)&category_id=eq.${categoryId}&is_active=eq.true&order=name.asc`, { headers })
+  // categoryId comes from the row above, not the URL, but it is encoded on the
+  // same footing so no future reader has to trace its provenance to feel safe.
+  const siblingsQuery = new URLSearchParams({
+    select: "id,slug,name,description,presentation,recommended_use,image_url,categories(slug,name)",
+    category_id: `eq.${categoryId}`,
+    is_active: "eq.true",
+    order: "name.asc",
+  })
+
+  const siblingsRes = await fetch(`${baseUrl}/rest/v1/products?${siblingsQuery}`, { headers })
   if (!siblingsRes.ok) throw new Error(`HTTP error ${siblingsRes.status}`)
-  
+
   const siblingsData = await siblingsRes.json()
 
   const all = toProducts(siblingsData as RawProductRow[])

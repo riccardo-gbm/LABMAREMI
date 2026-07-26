@@ -29,7 +29,14 @@
        (HTML → googleapis CSS → gstatic files). display=swap already paints the
        fallback, so the h1 — the LCP element — no longer waits on the network.
        The italic axis was dropped: nothing in src/ uses italic, and carrying
-       1,400..900 roughly doubled the Playfair payload. -->
+       1,400..900 roughly doubled the Playfair payload.
+
+       CSP COUPLING: the onload handler below is inline script, which
+       `script-src 'self'` blocks. vercel.json allows exactly this one handler
+       via 'unsafe-hashes' plus the SHA-256 of its source text — so editing the
+       attribute (even a quote style or a space) invalidates the hash and the
+       swap silently stops firing, leaving the sheet stuck at media="print" and
+       the site on fallback fonts. Change one, change the other. -->
   <link rel="preload" as="style"
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet" media="print" onload="this.media='all'"
