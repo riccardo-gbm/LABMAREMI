@@ -22,8 +22,9 @@ const TWO_PI = Math.PI;
  * mobile LCP to 3.94s. Do not add art here without checking its byte size —
  * scripts/check-asset-budget.mjs enforces the ceiling.
  *
- * Even indices render on every viewport; odd indices are hidden below `sm` so
- * mobile carries six logos instead of twelve, evenly spread around the ring.
+ * All twelve render on every viewport, including mobile — the full ring is the
+ * intended design. That is affordable now that the set weighs ~110 KB instead
+ * of 8.3 MB and a single rAF loop drives every cloud.
  */
 const images = [
   { src: "/photo1.webp", brand: "Krik", size: "w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] md:w-[105px] md:h-[105px]", rotate: -4 },
@@ -73,16 +74,14 @@ interface Cloud {
 function FloatingCloud({
   cloud,
   position,
-  hideOnMobile,
 }: {
   cloud: Cloud;
   position: { left: string; top: string };
-  hideOnMobile: boolean;
 }) {
   const { img, x, y, rotate } = cloud;
   return (
     <m.div
-      className={`absolute ${img.size} ${hideOnMobile ? "hidden sm:block" : ""}`}
+      className={`absolute ${img.size}`}
       style={{ ...position, x, y, z: 0, rotate }}
     >
       {/* Above the fold: no loading="lazy". Lazy images are invisible to the
@@ -153,8 +152,6 @@ export default function HeroFloatingCanvas() {
     }));
   }, [isMobileScreen]);
 
-  // Mobile shows even indices only, so positions are laid out over the visible
-  // count — otherwise the culled ring would have six gaps in it.
   const positions = useMemo(() => {
     const isMobile = dimensions.width < 640;
     const K = dimensions.height > 0 ? dimensions.width / dimensions.height : 2.0;
@@ -190,17 +187,13 @@ export default function HeroFloatingCanvas() {
       arcLengths.push(totalLength);
     }
 
-    // Index within the set that is actually visible at this breakpoint.
-    const slotOf = (i: number) => (isMobile ? i / 2 : i);
-    const visibleCount = isMobile ? Math.ceil(images.length / 2) : images.length;
-    // A closed ring needs N equal segments so the last slot doesn't overlap the first.
-    const numSegments = isMobile ? visibleCount : visibleCount - 1;
+    // A closed ring (mobile, 360deg) needs N equal segments so the last logo
+    // doesn't overlap the first. The desktop arch is open, so it needs N-1.
+    const numSegments = isMobile ? images.length : images.length - 1;
 
     const positionsArray = [];
     for (let i = 0; i < images.length; i++) {
-      // Odd indices are hidden on mobile; park them on their neighbour's slot.
-      const slot = isMobile ? Math.floor(slotOf(i)) : i;
-      const targetLen = slot * (totalLength / numSegments);
+      const targetLen = i * (totalLength / numSegments);
 
       // Binary search for the theta that corresponds to targetLen
       let low = 0;
@@ -264,8 +257,6 @@ export default function HeroFloatingCanvas() {
     const py = parallaxY.get();
 
     for (const cloud of clouds) {
-      // Skip the culled half on mobile — hidden elements still cost a write.
-      if (isMobileScreen && cloud.index % 2 === 1) continue;
       const p = cloud.params;
       const floatX =
         Math.sin((t / p.periodX1) * TWO_PI + p.phase1) * p.ampX1 +
@@ -319,7 +310,6 @@ export default function HeroFloatingCanvas() {
           <FloatingCloud
             key={cloud.img.src}
             cloud={cloud}
-            hideOnMobile={cloud.index % 2 === 1}
             position={positions[cloud.index] || { left: "0%", top: "0%" }}
           />
         ))}
