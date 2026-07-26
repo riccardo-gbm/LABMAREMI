@@ -4,6 +4,7 @@ import { AnimatePresence, m } from "framer-motion"
 import { Menu, X } from "lucide-react"
 
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
+import { routePrefetchers } from "@/lib/publicRoutes"
 import { cn } from "@/lib/utils"
 
 const navItems = [
@@ -12,6 +13,14 @@ const navItems = [
   { to: "/nosotros", label: "Nosotros" },
   { to: "/contacto", label: "Contacto" },
 ]
+
+/** Warm a route's lazy chunk on navigation intent (hover/focus/first touch) so
+ * the page mounts the moment the route-transition exit finishes. */
+const prefetchProps = (to: string) => ({
+  onMouseEnter: () => routePrefetchers[to]?.(),
+  onFocus: () => routePrefetchers[to]?.(),
+  onTouchStart: () => routePrefetchers[to]?.(),
+})
 
 function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -50,6 +59,7 @@ function Header() {
               key={item.to}
               to={item.to}
               end={item.to === "/"}
+              {...prefetchProps(item.to)}
               className={({ isActive }) =>
                 cn(
                   "relative overflow-hidden rounded-md px-3 py-2 text-sm font-medium transition-colors",
@@ -76,7 +86,11 @@ function Header() {
         </nav>
 
         <div className="hidden md:block">
-          <InteractiveHoverButton text="Solicitar cotización" onClick={goToQuote} />
+          <InteractiveHoverButton
+            text="Solicitar cotización"
+            onClick={goToQuote}
+            {...prefetchProps("/cotizacion")}
+          />
         </div>
 
         <button
@@ -115,6 +129,7 @@ function Header() {
                       to={item.to}
                       end={item.to === "/"}
                       onClick={() => setMobileOpen(false)}
+                      {...prefetchProps(item.to)}
                       className={({ isActive }) =>
                         cn(
                           "block rounded-md px-3 py-2 text-sm font-medium",
@@ -133,6 +148,7 @@ function Header() {
                 text="Solicitar cotización"
                 className="mt-3 w-full"
                 onClick={goToQuote}
+                {...prefetchProps("/cotizacion")}
               />
             </div>
           </m.nav>
