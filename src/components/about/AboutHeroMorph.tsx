@@ -1,22 +1,208 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { m, useTransform, useSpring, useMotionValue, useScroll, useMotionValueEvent } from "framer-motion";
-
-type AnimationPhase = "scatter" | "line" | "circle";
-
-interface FlipCardProps {
-  src: string;
-  target: { x: number; y: number; rotation: number; scale: number; opacity: number };
-}
+import {
+  m,
+  useTransform,
+  useSpring,
+  useMotionValue,
+  useScroll,
+  type MotionValue,
+} from "framer-motion";
 
 const IMG_WIDTH = 70;
 const IMG_HEIGHT = 95;
+const TOTAL_IMAGES = 20;
 
-function FlipCard({ src, target }: FlipCardProps) {
+// Product and team/workplace shots interleaved on purpose so the circle doesn't
+// read as visually segregated. Decorative brand imagery, not "meet our team" —
+// that's the section further down the page. Swap in real LABMAREMI photos later;
+// only this array needs to change.
+const IMAGES = [
+  // Blue nitrile gloves forming a heart
+  "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=400&auto=format&fit=crop",
+  // Tall warehouse aisle with stocked shelves
+  "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=400&auto=format&fit=crop",
+  // Rubber glove holding a yellow spray bottle
+  "https://images.unsplash.com/photo-1563453392212-326f5e854473?q=80&w=400&auto=format&fit=crop",
+  // Team working around a shared table
+  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=400&auto=format&fit=crop",
+  // Paper roll in a gloved hand over stacked stock
+  "https://images.unsplash.com/photo-1584556812952-905ffd0c611a?q=80&w=400&auto=format&fit=crop",
+  // Handing over a boxed delivery
+  "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=400&auto=format&fit=crop",
+  // Gloved hands disinfecting a surface
+  "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?q=80&w=400&auto=format&fit=crop",
+  // Colleagues celebrating at an office desk
+  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=400&auto=format&fit=crop",
+  // Natural cleaner spray bottle with lemons
+  "https://images.unsplash.com/photo-1583907659441-addbe699e921?q=80&w=400&auto=format&fit=crop",
+  // Distribution warehouse with organized bins
+  "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=400&auto=format&fit=crop",
+  // Glass-cleaner spray bottle with paper towel roll
+  "https://images.unsplash.com/photo-1550963295-019d8a8a61c5?q=80&w=400&auto=format&fit=crop",
+  // Team collaborating over laptops
+  "https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=400&auto=format&fit=crop",
+  // Hand sanitizer bottle with face mask
+  "https://images.unsplash.com/photo-1584744982491-665216d95f8b?q=80&w=400&auto=format&fit=crop",
+  // Delivery van loaded with parcels
+  "https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=400&auto=format&fit=crop",
+  // Spotless kitchen ready for service
+  "https://images.unsplash.com/photo-1556911220-bff31c812dba?q=80&w=400&auto=format&fit=crop",
+  // Team hands stacked together
+  "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?q=80&w=400&auto=format&fit=crop",
+  // Putting on blue nitrile gloves
+  "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?q=80&w=400&auto=format&fit=crop",
+  // Forklift moving stock in a warehouse
+  "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=400&auto=format&fit=crop",
+  // Spotless washroom after cleaning
+  "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=400&auto=format&fit=crop",
+  // Planning meeting in a conference room
+  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=400&auto=format&fit=crop",
+];
+
+interface Size {
+  width: number;
+  height: number;
+}
+
+interface ScatterPosition {
+  x: number;
+  y: number;
+  rotation: number;
+  scale: number;
+}
+
+interface CardTarget {
+  x: number;
+  y: number;
+  rotation: number;
+  scale: number;
+  opacity: number;
+}
+
+const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
+const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
+
+function linePosition(index: number) {
+  const lineSpacing = 78;
+  const lineTotalWidth = TOTAL_IMAGES * lineSpacing;
+  return { x: index * lineSpacing - lineTotalWidth / 2, y: 0, rotation: 0, scale: 1 };
+}
+
+function circlePosition(index: number, size: Size) {
+  const isMobile = size.width < 768;
+  const minDimension = Math.min(size.width, size.height);
+  // On phones a 0.35×height radius packs 20 cards into a solid pile and
+  // buries the headline; widen the ring past the screen edges instead.
+  const circleRadius = isMobile ? size.width * 0.44 : Math.min(minDimension * 0.35, 350);
+  const circleAngle = (index / TOTAL_IMAGES) * 360;
+  const circleRad = (circleAngle * Math.PI) / 180;
+  return {
+    x: Math.cos(circleRad) * circleRadius,
+    y: Math.sin(circleRad) * circleRadius,
+    rotation: circleAngle + 90,
+    scale: 1,
+  };
+}
+
+function arcPosition(index: number, size: Size, scrollProgress01: number, parallaxPx: number) {
+  const isMobile = size.width < 768;
+  const baseRadius = Math.min(size.width, size.height * 1.5);
+  const arcRadius = baseRadius * (isMobile ? 1.4 : 1.1);
+  const arcApexY = size.height * (isMobile ? 0.35 : 0.25);
+  const arcCenterY = arcApexY + arcRadius;
+  const spreadAngle = isMobile ? 100 : 130;
+  const startAngle = -90 - spreadAngle / 2;
+  const step = spreadAngle / (TOTAL_IMAGES - 1);
+  const maxRotation = spreadAngle * 0.8;
+  const boundedRotation = -scrollProgress01 * maxRotation;
+  const currentArcAngle = startAngle + index * step + boundedRotation;
+  const arcRad = (currentArcAngle * Math.PI) / 180;
+  return {
+    x: Math.cos(arcRad) * arcRadius + parallaxPx,
+    y: Math.sin(arcRad) * arcRadius + arcCenterY,
+    rotation: currentArcAngle + 90,
+    scale: isMobile ? 1.4 : 1.8,
+  };
+}
+
+/** Where a card sits for a given animation state. `intro` runs 0 (scatter) →
+ * 1 (line) → 2 (circle); past 1 the destination blends circle → scroll arc by
+ * `morph`. Pure math on numbers already read from motion values, so it runs
+ * inside motion's frame loop without touching React. */
+function cardTarget(
+  index: number,
+  scatter: ScatterPosition,
+  intro: number,
+  morph: number,
+  rotate01: number,
+  parallaxPx: number,
+  size: Size,
+): CardTarget {
+  const line = linePosition(index);
+  if (intro <= 1) {
+    const t = clamp01(intro);
+    return {
+      x: lerp(scatter.x, line.x, t),
+      y: lerp(scatter.y, line.y, t),
+      rotation: lerp(scatter.rotation, line.rotation, t),
+      scale: lerp(scatter.scale, line.scale, t),
+      opacity: t,
+    };
+  }
+  const t = clamp01(intro - 1);
+  const circle = circlePosition(index, size);
+  const arc = arcPosition(index, size, rotate01, parallaxPx);
+  const end = {
+    x: lerp(circle.x, arc.x, morph),
+    y: lerp(circle.y, arc.y, morph),
+    rotation: lerp(circle.rotation, arc.rotation, morph),
+    scale: lerp(circle.scale, arc.scale, morph),
+  };
+  return {
+    x: lerp(line.x, end.x, t),
+    y: lerp(line.y, end.y, t),
+    rotation: lerp(line.rotation, end.rotation, t),
+    scale: lerp(line.scale, end.scale, t),
+    opacity: 1,
+  };
+}
+
+interface FlipCardProps {
+  index: number;
+  src: string;
+  scatter: ScatterPosition;
+  intro: MotionValue<number>;
+  morph: MotionValue<number>;
+  rotate: MotionValue<number>;
+  parallax: MotionValue<number>;
+  size: Size;
+}
+
+/** Fully motion-value driven: position/rotation/scale/opacity are derived
+ * values written straight to style inside motion's frame loop. No React state
+ * changes per frame — the component renders once per resize, not per frame. */
+function FlipCard({ index, src, scatter, intro, morph, rotate, parallax, size }: FlipCardProps) {
+  const compute = () =>
+    cardTarget(index, scatter, intro.get(), morph.get(), clamp01(rotate.get() / 360), parallax.get(), size);
+  const x = useTransform(() => compute().x);
+  const y = useTransform(() => compute().y);
+  const rotation = useTransform(() => compute().rotation);
+  const scale = useTransform(() => compute().scale);
+  const opacity = useTransform(() => compute().opacity);
+
   return (
     <m.div
-      animate={{ x: target.x, y: target.y, rotate: target.rotation, scale: target.scale, opacity: target.opacity }}
-      transition={{ type: "spring", stiffness: 40, damping: 15 }}
-      style={{ position: "absolute", width: IMG_WIDTH, height: IMG_HEIGHT, transformStyle: "preserve-3d" }}
+      style={{
+        x,
+        y,
+        rotate: rotation,
+        scale,
+        opacity,
+        position: "absolute",
+        width: IMG_WIDTH,
+        height: IMG_HEIGHT,
+        transformStyle: "preserve-3d",
+      }}
       className="cursor-pointer group"
     >
       <m.div
@@ -26,7 +212,19 @@ function FlipCard({ src, target }: FlipCardProps) {
         whileHover={{ rotateY: 180 }}
       >
         <div className="absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg bg-slate-200" style={{ backfaceVisibility: "hidden" }}>
-          <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" draggable={false} />
+          {/* Not loading="lazy": all 20 live inside the sticky hero viewport,
+              lazy only delays them behind the entrance animation. Low fetch
+              priority keeps them from competing with the page chunk and text. */}
+          <img
+            src={src}
+            alt=""
+            width={IMG_WIDTH}
+            height={IMG_HEIGHT}
+            decoding="async"
+            fetchPriority="low"
+            className="h-full w-full object-cover"
+            draggable={false}
+          />
           <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-transparent" />
         </div>
         <div
@@ -34,67 +232,25 @@ function FlipCard({ src, target }: FlipCardProps) {
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           {/* Counter-mirror so the photo reads identical to the front, not flipped */}
-          <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" style={{ transform: "scaleX(-1)" }} draggable={false} />
+          <img
+            src={src}
+            alt=""
+            width={IMG_WIDTH}
+            height={IMG_HEIGHT}
+            decoding="async"
+            fetchPriority="low"
+            className="h-full w-full object-cover"
+            style={{ transform: "scaleX(-1)" }}
+            draggable={false}
+          />
         </div>
       </m.div>
     </m.div>
   );
 }
 
-const TOTAL_IMAGES = 20;
-
-// Product and team/workplace shots interleaved on purpose so the circle doesn't
-// read as visually segregated. Decorative brand imagery, not "meet our team" —
-// that's the section further down the page. Swap in real LABMAREMI photos later;
-// only this array needs to change.
-const IMAGES = [
-  // Blue nitrile gloves forming a heart
-  "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=400",
-  // Tall warehouse aisle with stocked shelves
-  "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=400",
-  // Rubber glove holding a yellow spray bottle
-  "https://images.unsplash.com/photo-1563453392212-326f5e854473?q=80&w=400",
-  // Team working around a shared table
-  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=400",
-  // Paper roll in a gloved hand over stacked stock
-  "https://images.unsplash.com/photo-1584556812952-905ffd0c611a?q=80&w=400",
-  // Handing over a boxed delivery
-  "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=400",
-  // Gloved hands disinfecting a surface
-  "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?q=80&w=400",
-  // Colleagues celebrating at an office desk
-  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=400",
-  // Natural cleaner spray bottle with lemons
-  "https://images.unsplash.com/photo-1583907659441-addbe699e921?q=80&w=400",
-  // Distribution warehouse with organized bins
-  "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=400",
-  // Glass-cleaner spray bottle with paper towel roll
-  "https://images.unsplash.com/photo-1550963295-019d8a8a61c5?q=80&w=400",
-  // Team collaborating over laptops
-  "https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=400",
-  // Hand sanitizer bottle with face mask
-  "https://images.unsplash.com/photo-1584744982491-665216d95f8b?q=80&w=400",
-  // Delivery van loaded with parcels
-  "https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=400",
-  // Spotless kitchen ready for service
-  "https://images.unsplash.com/photo-1556911220-bff31c812dba?q=80&w=400",
-  // Team hands stacked together
-  "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?q=80&w=400",
-  // Putting on blue nitrile gloves
-  "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?q=80&w=400",
-  // Forklift moving stock in a warehouse
-  "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=400",
-  // Spotless washroom after cleaning
-  "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=400",
-  // Planning meeting in a conference room
-  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=400",
-];
-
-const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
-
 export default function AboutHeroMorph() {
-  const [introPhase, setIntroPhase] = useState<AnimationPhase>("scatter");
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [containerSize, setContainerSize] = useState<Size>({ width: 0, height: 0 });
   const stickyRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion =
@@ -136,32 +292,37 @@ export default function AboutHeroMorph() {
     return () => el.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, prefersReducedMotion]);
 
+  // One spring-smoothed progress value drives the whole intro instead of the
+  // old phase state machine: the timers write to a motion value, so the intro
+  // never re-renders React. Same spring constants as the old per-card springs
+  // (identical params per coordinate ≡ one spring along the segment).
+  const introTarget = useMotionValue(0);
+  const introProgress = useSpring(introTarget, { stiffness: 40, damping: 15 });
+
   useEffect(() => {
     if (prefersReducedMotion) return;
-    const t1 = setTimeout(() => setIntroPhase("line"), 500);
-    const t2 = setTimeout(() => setIntroPhase("circle"), 2500);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, [prefersReducedMotion]);
+    const t1 = setTimeout(() => introTarget.set(1), 500);
+    const t2 = setTimeout(() => introTarget.set(2), 2500);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [prefersReducedMotion, introTarget]);
 
-  const scatterPositions = useMemo(
+  const scatterPositions = useMemo<ScatterPosition[]>(
     () =>
       IMAGES.map(() => ({
         x: (Math.random() - 0.5) * 1500,
         y: (Math.random() - 0.5) * 1000,
         rotation: (Math.random() - 0.5) * 180,
         scale: 0.6,
-        opacity: 0,
       })),
     []
   );
 
-  const [morphValue, setMorphValue] = useState(0);
-  const [rotateValue, setRotateValue] = useState(0);
-  const [parallaxValue, setParallaxValue] = useState(0);
-
-  useMotionValueEvent(smoothMorph, "change", setMorphValue);
-  useMotionValueEvent(smoothScrollRotate, "change", setRotateValue);
-  useMotionValueEvent(smoothMouseX, "change", setParallaxValue);
+  // The headline is the page's LCP element: it paints at first render and only
+  // fades *out* once the scroll morph begins. Never gate it behind the intro.
+  const heroTextOpacity = useTransform(smoothMorph, [0, 0.4], [1, 0]);
 
   const contentOpacity = useTransform(smoothMorph, [0.8, 1], [0, 1]);
   const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
@@ -194,32 +355,23 @@ export default function AboutHeroMorph() {
     <section ref={sectionRef} className="relative h-[300vh]">
       <div ref={stickyRef} className="sticky top-0 h-screen w-full overflow-hidden bg-[#FAFAFA]">
         <div className="flex h-full w-full flex-col items-center justify-center">
-          <div className="absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2 px-4">
-            <m.h1
-              initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-              animate={
-                introPhase === "circle" && morphValue < 0.5
-                  ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" }
-                  : { opacity: 0, filter: "blur(10px)" }
-              }
-              transition={{ duration: 1 }}
-              className="max-w-[13rem] text-2xl font-bold tracking-tight text-slate-900 md:max-w-sm md:text-4xl"
-            >
+          {/* z-10 so the line-phase card sweep passes behind the headline. */}
+          <m.div
+            style={{ opacity: heroTextOpacity }}
+            className="absolute z-10 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2 px-4"
+          >
+            <h1 className="max-w-[13rem] text-2xl font-bold tracking-tight text-slate-900 md:max-w-sm md:text-4xl">
               Su satisfacción es nuestro éxito
-            </m.h1>
+            </h1>
             <m.p
               initial={{ opacity: 0 }}
-              animate={
-                introPhase === "circle" && morphValue < 0.5
-                  ? { opacity: 0.6 - morphValue }
-                  : { opacity: 0 }
-              }
-              transition={{ duration: 1, delay: 0.2 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ delay: 2.6, duration: 1 }}
               className="mt-4 text-xs font-bold tracking-[0.2em] text-slate-500 uppercase"
             >
               Desliza para explorar
             </m.p>
-          </div>
+          </m.div>
 
           <m.div
             style={{ opacity: contentOpacity, y: contentY }}
@@ -235,61 +387,19 @@ export default function AboutHeroMorph() {
           </m.div>
 
           <div className="relative flex items-center justify-center w-full h-full">
-            {IMAGES.map((src, i) => {
-              let target = { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1 };
-
-              if (introPhase === "scatter") {
-                target = scatterPositions[i];
-              } else if (introPhase === "line") {
-                const lineSpacing = 78;
-                const lineTotalWidth = TOTAL_IMAGES * lineSpacing;
-                target = { x: i * lineSpacing - lineTotalWidth / 2, y: 0, rotation: 0, scale: 1, opacity: 1 };
-              } else {
-                const isMobile = containerSize.width < 768;
-                const minDimension = Math.min(containerSize.width, containerSize.height);
-                // On phones a 0.35×height radius packs 20 cards into a solid pile and
-                // buries the headline; widen the ring past the screen edges instead.
-                const circleRadius = isMobile
-                  ? containerSize.width * 0.44
-                  : Math.min(minDimension * 0.35, 350);
-                const circleAngle = (i / TOTAL_IMAGES) * 360;
-                const circleRad = (circleAngle * Math.PI) / 180;
-                const circlePos = {
-                  x: Math.cos(circleRad) * circleRadius,
-                  y: Math.sin(circleRad) * circleRadius,
-                  rotation: circleAngle + 90,
-                };
-
-                const baseRadius = Math.min(containerSize.width, containerSize.height * 1.5);
-                const arcRadius = baseRadius * (isMobile ? 1.4 : 1.1);
-                const arcApexY = containerSize.height * (isMobile ? 0.35 : 0.25);
-                const arcCenterY = arcApexY + arcRadius;
-                const spreadAngle = isMobile ? 100 : 130;
-                const startAngle = -90 - spreadAngle / 2;
-                const step = spreadAngle / (TOTAL_IMAGES - 1);
-                const scrollProgress = Math.min(Math.max(rotateValue / 360, 0), 1);
-                const maxRotation = spreadAngle * 0.8;
-                const boundedRotation = -scrollProgress * maxRotation;
-                const currentArcAngle = startAngle + i * step + boundedRotation;
-                const arcRad = (currentArcAngle * Math.PI) / 180;
-                const arcPos = {
-                  x: Math.cos(arcRad) * arcRadius + parallaxValue,
-                  y: Math.sin(arcRad) * arcRadius + arcCenterY,
-                  rotation: currentArcAngle + 90,
-                  scale: isMobile ? 1.4 : 1.8,
-                };
-
-                target = {
-                  x: lerp(circlePos.x, arcPos.x, morphValue),
-                  y: lerp(circlePos.y, arcPos.y, morphValue),
-                  rotation: lerp(circlePos.rotation, arcPos.rotation, morphValue),
-                  scale: lerp(1, arcPos.scale, morphValue),
-                  opacity: 1,
-                };
-              }
-
-              return <FlipCard key={src} src={src} target={target} />;
-            })}
+            {IMAGES.map((src, i) => (
+              <FlipCard
+                key={src}
+                index={i}
+                src={src}
+                scatter={scatterPositions[i]}
+                intro={introProgress}
+                morph={smoothMorph}
+                rotate={smoothScrollRotate}
+                parallax={smoothMouseX}
+                size={containerSize}
+              />
+            ))}
           </div>
         </div>
       </div>

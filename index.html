@@ -24,6 +24,20 @@
     content="Distribuidor de productos de limpieza, desinfección, protección e higiene para empresas en Quito, Ecuador." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Every hero/tile photo comes from Unsplash and all catalog data + product
+       images from Supabase; warming both connections during HTML parse saves a
+       DNS+TLS round trip on mobile. crossorigin on Supabase: fetch() is CORS;
+       none on Unsplash: <img> is no-CORS. -->
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <link rel="preconnect" href="https://alyjdwsblnedadlfplgw.supabase.co" crossorigin />
+  <!-- The four fetchPriority="high" hero clouds otherwise wait for entry JS +
+       the lazy HeroFloatingCanvas chunk before the browser even learns their
+       URLs. Preload starts them at t≈0; default (low) priority so they never
+       preempt the critical JS. -->
+  <link rel="preload" as="image" href="/photo1.webp" />
+  <link rel="preload" as="image" href="/photo2.webp" />
+  <link rel="preload" as="image" href="/photo3.webp" />
+  <link rel="preload" as="image" href="/photo4.webp" />
   <!-- Fonts load without blocking first paint: the media="print" swap applies
        the sheet on load instead of holding render on a third-party round trip
        (HTML → googleapis CSS → gstatic files). display=swap already paints the

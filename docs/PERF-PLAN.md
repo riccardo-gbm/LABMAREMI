@@ -159,3 +159,26 @@ Add `scripts/check-asset-budget.mjs` (runnable in CI later) asserting:
 ### Rollback
 
 Asset and loading-attribute changes are self-contained; revert the commit and redeploy via Vercel's instant rollback (`docs/RUNBOOK.md` §7).
+
+---
+
+# Round 2 — 2026-07-26: LCP/INP field regressions
+
+**Reported (Vercel Speed Insights, mobile):** LCP 3.08 s on `/`, 4.08 s on `/nosotros` · INP 2,336 ms on `/`, 432 ms on `/cotizacion`. Targets: LCP < 2.5 s, INP < 200 ms at p75.
+
+## Root causes
+
+1. **Route cross-attribution (measurement, fix first).** `<SpeedInsights />` and `<Analytics />` rendered without a `route` prop, so beacons carry whatever path is current at flush time (first input / page hide) — in an SPA that files one route's metrics under another. Proof: the reported "/" LCP selector (`h1.max-w-[13rem]…`) exists only in `AboutHeroMorph` (`/nosotros`), and the "/nosotros" selector (`img…object-contain.pointer-events-none`) only in `HeroFloatingCanvas` (`/`). Fixed with a `route` prop derived from `useLocation` (`VercelBeacons` in `App.tsx`).
+2. **`/nosotros` LCP was structurally ≥ 2.5 s.** The headline sat at `opacity: 0` behind a 2,500 ms `setTimeout` plus a 1 s fade. Now it paints at first render and only fades out on scroll.
+3. **INP: per-frame React re-renders in `AboutHeroMorph`.** Three `useMotionValueEvent(…, setState)` bridges re-rendered the whole component on every spring frame, recomputing 20 card targets and re-targeting 20 springs. Rewritten as a pure motion-value pipeline (`useTransform` derived values written straight to style); the component now re-renders only on resize.
+4. **Every route's first paint gated on framer-motion.** `Layout`'s `m.main` started at `opacity: 0` on hard load; the home h1 additionally carried a CSS `opacity: 0` + 0.2 s delay + 0.8 s fade. The landing route now mounts with a visible `initial` object (navigations keep the fade), and the h1 lost its fade classes.
+5. **Delivery gaps.** No `Cache-Control` headers at all (now: immutable for hashed `/assets/*`, 1 day + SWR for public images); no preconnect to `images.unsplash.com`/Supabase (added); no HTML preload for the hero art (added for `photo1–4.webp` — this closes P0-b, which Round 1 specified but never shipped); homepage fetched the full ~138-product catalog to use only categories (now `fetchCategories()`); route chunks fetched only after the 240 ms exit animation (now prefetched on nav hover/focus/touch + idle warm-up, `saveData`-guarded).
+
+## Corrections to Round 1
+
+- **P2-b's claim was wrong.** Lazy-loading `HeroFloatingCanvas` did *not* take framer-motion off the critical path: `Layout.tsx` statically imports `domMax`, so the motion chunk is modulepreloaded on every route. This is now a *recorded decision*, not an accident — async `LazyMotion` features would regress LCP (initial-hidden content can't animate until the features chunk lands), and `domAnimation` would require removing the nav `layoutId` pill, CatalogPage's `LayoutGroup`, and TextLoop's `popLayout`. The budget script now binds the whole eager path (entry + react + motion ≤ 155 KB gzip, per-chunk ceilings ~10% above measured) instead of only the entry chunk.
+- **P0-b (hero image preload) is now actually implemented** (`index.html`).
+
+## Verification
+
+Lab: `npm run build` → `node scripts/check-asset-budget.mjs` → `npm run doctor` → `npm run preview` + Lighthouse mobile (Slow 4G, 4× CPU) on `/` and `/nosotros`; LCP element must be the h1 on both, no long task > 200 ms while interacting during the `/nosotros` intro. Field: Speed Insights per-route p75 ~1 week post-deploy is the pass/fail read. Expect the 2,336 ms INP to migrate to `/nosotros` under honest attribution, then drop.
