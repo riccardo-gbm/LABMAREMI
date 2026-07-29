@@ -1,10 +1,13 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import {
   m,
+  animate,
   useTransform,
   useSpring,
   useMotionValue,
   useScroll,
+  useMotionValueEvent,
+  type AnimationPlaybackControls,
   type MotionValue,
 } from "framer-motion";
 
@@ -12,51 +15,65 @@ const IMG_WIDTH = 70;
 const IMG_HEIGHT = 95;
 const TOTAL_IMAGES = 20;
 
+// Intro choreography, single source of truth. The headline reveal derives from
+// these instead of carrying its own delay, so retuning the intro can never
+// leave the phrase firing mid-sweep. See the headline gate in AboutHeroMorph.
+const INTRO_SPRING = { stiffness: 70, damping: 18 } as const;
+const INTRO_LINE_MS = 300;
+const INTRO_CIRCLE_MS = 1200;
+const HEADLINE_BEAT_MS = 300;
+// `intro` targets 2 for the circle. INTRO_SPRING is overdamped (ζ ≈ 1.08), so
+// introProgress rises monotonically and can't cross this threshold early.
+const CIRCLE_SETTLED = 1.98;
+
 // Product and team/workplace shots interleaved on purpose so the circle doesn't
 // read as visually segregated. Decorative brand imagery, not "meet our team" —
 // that's the section further down the page. Swap in real LABMAREMI photos later;
 // only this array needs to change.
+// w=220 covers IMG_WIDTH/IMG_HEIGHT (70x95) at ~3x DPR — all 20 fetch eagerly
+// (see FlipCard), so oversizing here is 20x the usual cost. Don't bump toward
+// w=400 without re-checking payload; that was ~600KB total for this array alone.
 const IMAGES = [
   // Blue nitrile gloves forming a heart
-  "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=220&auto=format&fit=crop",
   // Tall warehouse aisle with stocked shelves
-  "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=220&auto=format&fit=crop",
   // Rubber glove holding a yellow spray bottle
-  "https://images.unsplash.com/photo-1563453392212-326f5e854473?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1563453392212-326f5e854473?q=80&w=220&auto=format&fit=crop",
   // Team working around a shared table
-  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=220&auto=format&fit=crop",
   // Paper roll in a gloved hand over stacked stock
-  "https://images.unsplash.com/photo-1584556812952-905ffd0c611a?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1584556812952-905ffd0c611a?q=80&w=220&auto=format&fit=crop",
   // Handing over a boxed delivery
-  "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=220&auto=format&fit=crop",
   // Gloved hands disinfecting a surface
-  "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?q=80&w=220&auto=format&fit=crop",
   // Colleagues celebrating at an office desk
-  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=220&auto=format&fit=crop",
   // Natural cleaner spray bottle with lemons
-  "https://images.unsplash.com/photo-1583907659441-addbe699e921?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1583907659441-addbe699e921?q=80&w=220&auto=format&fit=crop",
   // Distribution warehouse with organized bins
-  "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=220&auto=format&fit=crop",
   // Glass-cleaner spray bottle with paper towel roll
-  "https://images.unsplash.com/photo-1550963295-019d8a8a61c5?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1550963295-019d8a8a61c5?q=80&w=220&auto=format&fit=crop",
   // Team collaborating over laptops
-  "https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=220&auto=format&fit=crop",
   // Hand sanitizer bottle with face mask
-  "https://images.unsplash.com/photo-1584744982491-665216d95f8b?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1584744982491-665216d95f8b?q=80&w=220&auto=format&fit=crop",
   // Delivery van loaded with parcels
-  "https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=220&auto=format&fit=crop",
   // Spotless kitchen ready for service
-  "https://images.unsplash.com/photo-1556911220-bff31c812dba?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1556911220-bff31c812dba?q=80&w=220&auto=format&fit=crop",
   // Team hands stacked together
-  "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?q=80&w=220&auto=format&fit=crop",
   // Putting on blue nitrile gloves
-  "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?q=80&w=220&auto=format&fit=crop",
   // Forklift moving stock in a warehouse
-  "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=220&auto=format&fit=crop",
   // Spotless washroom after cleaning
-  "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=220&auto=format&fit=crop",
   // Planning meeting in a conference room
-  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=220&auto=format&fit=crop",
 ];
 
 interface Size {
@@ -294,20 +311,46 @@ export default function AboutHeroMorph() {
 
   // One spring-smoothed progress value drives the whole intro instead of the
   // old phase state machine: the timers write to a motion value, so the intro
-  // never re-renders React. Same spring constants as the old per-card springs
-  // (identical params per coordinate ≡ one spring along the segment).
+  // never re-renders React. One spring along the segment ≡ identical params per
+  // coordinate, so the cards stay in formation.
   const introTarget = useMotionValue(0);
-  const introProgress = useSpring(introTarget, { stiffness: 40, damping: 15 });
+  const introProgress = useSpring(introTarget, INTRO_SPRING);
 
   useEffect(() => {
     if (prefersReducedMotion) return;
-    const t1 = setTimeout(() => introTarget.set(1), 500);
-    const t2 = setTimeout(() => introTarget.set(2), 2500);
+    const t1 = setTimeout(() => introTarget.set(1), INTRO_LINE_MS);
+    const t2 = setTimeout(() => introTarget.set(2), INTRO_CIRCLE_MS);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
     };
   }, [prefersReducedMotion, introTarget]);
+
+  // 0 hidden → 1 revealed. Driven off introProgress landing rather than a fixed
+  // delay so it tracks the real spring settle, and written as a motion value so
+  // the reveal costs zero re-renders (a state change here would re-render all
+  // 20 unmemoized FlipCards).
+  const headlineGate = useMotionValue(0);
+  const beatRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const fadeRef = useRef<AnimationPlaybackControls | undefined>(undefined);
+
+  // useMotionValueEvent owns the subscribe/unsubscribe; the ref guard makes the
+  // handler fire exactly once. Springs rest asymptotically, so crossing
+  // CIRCLE_SETTLED is the frame the circle has visually landed.
+  useMotionValueEvent(introProgress, "change", (value) => {
+    if (prefersReducedMotion || value < CIRCLE_SETTLED || beatRef.current) return;
+    beatRef.current = setTimeout(() => {
+      fadeRef.current = animate(headlineGate, 1, { duration: 0.6, ease: "easeOut" });
+    }, HEADLINE_BEAT_MS);
+  });
+
+  useEffect(
+    () => () => {
+      clearTimeout(beatRef.current);
+      fadeRef.current?.stop();
+    },
+    [],
+  );
 
   const scatterPositions = useMemo<ScatterPosition[]>(
     () =>
@@ -320,9 +363,18 @@ export default function AboutHeroMorph() {
     []
   );
 
-  // The headline is the page's LCP element: it paints at first render and only
-  // fades *out* once the scroll morph begins. Never gate it behind the intro.
-  const heroTextOpacity = useTransform(smoothMorph, [0, 0.4], [1, 0]);
+  // The headline is gated behind the intro on purpose: the line beat parks all
+  // 20 cards at y:0, straight through the centered headline, and showing the
+  // phrase under that sweep reads as a layout bug. It fades in HEADLINE_BEAT_MS
+  // after the circle settles. That makes it the LCP element at ~2.2s from mount
+  // rather than at first paint — INTRO_LINE_MS/INTRO_CIRCLE_MS/INTRO_SPRING are
+  // tuned to keep it under 2.5s, so slowing the intro regresses /nosotros LCP.
+  // The second factor is the separate scroll-driven fade-*out*.
+  const headlineOpacity = useTransform(
+    () => headlineGate.get() * clamp01(1 - smoothMorph.get() / 0.4),
+  );
+  // Trails inside the same fade instead of running its own timer.
+  const hintOpacity = useTransform(headlineGate, [0.6, 1], [0, 0.6]);
 
   const contentOpacity = useTransform(smoothMorph, [0.8, 1], [0, 1]);
   const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
@@ -355,18 +407,18 @@ export default function AboutHeroMorph() {
     <section ref={sectionRef} className="relative h-[300vh]">
       <div ref={stickyRef} className="sticky top-0 h-screen w-full overflow-hidden bg-[#FAFAFA]">
         <div className="flex h-full w-full flex-col items-center justify-center">
-          {/* z-10 so the line-phase card sweep passes behind the headline. */}
+          {/* z-10 so the line-phase card sweep passes behind the headline. Only
+              opacity animates and the wrapper is already out of flow, so the
+              gated reveal costs no layout shift. */}
           <m.div
-            style={{ opacity: heroTextOpacity }}
+            style={{ opacity: headlineOpacity }}
             className="absolute z-10 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2 px-4"
           >
             <h1 className="max-w-[13rem] text-2xl font-bold tracking-tight text-slate-900 md:max-w-sm md:text-4xl">
               Su satisfacción es nuestro éxito
             </h1>
             <m.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              transition={{ delay: 2.6, duration: 1 }}
+              style={{ opacity: hintOpacity }}
               className="mt-4 text-xs font-bold tracking-[0.2em] text-slate-500 uppercase"
             >
               Desliza para explorar
