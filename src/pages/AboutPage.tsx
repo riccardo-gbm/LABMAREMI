@@ -28,26 +28,26 @@ const timelineEntries: TimelineEntry[] = [
     year: "2021",
     title: "Fundación de LABMAREMI",
     description:
-      "La familia Andrade funda LABMAREMI en Quito como un pequeño local de venta de insumos de limpieza para negocios del barrio.",
+      "LABMAREMI es fundada por Diego Cango como un proveedor único de insumos de limpieza para negocios.",
     icon: Store,
   },
   {
     year: "2022",
     title: "Primera bodega propia",
     description:
-      "El crecimiento de pedidos nos lleva a abrir una bodega propia y ampliar el catálogo más allá de los productos básicos de limpieza.",
+      "El crecimiento de pedidos e inventario nos lleva a abrir una bodega propia y ampliar el catálogo más allá de los productos básicos de limpieza.",
     icon: Warehouse,
   },
   {
     year: "2023",
     title: "Cobertura a provincias cercanas",
     description:
-      "Empezamos a entregar fuera de Quito, llegando a negocios en el Valle de los Chillos, Cumbayá y Machachi con rutas periódicas.",
+      "Empezamos a entregar fuera de Quito, llegando a negocios en el Valle de los Chillos, Cumbayá y Machachi con rutas periódicas y nuestro propio camión de entregas",
     icon: Truck,
   },
   {
     year: "2024",
-    title: "Equipo de atención B2B",
+    title: "Ampliación del equipo de trabajo",
     description:
       "Formamos un equipo dedicado a clientes institucionales, hoteles, clínicas y unidades educativas, con seguimiento personalizado.",
     icon: Users,
@@ -69,9 +69,9 @@ interface ValueItem {
 
 const values: ValueItem[] = [
   {
-    title: "Confiabilidad",
+    title: "Confianza",
     description:
-      "Cumplimos lo que prometemos, en cada entrega y en cada plazo acordado.",
+      "Cumplimos lo que prometemos, en cada entrega, pago, producto y en cada plazo acordado.",
     icon: ShieldCheck,
   },
   {
@@ -83,7 +83,7 @@ const values: ValueItem[] = [
   {
     title: "Compromiso",
     description:
-      "Acompañamos a cada cliente como si su negocio fuera el nuestro.",
+      "Acompañamos a cada cliente como si su negocio fuera el nuestro, ofrecemos lo que necesita y cuando lo necesita.",
     icon: Handshake,
   },
   {
@@ -104,11 +104,11 @@ interface TeamPerson {
 const owners: TeamPerson[] = [
   {
     name: "Diego Cango",
-    role: "Función",
+    role: "Gerente de Ventas",
   },
   {
     name: "Juan Carlos Cango",
-    role: "Función",
+    role: "Gerente General",
   },
 ]
 
@@ -146,11 +146,11 @@ export default function AboutPage() {
               Un negocio familiar que abastece a otros negocios
             </h2>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-              LABMAREMI nació en 2021 como el proyecto de una familia quiteña que
+              LABMAREMI nació en 2021 como el proyecto que
               vio la necesidad de un proveedor confiable de insumos de limpieza,
               desinfección e higiene para pequeños y medianos negocios. Cinco
               años y entrega tras entrega después, seguimos siendo una empresa
-              familiar, ahora con un equipo que comparte el mismo compromiso con
+              con los mismos valores, ahora con un equipo que comparte el mismo compromiso con
               el que empezamos.
             </p>
           </div>
@@ -236,7 +236,7 @@ export default function AboutPage() {
           <div>
             <Eyebrow>Nuestra historia</Eyebrow>
             <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              Cinco años de crecimiento, un paso a la vez
+              Seis años de crecimiento, un paso a la vez
             </h2>
             <MediaFrame
               src="https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?q=80&w=1000&auto=format&fit=crop"
@@ -288,8 +288,6 @@ export default function AboutPage() {
 
         <Reveal>
         <p className="mt-8 text-xs text-muted-foreground">
-          Las imágenes de equipo son espacios temporales hasta cargar fotos
-          reales de la dirección y del equipo de trabajo.
         </p>
         </Reveal>
       </Section>
