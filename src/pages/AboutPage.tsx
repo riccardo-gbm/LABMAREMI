@@ -1,13 +1,11 @@
 import {
   BadgeCheck,
   Camera,
-  Eye,
   Handshake,
   MapPin,
   Rocket,
   ShieldCheck,
   Store,
-  Target,
   Truck,
   UserRound,
   Users,
@@ -138,16 +136,15 @@ export default function AboutPage() {
     <>
       <AboutHeroMorph />
 
-      <Section>
-        <Reveal className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:items-center">
+      <Section className="border-t">
+        <Reveal className="grid gap-8 lg:grid-cols-[3fr_2fr] lg:items-center">
           <div>
-            <Eyebrow>Nosotros</Eyebrow>
             <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              Un negocio familiar que abastece a otros negocios
+              Un proveedor de limpieza único y confiable para su negocio
             </h2>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
               LABMAREMI nació en 2021 como el proyecto que
-              vio la necesidad de un proveedor confiable de insumos de limpieza,
+              vió la necesidad de un proveedor confiable de insumos de limpieza,
               desinfección e higiene para pequeños y medianos negocios. Cinco
               años y entrega tras entrega después, seguimos siendo una empresa
               con los mismos valores, ahora con un equipo que comparte el mismo compromiso con
@@ -159,16 +156,13 @@ export default function AboutPage() {
             alt="Trabajo operativo de limpieza profesional"
             fallbackLabel="Espacio para foto familiar de LABMAREMI"
             fallbackIcon={Camera}
-            badge="Foto referencial"
             className="aspect-[4/3] shadow-sm"
           />
         </Reveal>
       </Section>
-
-      <Section>
+      <Section className="border-t">
         <Reveal>
-          <Eyebrow>Misión, visión y valores</Eyebrow>
-          <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+          <h2 className="mt-1 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Lo que nos mueve
           </h2>
         </Reveal>
@@ -176,10 +170,7 @@ export default function AboutPage() {
         <RevealGroup className="mt-10 grid gap-6 md:grid-cols-2">
           <RevealItem>
             <Card className="h-full p-6">
-              <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-                <Target className="h-6 w-6" aria-hidden="true" />
-              </span>
-              <p className="mt-5 font-mono text-xs uppercase tracking-[0.16em] text-primary">
+              <p className="mt-5 font-mono text-xl uppercase tracking-[0.16em] text-primary">
                 Misión
               </p>
               <p className="mt-3 text-base leading-relaxed text-muted-foreground">
@@ -192,10 +183,7 @@ export default function AboutPage() {
           </RevealItem>
           <RevealItem>
             <Card className="h-full p-6">
-              <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-                <Eye className="h-6 w-6" aria-hidden="true" />
-              </span>
-              <p className="mt-5 font-mono text-xs uppercase tracking-[0.16em] text-primary">
+              <p className="mt-5 font-mono text-xl uppercase tracking-[0.16em] text-primary">
                 Visión
               </p>
               <p className="mt-3 text-base leading-relaxed text-muted-foreground">
@@ -208,11 +196,11 @@ export default function AboutPage() {
         </RevealGroup>
 
         <Reveal className="mt-10" delay={0.05}>
-          <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="mt-10 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Nuestros valores
           </p>
         </Reveal>
-        <RevealGroup className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {values.map((value) => (
             <RevealItem key={value.title}>
               <Card className="h-full p-5">
