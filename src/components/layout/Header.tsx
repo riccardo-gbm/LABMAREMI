@@ -40,7 +40,7 @@ function Header() {
           onClick={() => setMobileOpen(false)}
         >
           <img
-            src="/logo1.webp"
+            src="/logo1.webp?v=2"
             alt="LABMAREMI"
             width={192}
             height={192}
