@@ -18,7 +18,7 @@ const categoryCodes: Record<string, string> = {
   desinfectantes: "DSF",
   desengrasantes: "DGR",
   papel: "PAP",
-  "herramientas-limpieza": "HER",
+  "materiales-limpieza": "HER",
   "fundas-basura": "FND",
   "insumos-bano": "BAN",
   "limpieza-industrial": "IND",
