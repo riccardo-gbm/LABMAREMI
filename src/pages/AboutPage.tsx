@@ -1,13 +1,11 @@
 import {
   BadgeCheck,
   Camera,
-  Eye,
   Handshake,
   MapPin,
   Rocket,
   ShieldCheck,
   Store,
-  Target,
   Truck,
   UserRound,
   Users,
@@ -28,26 +26,26 @@ const timelineEntries: TimelineEntry[] = [
     year: "2021",
     title: "Fundación de LABMAREMI",
     description:
-      "La familia Andrade funda LABMAREMI en Quito como un pequeño local de venta de insumos de limpieza para negocios del barrio.",
+      "LABMAREMI es fundada por Diego Cango como un proveedor único de insumos de limpieza para negocios.",
     icon: Store,
   },
   {
     year: "2022",
     title: "Primera bodega propia",
     description:
-      "El crecimiento de pedidos nos lleva a abrir una bodega propia y ampliar el catálogo más allá de los productos básicos de limpieza.",
+      "El crecimiento de pedidos e inventario nos lleva a abrir una bodega propia y ampliar el catálogo más allá de los productos básicos de limpieza.",
     icon: Warehouse,
   },
   {
     year: "2023",
     title: "Cobertura a provincias cercanas",
     description:
-      "Empezamos a entregar fuera de Quito, llegando a negocios en el Valle de los Chillos, Cumbayá y Machachi con rutas periódicas.",
+      "Empezamos a entregar fuera de Quito, llegando a negocios en el Valle de los Chillos, Cumbayá y Machachi con rutas periódicas y nuestro propio camión de entregas",
     icon: Truck,
   },
   {
     year: "2024",
-    title: "Equipo de atención B2B",
+    title: "Ampliación del equipo de trabajo",
     description:
       "Formamos un equipo dedicado a clientes institucionales, hoteles, clínicas y unidades educativas, con seguimiento personalizado.",
     icon: Users,
@@ -69,9 +67,9 @@ interface ValueItem {
 
 const values: ValueItem[] = [
   {
-    title: "Confiabilidad",
+    title: "Confianza",
     description:
-      "Cumplimos lo que prometemos, en cada entrega y en cada plazo acordado.",
+      "Cumplimos lo que prometemos, en cada entrega, pago, producto y en cada plazo acordado.",
     icon: ShieldCheck,
   },
   {
@@ -83,7 +81,7 @@ const values: ValueItem[] = [
   {
     title: "Compromiso",
     description:
-      "Acompañamos a cada cliente como si su negocio fuera el nuestro.",
+      "Acompañamos a cada cliente como si su negocio fuera el nuestro, ofrecemos lo que necesita y cuando lo necesita.",
     icon: Handshake,
   },
   {
@@ -104,11 +102,11 @@ interface TeamPerson {
 const owners: TeamPerson[] = [
   {
     name: "Diego Cango",
-    role: "Función",
+    role: "Gerente de Ventas",
   },
   {
     name: "Juan Carlos Cango",
-    role: "Función",
+    role: "Gerente General",
   },
 ]
 
@@ -138,19 +136,18 @@ export default function AboutPage() {
     <>
       <AboutHeroMorph />
 
-      <Section>
-        <Reveal className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:items-center">
+      <Section className="border-t">
+        <Reveal className="grid gap-8 lg:grid-cols-[3fr_2fr] lg:items-center">
           <div>
-            <Eyebrow>Nosotros</Eyebrow>
             <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              Un negocio familiar que abastece a otros negocios
+              Un proveedor de limpieza único y confiable para su negocio
             </h2>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-              LABMAREMI nació en 2021 como el proyecto de una familia quiteña que
-              vio la necesidad de un proveedor confiable de insumos de limpieza,
+              LABMAREMI nació en 2021 como el proyecto que
+              vió la necesidad de un proveedor confiable de insumos de limpieza,
               desinfección e higiene para pequeños y medianos negocios. Cinco
               años y entrega tras entrega después, seguimos siendo una empresa
-              familiar, ahora con un equipo que comparte el mismo compromiso con
+              con los mismos valores, ahora con un equipo que comparte el mismo compromiso con
               el que empezamos.
             </p>
           </div>
@@ -159,16 +156,13 @@ export default function AboutPage() {
             alt="Trabajo operativo de limpieza profesional"
             fallbackLabel="Espacio para foto familiar de LABMAREMI"
             fallbackIcon={Camera}
-            badge="Foto referencial"
             className="aspect-[4/3] shadow-sm"
           />
         </Reveal>
       </Section>
-
-      <Section>
+      <Section className="border-t">
         <Reveal>
-          <Eyebrow>Misión, visión y valores</Eyebrow>
-          <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+          <h2 className="mt-1 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Lo que nos mueve
           </h2>
         </Reveal>
@@ -176,10 +170,7 @@ export default function AboutPage() {
         <RevealGroup className="mt-10 grid gap-6 md:grid-cols-2">
           <RevealItem>
             <Card className="h-full p-6">
-              <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-                <Target className="h-6 w-6" aria-hidden="true" />
-              </span>
-              <p className="mt-5 font-mono text-xs uppercase tracking-[0.16em] text-primary">
+              <p className="mt-5 font-mono text-xl uppercase tracking-[0.16em] text-primary">
                 Misión
               </p>
               <p className="mt-3 text-base leading-relaxed text-muted-foreground">
@@ -192,10 +183,7 @@ export default function AboutPage() {
           </RevealItem>
           <RevealItem>
             <Card className="h-full p-6">
-              <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-                <Eye className="h-6 w-6" aria-hidden="true" />
-              </span>
-              <p className="mt-5 font-mono text-xs uppercase tracking-[0.16em] text-primary">
+              <p className="mt-5 font-mono text-xl uppercase tracking-[0.16em] text-primary">
                 Visión
               </p>
               <p className="mt-3 text-base leading-relaxed text-muted-foreground">
@@ -208,11 +196,11 @@ export default function AboutPage() {
         </RevealGroup>
 
         <Reveal className="mt-10" delay={0.05}>
-          <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="mt-10 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Nuestros valores
           </p>
         </Reveal>
-        <RevealGroup className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {values.map((value) => (
             <RevealItem key={value.title}>
               <Card className="h-full p-5">
@@ -236,7 +224,7 @@ export default function AboutPage() {
           <div>
             <Eyebrow>Nuestra historia</Eyebrow>
             <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              Cinco años de crecimiento, un paso a la vez
+              Seis años de crecimiento, un paso a la vez
             </h2>
             <MediaFrame
               src="https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?q=80&w=1000&auto=format&fit=crop"
@@ -288,8 +276,6 @@ export default function AboutPage() {
 
         <Reveal>
         <p className="mt-8 text-xs text-muted-foreground">
-          Las imágenes de equipo son espacios temporales hasta cargar fotos
-          reales de la dirección y del equipo de trabajo.
         </p>
         </Reveal>
       </Section>

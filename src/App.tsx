@@ -1,5 +1,6 @@
 import { Suspense, lazy, useEffect } from "react"
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
+import { ReactLenis } from "lenis/react"
 
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/react"
@@ -93,40 +94,42 @@ function RoutePrefetchWarmup() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <VercelBeacons />
-      <RoutePrefetchWarmup />
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/catalogo" element={<CatalogPage />} />
-          <Route path="/producto/:slug" element={<ProductDetailPage />} />
-          <Route path="/cotizacion" element={<QuotePage />} />
-          <Route path="/contacto" element={<ContactPage />} />
-          <Route path="/nosotros" element={<AboutPage />} />
-          <Route path="/platform" element={<PlatformPage />} />
+    <ReactLenis root>
+      <BrowserRouter>
+        <ScrollToTop />
+        <VercelBeacons />
+        <RoutePrefetchWarmup />
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/catalogo" element={<CatalogPage />} />
+            <Route path="/producto/:slug" element={<ProductDetailPage />} />
+            <Route path="/cotizacion" element={<QuotePage />} />
+            <Route path="/contacto" element={<ContactPage />} />
+            <Route path="/nosotros" element={<AboutPage />} />
+            <Route path="/platform" element={<PlatformPage />} />
 
-          {/* Admin: AuthProvider is lazy loaded in AdminRoot so Supabase and auth state
-              are fully code-split from the public bundle. */}
-          <Route
-            element={
-              <Suspense fallback={<AdminChunkFallback />}>
-                <AdminRoot />
-              </Suspense>
-            }
-          >
-            <Route path="/admin/login" element={<AdminLoginPage />} />
-            <Route element={<ProtectedRoute />}>
-              <Route element={<AdminLayout />}>
-                <Route path="/admin" element={<AdminPage />} />
+            {/* Admin: AuthProvider is lazy loaded in AdminRoot so Supabase and auth state
+                are fully code-split from the public bundle. */}
+            <Route
+              element={
+                <Suspense fallback={<AdminChunkFallback />}>
+                  <AdminRoot />
+                </Suspense>
+              }
+            >
+              <Route path="/admin/login" element={<AdminLoginPage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route element={<AdminLayout />}>
+                  <Route path="/admin" element={<AdminPage />} />
+                </Route>
               </Route>
             </Route>
-          </Route>
 
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ReactLenis>
   )
 }
