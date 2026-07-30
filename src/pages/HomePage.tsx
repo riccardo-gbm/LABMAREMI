@@ -70,7 +70,7 @@ const procurementTiles = [
     title: "Producto en inventario",
     label: "Disponibilidad",
     imageUrl:
-      "https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?q=80&w=900&auto=format&fit=crop",
+      "/bodega.jpg",
     imageAlt: "Productos de limpieza organizados para abastecimiento",
   },
   {
@@ -147,7 +147,7 @@ export default function HomePage() {
       <Section id="por-que-labmaremi" className="border-y bg-secondary/40">
         <Reveal>
           <h2 className="mt-4 max-w-full font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Trabajar con nosotros le da estos beneficios a su negocio : 
+            Trabajar con nosotros le da estos beneficios a su negocio 
           </h2>
         </Reveal>
         <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
