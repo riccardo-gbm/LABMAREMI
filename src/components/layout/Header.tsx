@@ -46,9 +46,11 @@ function Header() {
             height={192}
             fetchPriority="high"
             decoding="async"
-            className="h-15 w-15 object-contain"
+            // You can adjust 'scale-125' to make it bigger/smaller,
+            // and '-translate-y-1' to move it up/down
+            className="h-12 w-12 object-contain scale-80 -translate-y-[1px]"
           />
-          <span className="font-goodtimes text-lg font-bold tracking-tight text-[#0066cc]">
+          <span className="font-quantico text-xl tracking-tight text-[#0066cc] ml-2">
             LABMAREMI
           </span>
         </Link>
