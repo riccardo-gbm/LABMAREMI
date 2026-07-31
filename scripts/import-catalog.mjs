@@ -38,79 +38,105 @@ const UNSPLASH = (id) =>
  * Canonical category list — name, slug, and the public-facing copy Home renders.
  * This IS the source of truth now: it used to live in src/data/categories.ts,
  * which P5 deleted once these columns existed. Array order becomes sort_order.
+ *
+ * MIRRORS THE LIVE `categories` TABLE, verbatim — copy included, typos included.
+ * The catalog was re-scoped directly in Supabase after the original import
+ * (nine categories became eleven, and seven were renamed while keeping their
+ * slug). Since the upsert below is keyed on `slug`, a seed carrying the old
+ * names would rename the live categories back. If you change a category in
+ * Supabase, update this array in the same PR — the same way
+ * scripts/export-catalog-csv.mjs keeps docs/labmaremi_catalog.csv honest.
+ *
+ * Category `name` here must match the `category` column of that CSV, which is
+ * what resolves a product to its category_id further down.
  */
 const CATEGORY_SEED = [
   {
-    slug: "desinfectantes",
-    name: "Desinfectantes",
+    slug: "materiales-limpieza",
+    name: "Materiales de Limpieza",
     description:
-      "Alcoholes, cloro y desinfectantes multiuso para eliminar gérmenes y bacterias en cocinas, baños y áreas comunes.",
-    image_url: UNSPLASH("1584744982491-665216d95f8b"),
-    image_alt: "Insumos de desinfección y bioseguridad para empresas",
-  },
-  {
-    slug: "desengrasantes",
-    name: "Desengrasantes",
-    description:
-      "Productos de alto poder para remover grasa acumulada en cocinas industriales, campanas y superficies de trabajo.",
-    image_url: UNSPLASH("1528740561666-dc2479dc08ab"),
-    image_alt: "Botellas de limpieza para cocina y superficies",
-  },
-  {
-    slug: "papel",
-    name: "Papel",
-    description:
-      "Papel higiénico, toallas y servilletas institucionales para un abastecimiento constante en baños y áreas de servicio.",
-    image_url: UNSPLASH("1585421514284-efb74c2b69ba"),
-    image_alt: "Toallas de papel y limpieza institucional",
-  },
-  {
-    slug: "herramientas-limpieza",
-    name: "Herramientas de Limpieza",
-    description:
-      "Trapeadores, escobas, paños y accesorios pensados para el uso diario e intensivo en instalaciones comerciales.",
+      "Trapeadores, escobas, paños, fibras, limpión y accesorios pensados para el uso industrial diario.",
     image_url: UNSPLASH("1581578731548-c64695cc6952"),
     image_alt: "Personal de limpieza usando herramientas profesionales",
   },
   {
-    slug: "fundas-basura",
-    name: "Fundas de Basura",
+    slug: "papel",
+    name: "Papel para aseo personal",
     description:
-      "Fundas industriales en distintas capacidades y resistencias para el manejo de desechos comunes y especiales.",
+      "Papel higiénico, toallas de mano y servilletas institucionales para restaurantes, baños y áreas de servicio.",
+    image_url: UNSPLASH("1585421514284-efb74c2b69ba"),
+    image_alt: "Toallas de papel y limpieza institucional",
+  },
+  {
+    slug: "equipos-proteccion",
+    name: "Equipos de Protección Personal",
+    description:
+      "Protección corporal, auditiva, visual,facial, respiratoria, mano, brazos, corporal, anticaídas y para cabeza",
+    image_url: UNSPLASH("1584820927498-cfe5211fd8bf"),
+    image_alt: "Equipo de protección para personal operativo",
+  },
+  {
+    slug: "fundas-basura",
+    name: "Fundas para basura",
+    description:
+      "Fundas para desechos pequeñas, medianas, jumbo y superjumbo industriales para desechos comúnes, orgánicos e infecciosos.",
     image_url: UNSPLASH("1550963295-019d8a8a61c5"),
     image_alt: "Insumos de limpieza y manejo de residuos",
   },
   {
-    slug: "insumos-bano",
-    name: "Insumos para Baño",
+    slug: "empaques",
+    name: "Fundas y Plástico para empáques",
     description:
-      "Jabones, ambientadores y desinfectantes específicos para mantener los baños de su negocio impecables.",
-    image_url: UNSPLASH("1583907659441-addbe699e921"),
-    image_alt: "Productos de higiene para baños institucionales",
+      "Productos concentrados para remover grasa acumulada en cocinas industriales, campanas y superficies de trabajo.",
+    image_url: UNSPLASH("1528740561666-dc2479dc08ab"),
+    image_alt: "Botellas de limpieza para cocina y superficies",
   },
   {
     slug: "limpieza-industrial",
-    name: "Limpieza Industrial",
-    description:
-      "Soluciones de mayor concentración para pisos, maquinaria y superficies en entornos industriales y de alto tránsito.",
+    name: "Químicos Industriales",
+    description: "Químicos para la limpieza en la industria de alimentos y en general",
     image_url: UNSPLASH("1563453392212-326f5e854473"),
     image_alt: "Limpieza profesional de superficies industriales",
   },
   {
     slug: "higiene-personal",
-    name: "Higiene Personal",
+    name: "Químicos de Aseo Personal",
     description:
-      "Jabones, geles y toallas húmedas para el cuidado e higiene del personal en cualquier tipo de negocio.",
+      "Jabones líquidos para manos  y gel alcohol desinfectante para el higiene del personal en cualquier tipo de negocio.",
     image_url: UNSPLASH("1585421514738-01798e348b17"),
     image_alt: "Guantes e insumos de higiene personal",
   },
   {
-    slug: "equipos-proteccion",
-    name: "Equipos de Protección",
+    slug: "desinfectantes",
+    name: "Químicos Institucionales",
     description:
-      "Guantes, mascarillas y prendas de protección para el personal de cocina, limpieza y atención al público.",
-    image_url: UNSPLASH("1584820927498-cfe5211fd8bf"),
-    image_alt: "Equipo de protección para personal operativo",
+      "Ambientales, lavavajillas, cloro y desinfectantes industriales para eliminar gérmenes y bacterias.",
+    image_url: UNSPLASH("1584744982491-665216d95f8b"),
+    image_alt: "Insumos de desinfección y bioseguridad para empresas",
+  },
+  {
+    slug: "desechables",
+    name: "Desechables para alimentos",
+    description: "Productos desechables para envasar y transportar alimentos o líquidos.",
+    image_url: null,
+    image_alt: null,
+  },
+  {
+    slug: "insumos-bano",
+    name: "Plásticos Industriales",
+    description:
+      "Gavetas, tachos de basura, pallets y bandejas apra la organización de su negocio",
+    image_url: UNSPLASH("1583907659441-addbe699e921"),
+    image_alt: "Productos de higiene para baños institucionales",
+  },
+  {
+    // Live sort_order is 11, not 10 — array position wins on the next import,
+    // which closes the gap without reordering anything.
+    slug: "salud",
+    name: "Línea Hospitalaria y de Salud",
+    description: "Químicos y EPP para la industria de la salud ",
+    image_url: null,
+    image_alt: null,
   },
 ]
 
