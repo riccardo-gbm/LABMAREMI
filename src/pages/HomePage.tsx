@@ -68,7 +68,6 @@ const procurementTiles = [
   {
     icon: Boxes,
     title: "Producto en inventario",
-    label: "Disponibilidad",
     imageUrl: "/warehouse-inventory.webp",
     imageAlt:
       "Bodega con inventario de químicos, papel, fundas, herramientas de limpieza y protección",
@@ -76,14 +75,12 @@ const procurementTiles = [
   {
     icon: Route,
     title: "Entrega inmediata",
-    label: "Logística",
     imageUrl: "/delivery-truck.webp",
     imageAlt: "Camión de reparto en carretera con carga hacia el cliente",
   },
   {
     icon: ClipboardCheck,
     title: "Cotización personalizada",
-    label: "Servicio",
     imageUrl:
       "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=900&auto=format&fit=crop",
     imageAlt: "Guantes y protección para equipos operativos",
@@ -130,7 +127,6 @@ export default function HomePage() {
                   alt={tile.imageAlt}
                   fallbackLabel={tile.title}
                   fallbackIcon={tile.icon}
-                  badge={tile.label}
                   className="aspect-[4/5] shadow-sm transition group-hover:-translate-y-0.5 group-hover:shadow-md"
                 />
                 <p className="mt-3 font-display text-base font-semibold tracking-tight text-foreground">
