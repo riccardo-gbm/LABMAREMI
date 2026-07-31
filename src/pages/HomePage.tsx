@@ -42,25 +42,25 @@ const reasons = [
     icon: Truck,
     title: "Entregas inmediatas",
     description:
-      "Coordinamos entregas el mismo día o hasta 48 horas a Quito y provincias cercanas.",
+      "Coordinamos entregas el mismo día o hasta 48 horas a Quito, Picincha y provincias cercanas. Sin costo adicional sobre su pedido.",
   },
   {
     icon: PackageCheck,
     title: "Continuidad de inventario",
     description:
-      "Planificamos reposición para productos como papel, desinfectantes, guantes y químicos de uso diario.",
+      "Planificamos reposición para productos como papel, desinfectantes, guantes y químicos de uso diario. Si un producto no está en el catálogo, le ofrecemos una cotización personalizada instantánea",
   },
   {
     icon: Boxes,
     title: "Catálogo completo",
     description:
-      "Agrupamos limpieza, higiene, protección y consumibles para reducir compras dispersas entre varios proveedores",
+      "Agrupamos limpieza, higiene, protección y consumibles para reducir compras dispersas entre varios proveedores. Todo lo que tu negocio necesita lo encuentras en LABMAREMI. ",
   },
   {
     icon: Handshake,
     title: "Atención personalizada",
     description:
-      "Acompañamos pedidos recurrentes con asesoría por tipo de negocio, presentación y frecuencia de consumo.",
+      "Acompañamos pedidos recurrentes con asesoría por tipo de negocio, presentación y frecuencia de consumo. Así como capacitaciones de uso seguro de químicos y productos de limpieza para su personal.",
   },
 ]
 
