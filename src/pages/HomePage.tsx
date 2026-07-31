@@ -69,17 +69,16 @@ const procurementTiles = [
     icon: Boxes,
     title: "Producto en inventario",
     label: "Disponibilidad",
-    imageUrl:
-      "/bodega.jpg",
-    imageAlt: "Productos de limpieza organizados para abastecimiento",
+    imageUrl: "/warehouse-inventory.webp",
+    imageAlt:
+      "Bodega con inventario de químicos, papel, fundas, herramientas de limpieza y protección",
   },
   {
     icon: Route,
     title: "Entrega inmediata",
     label: "Logística",
-    imageUrl:
-      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=900&auto=format&fit=crop",
-    imageAlt: "Operación de limpieza y logística profesional",
+    imageUrl: "/delivery-truck.webp",
+    imageAlt: "Camión de reparto en carretera con carga hacia el cliente",
   },
   {
     icon: ClipboardCheck,
