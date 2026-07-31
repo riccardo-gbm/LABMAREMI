@@ -1,6 +1,6 @@
 import {
-  Bath,
   BedDouble,
+  Boxes,
   Brush,
   Building2,
   Droplets,
@@ -11,7 +11,6 @@ import {
   Package,
   ShieldCheck,
   Sparkles,
-  SprayCan,
   ScrollText,
   Stethoscope,
   Store,
@@ -25,15 +24,19 @@ import {
  * the same visual mark across the site.
  */
 const categoryIcons: Record<string, LucideIcon> = {
-  desinfectantes: Droplets,
-  desengrasantes: SprayCan,
+  "materiales-limpieza": Brush,
   papel: ScrollText,
-  "herramientas-limpieza": Brush,
+  "equipos-proteccion": ShieldCheck,
   "fundas-basura": Trash2,
-  "insumos-bano": Bath,
+  empaques: Package,
   "limpieza-industrial": Factory,
   "higiene-personal": HandHeart,
-  "equipos-proteccion": ShieldCheck,
+  desinfectantes: Droplets,
+  desechables: UtensilsCrossed,
+  // Slug predates the rename to "Plásticos Industriales" — the category is
+  // keyed on the slug, so renaming it in Supabase did not change this key.
+  "insumos-bano": Boxes,
+  salud: Stethoscope,
 }
 
 /**
