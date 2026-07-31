@@ -282,7 +282,7 @@ export default function CatalogPage() {
               Producto no encontrado
             </h2>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
-              Contáctanos y cotiza el producto que necesitas.
+              Escríbanos y le cotizamos el producto que necesita.
             </p>
             {hasActiveFilters ? (
               <Button variant="outline" className="mt-6" onClick={clearFilters}>

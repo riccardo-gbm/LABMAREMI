@@ -48,13 +48,13 @@ const reasons = [
     icon: PackageCheck,
     title: "Continuidad de inventario",
     description:
-      "Planificamos reposición para productos como papel, desinfectantes, guantes y químicos de uso diario. Si un producto no está en el catálogo, le ofrecemos una cotización personalizada instantánea",
+      "Planificamos reposición para productos como papel, desinfectantes, guantes y químicos de uso diario. Si un producto no está en el catálogo, le ofrecemos una cotización personalizada al momento.",
   },
   {
     icon: Boxes,
     title: "Catálogo completo",
     description:
-      "Agrupamos limpieza, higiene, protección y consumibles para reducir compras dispersas entre varios proveedores. Todo lo que tu negocio necesita lo encuentras en LABMAREMI. ",
+      "Agrupamos limpieza, higiene, protección y consumibles para reducir compras dispersas entre varios proveedores. Todo lo que su negocio necesita lo encuentra en LABMAREMI.",
   },
   {
     icon: Handshake,
@@ -115,7 +115,7 @@ export default function HomePage() {
               ¿Quienes somos?
             </h2>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-              LABMAREMI es un distribuidor que centraliza todos los productos de limpieza, protección e higiene para tu negocio. Ofrecemos cotización directa personalizada, entregas inmediatas y
+              LABMAREMI es un distribuidor que centraliza todos los productos de limpieza, protección e higiene para su negocio. Ofrecemos cotización directa personalizada, entregas inmediatas y
               seguimiento periódico.
             </p>
           </div>
