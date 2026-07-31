@@ -42,7 +42,7 @@ const reasons = [
     icon: Truck,
     title: "Entregas inmediatas",
     description:
-      "Coordinamos entregas el mismo día o hasta 48 horas a Quito, Picincha y provincias cercanas. Sin costo adicional sobre su pedido.",
+      "Coordinamos entregas el mismo día o hasta 48 horas a Quito, Pichincha y provincias cercanas. Sin costo adicional sobre su pedido.",
   },
   {
     icon: PackageCheck,
