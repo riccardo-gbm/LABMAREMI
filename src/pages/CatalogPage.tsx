@@ -279,11 +279,10 @@ export default function CatalogPage() {
               <SearchX className="h-6 w-6" aria-hidden="true" />
             </span>
             <h2 className="mt-5 font-display text-xl font-semibold tracking-tight text-foreground">
-              No encontramos productos con esos criterios
+              Producto no encontrado
             </h2>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
-              Pruebe con otra palabra o revise la categoría seleccionada. Si no
-              encuentra lo que necesita, escríbanos y le ayudamos a ubicarlo.
+              Contáctanos y cotiza el producto que necesitas.
             </p>
             {hasActiveFilters ? (
               <Button variant="outline" className="mt-6" onClick={clearFilters}>
