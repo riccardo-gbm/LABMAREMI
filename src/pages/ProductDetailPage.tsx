@@ -18,6 +18,48 @@ import { useAsync } from "@/hooks/useAsync"
 import { getCategoryIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
+/**
+ * "Uso recomendado" is free text with three shapes in the catalog: most
+ * products store numbered steps separated by a blank line, a few store
+ * unnumbered paragraphs, and the rest a single block. Rendering it raw runs the
+ * steps together into one paragraph, so the shape is detected here instead.
+ *
+ * A lone newline inside a block is a hard wrap carried over from the source
+ * PDF, never a deliberate break — those collapse back into spaces.
+ */
+function SpecValue({ value }: { value: string }) {
+  const blocks = value
+    .replace(/\r\n/g, "\n")
+    .split(/\n{2,}/)
+    .map((block) => block.replace(/\s*\n\s*/g, " ").trim())
+    .filter(Boolean)
+
+  if (blocks.length < 2) return <>{blocks[0] ?? ""}</>
+
+  // "1. …", "2. …" — let <ol> supply the numbering so the text hangs and wraps
+  // against the marker instead of restarting at the left edge.
+  const numbered = blocks.every((block, i) => block.startsWith(`${i + 1}. `))
+  if (numbered) {
+    return (
+      <ol className="list-decimal space-y-2 pl-5 marker:text-muted-foreground">
+        {blocks.map((block, i) => (
+          <li key={block} className="pl-1">
+            {block.slice(`${i + 1}. `.length)}
+          </li>
+        ))}
+      </ol>
+    )
+  }
+
+  return (
+    <div className="space-y-2">
+      {blocks.map((block) => (
+        <p key={block}>{block}</p>
+      ))}
+    </div>
+  )
+}
+
 /** Spec-sheet placeholder mirroring the two-column detail layout. */
 function DetailSkeleton() {
   return (
@@ -101,7 +143,7 @@ export default function ProductDetailPage() {
     { label: "Código", value: code, mono: true },
     { label: "Categoría", value: product.categoryName || "—", mono: false },
     { label: "Presentación", value: product.presentation, mono: false },
-    { label: "Uso recomendado", value: product.recommendedUse, mono: false },
+    { label: "Uso recomendado", value: product.recommendedUse, mono: false, rich: true },
   ]
 
   return (
@@ -182,7 +224,7 @@ export default function ProductDetailPage() {
                       row.mono && "font-mono tracking-widest"
                     )}
                   >
-                    {row.value}
+                    {row.rich ? <SpecValue value={row.value} /> : row.value}
                   </dd>
                 </div>
               ))}
