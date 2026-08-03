@@ -40,6 +40,9 @@ function MediaFrameInner({
           src={src}
           alt={alt ?? fallbackLabel}
           loading="lazy"
+          // A catalog page change swaps in a whole grid of these at once;
+          // async decode keeps that off the main thread.
+          decoding="async"
           onError={() => setFailed(true)}
           className={cn(
             "h-full w-full object-cover transition-transform duration-500 ease-out group-hover/media:scale-[1.03]",
