@@ -60,12 +60,18 @@ function CatalogSkeleton() {
           <Skeleton className="mb-5 h-4 w-44" />
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 9 }).map((_, i) => (
-              <Card key={i} className="overflow-hidden">
+              <Card key={i} className="flex h-full w-full flex-col overflow-hidden">
                 <Skeleton className="aspect-[4/3] w-full rounded-none" />
-                <div className="space-y-3 p-5">
-                  <Skeleton className="h-5 w-28 rounded-full" />
-                  <Skeleton className="h-5 w-3/4" />
-                  <Skeleton className="h-16 w-full" />
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <Skeleton className="h-5 w-24 rounded-full" />
+                    <Skeleton className="h-3 w-12" />
+                  </div>
+                  <Skeleton className="mt-4 h-6 w-3/4" />
+                  <Skeleton className="mt-3 h-14 w-full" />
+                  <div className="mt-auto pt-5">
+                    <Skeleton className="h-10 w-full" />
+                  </div>
                 </div>
               </Card>
             ))}

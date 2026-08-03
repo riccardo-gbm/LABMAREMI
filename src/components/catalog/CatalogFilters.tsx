@@ -44,7 +44,7 @@ interface CategorySidebarProps {
 // One markup, two shapes: wrapping pills on small screens, a stacked list in
 // the left column from lg up.
 const ITEM_BASE =
-  "relative inline-flex items-center gap-2 overflow-hidden rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:w-full lg:justify-between lg:rounded-lg lg:px-3 lg:py-2"
+  "relative inline-flex items-center gap-2 overflow-hidden rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:w-full lg:justify-between lg:rounded-lg lg:px-3 lg:py-2"
 const ITEM_ACTIVE = "border-primary text-primary-foreground"
 const ITEM_IDLE =
   "border-input bg-background text-muted-foreground hover:border-ring/60 hover:text-foreground"
