@@ -254,6 +254,9 @@ export default function CatalogPage() {
               ) : null}
             </div>
 
+          {/* Three across only from xl. At lg the sidebar leaves ~185px per
+              card, under the ~195px the CTA needs before its nowrap label
+              starts clipping. */}
           <m.div layout className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <AnimatePresence mode="popLayout">
               {visible.map((product) => (
