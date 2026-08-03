@@ -46,4 +46,6 @@ supabase
 # git history. Recover one with:
 #   git show <commit-before-this-branch>:public/photo4.svg > design-assets/originals/photo4.svg
 design-assets
+description.txt
+.graphifyignore
 
