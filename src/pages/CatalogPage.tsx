@@ -1,23 +1,27 @@
-import { useMemo, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import { AnimatePresence, LayoutGroup, m } from "framer-motion"
-import { Search, SearchX } from "lucide-react"
+import { AnimatePresence, m } from "framer-motion"
+import { SearchX } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { PageHeader } from "@/components/ui/page-header"
+import { Pagination } from "@/components/ui/pagination"
 import { Reveal } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
 import { Skeleton } from "@/components/ui/skeleton"
 import { QueryError } from "@/components/ui/query-error"
+import { CatalogSearch, CategorySidebar } from "@/components/catalog/CatalogFilters"
 import { ProductCard } from "@/components/catalog/ProductCard"
 import { fetchCatalog, type CatalogCategory, type CatalogProduct } from "@/lib/catalogData"
 import { useAsync } from "@/hooks/useAsync"
-import { getCategoryCode, matchesQuery } from "@/lib/catalog"
-import { cn } from "@/lib/utils"
+import { matchesQuery } from "@/lib/catalog"
 
 const CATEGORY_PARAM = "categoria"
+const PAGE_PARAM = "pagina"
+// Divisible by both grid widths (sm:grid-cols-2, lg:grid-cols-3), so a full
+// page never leaves an orphan row.
+const PAGE_SIZE = 24
 
 // Stable references for the empty state, so the filter useMemo below only
 // recomputes when the data actually changes — not on every render (a fresh
@@ -33,29 +37,43 @@ const HEADER = (
   />
 )
 
-/** Filter bar + card grid placeholders, matching the loaded layout. */
+/** Search bar, category column and card grid placeholders, matching the
+ *  loaded layout so nothing jumps when the data lands. */
 function CatalogSkeleton() {
   return (
     <Section className="pt-8 md:pt-10">
-      <Card className="space-y-5 p-4 md:p-5">
-        <Skeleton className="h-11 w-full max-w-[360px]" />
-        <div className="flex flex-wrap gap-2 border-t pt-4">
+      <Card className="p-4 md:p-5">
+        <Skeleton className="h-11 w-full" />
+      </Card>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-[220px_1fr] lg:items-start lg:gap-8">
+        <div className="flex flex-wrap gap-2 lg:flex-col lg:gap-1.5">
           {Array.from({ length: 10 }).map((_, i) => (
-            <Skeleton key={i} className="h-8 w-32 rounded-full" />
+            <Skeleton
+              key={i}
+              className="h-8 w-32 rounded-full lg:h-10 lg:w-full lg:rounded-lg"
+            />
           ))}
         </div>
-      </Card>
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="overflow-hidden">
-            <Skeleton className="aspect-[4/3] w-full rounded-none" />
-            <div className="space-y-3 p-5">
-              <Skeleton className="h-5 w-28 rounded-full" />
-              <Skeleton className="h-5 w-3/4" />
-              <Skeleton className="h-16 w-full" />
-            </div>
-          </Card>
-        ))}
+
+        <div>
+          <Skeleton className="mb-5 h-4 w-44" />
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <Card key={i} className="overflow-hidden">
+                <Skeleton className="aspect-[4/3] w-full rounded-none" />
+                <div className="space-y-3 p-5">
+                  <Skeleton className="h-5 w-28 rounded-full" />
+                  <Skeleton className="h-5 w-3/4" />
+                  <Skeleton className="h-16 w-full" />
+                </div>
+              </Card>
+            ))}
+          </div>
+          <div className="mt-10 flex justify-center">
+            <Skeleton className="h-9 w-72" />
+          </div>
+        </div>
       </div>
     </Section>
   )
@@ -65,6 +83,7 @@ export default function CatalogPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [query, setQuery] = useState("")
   const { data, loading, error, retry } = useAsync(fetchCatalog)
+  const resultsRef = useRef<HTMLDivElement>(null)
 
   const categories = data?.categories ?? EMPTY_CATEGORIES
   const products = data?.products ?? EMPTY_PRODUCTS
@@ -87,6 +106,20 @@ export default function CatalogPage() {
     [products, activeCategory, query]
   )
 
+  // Page is derived from the URL, never mirrored into state. Clamping here
+  // rather than rewriting the URL means a junk or out-of-range `?pagina=`
+  // still renders sane results, with no setSearchParams → re-render loop.
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const requestedPage = Number.parseInt(searchParams.get(PAGE_PARAM) ?? "1", 10)
+  const page = Number.isFinite(requestedPage)
+    ? Math.min(Math.max(requestedPage, 1), totalPages)
+    : 1
+  const pageStart = (page - 1) * PAGE_SIZE
+  const visible = useMemo(
+    () => filtered.slice(pageStart, pageStart + PAGE_SIZE),
+    [filtered, pageStart]
+  )
+
   const selectCategory = (categoryId: string | null) => {
     setSearchParams(
       (params) => {
@@ -95,10 +128,49 @@ export default function CatalogPage() {
         } else {
           params.delete(CATEGORY_PARAM)
         }
+        // A different result set invalidates the page number.
+        params.delete(PAGE_PARAM)
         return params
       },
       { replace: true }
     )
+  }
+
+  const updateQuery = (value: string) => {
+    setQuery(value)
+    // Same reason as above — but only touch the URL when there is a page to
+    // clear, so typing doesn't push a router update per keystroke.
+    if (searchParams.has(PAGE_PARAM)) {
+      setSearchParams(
+        (params) => {
+          params.delete(PAGE_PARAM)
+          return params
+        },
+        { replace: true }
+      )
+    }
+  }
+
+  const goToPage = (next: number) => {
+    setSearchParams(
+      (params) => {
+        // Page 1 is the default — keep it out of the URL.
+        if (next <= 1) {
+          params.delete(PAGE_PARAM)
+        } else {
+          params.set(PAGE_PARAM, String(next))
+        }
+        return params
+      },
+      { replace: true }
+    )
+    // Otherwise a click on the control at the bottom leaves the visitor
+    // staring at the last row of a brand-new page. Deliberately instant, not
+    // smooth: a page change swaps all 24 cards at once, and animating the
+    // scroll would run a per-frame scroll against framer-motion's layout
+    // projection for the same 48 entering/exiting nodes. Jumping is also what
+    // paginated lists conventionally do.
+    resultsRef.current?.scrollIntoView({ block: "start" })
   }
 
   const clearFilters = () => {
@@ -138,122 +210,53 @@ export default function CatalogPage() {
 
       <Section className="pt-8 md:pt-10">
         <Reveal>
-        <Card className="space-y-5 p-4 md:p-5">
-          <div className="grid gap-4 lg:grid-cols-[minmax(260px,360px)_1fr_auto] lg:items-center">
-            <div className="relative">
-              <Search
-                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <Input
-                type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Buscar por nombre o descripción…"
-                aria-label="Buscar productos"
-                className="h-11 pl-9"
-              />
-            </div>
-
-            <p
-              className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground"
-              aria-live="polite"
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                <m.span
-                  key={filtered.length}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.18, ease: "easeOut" }}
-                  className="inline-block"
-                >
-                  {filtered.length} de {products.length} productos
-                </m.span>
-              </AnimatePresence>
-            </p>
-
-            {hasActiveFilters ? (
-              <Button variant="outline" size="sm" onClick={clearFilters}>
-                Limpiar filtros
-              </Button>
-            ) : null}
-          </div>
-
-          <LayoutGroup>
-          <div
-            className="flex flex-wrap gap-2 border-t pt-4"
-            role="group"
-            aria-label="Filtrar por categoría"
-          >
-            <button
-              type="button"
-              onClick={() => selectCategory(null)}
-              aria-pressed={!activeCategory}
-              className={cn(
-                "relative overflow-hidden rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                !activeCategory
-                  ? "border-primary text-primary-foreground"
-                  : "border-input bg-background text-muted-foreground hover:border-ring/60 hover:text-foreground"
-              )}
-            >
-              {!activeCategory ? (
-                <m.span
-                  layoutId="catalog-filter-active"
-                  className="absolute inset-0 rounded-full bg-primary"
-                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                />
-              ) : null}
-              <span className="relative z-10">Todas</span>
-            </button>
-            {categories.map((category) => {
-              const isActive = category.id === activeCategory
-              return (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => selectCategory(isActive ? null : category.id)}
-                  aria-pressed={isActive}
-                  className={cn(
-                    "relative inline-flex items-center gap-2 overflow-hidden rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                    isActive
-                      ? "border-primary text-primary-foreground"
-                      : "border-input bg-background text-muted-foreground hover:border-ring/60 hover:text-foreground"
-                  )}
-                >
-                  {isActive ? (
-                    <m.span
-                      layoutId="catalog-filter-active"
-                      className="absolute inset-0 rounded-full bg-primary"
-                      transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                    />
-                  ) : null}
-                  <span className="relative z-10">{category.name}</span>
-                  <span
-                    className={cn(
-                      "relative z-10 font-mono text-[10px] tracking-widest",
-                      isActive
-                        ? "text-primary-foreground/70"
-                        : "text-muted-foreground/70"
-                    )}
-                  >
-                    {getCategoryCode(category.id)}
-                  </span>
-                </button>
-              )
-            })}
-          </div>
-          </LayoutGroup>
-        </Card>
+          <CatalogSearch value={query} onChange={updateQuery} />
         </Reveal>
 
-        {/* Results — the grid + its AnimatePresence stay mounted so cards can
-            exit-animate as the list empties out; the empty state is a sibling,
-            not an alternative branch that would tear the boundary down. */}
-        <div className="mt-8">
-          <m.div layout className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 lg:grid-cols-[220px_1fr] lg:items-start lg:gap-8">
+          <CategorySidebar
+            categories={categories}
+            activeCategory={activeCategory}
+            onSelect={selectCategory}
+          />
+
+          {/* Results — the grid + its AnimatePresence stay mounted so cards can
+              exit-animate as the list empties out; the empty state is a sibling,
+              not an alternative branch that would tear the boundary down.
+              scroll-mt-24 keeps the first row clear of the sticky Header when
+              goToPage scrolls this back into view. */}
+          <div ref={resultsRef} className="scroll-mt-24">
+            <div className="mb-5 flex items-center justify-between gap-4 border-b pb-4">
+              <p
+                className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground"
+                aria-live="polite"
+              >
+                <AnimatePresence mode="wait" initial={false}>
+                  <m.span
+                    key={`${page}-${filtered.length}`}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
+                    className="inline-block"
+                  >
+                    {filtered.length > 0
+                      ? `${visible.length} de ${filtered.length} productos`
+                      : `0 de ${products.length} productos`}
+                  </m.span>
+                </AnimatePresence>
+              </p>
+
+              {hasActiveFilters ? (
+                <Button variant="outline" size="sm" onClick={clearFilters}>
+                  Limpiar filtros
+                </Button>
+              ) : null}
+            </div>
+
+          <m.div layout className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <AnimatePresence mode="popLayout">
-              {filtered.map((product) => (
+              {visible.map((product) => (
                 <m.div
                   key={product.id}
                   layout
@@ -268,6 +271,16 @@ export default function CatalogPage() {
               ))}
             </AnimatePresence>
           </m.div>
+
+          {filtered.length > 0 ? (
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onPageChange={goToPage}
+              className="mt-10"
+            />
+          ) : null}
+
           {filtered.length === 0 ? (
           <m.div
             initial={{ opacity: 0, y: 16 }}
@@ -291,6 +304,7 @@ export default function CatalogPage() {
             ) : null}
           </m.div>
           ) : null}
+          </div>
         </div>
       </Section>
     </>
