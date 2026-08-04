@@ -16,10 +16,17 @@ does not redefine them.
 | Static frontend  | Vercel (Vite preset)             | `vercel.json`  |
 | Database + Auth  | Supabase (Postgres, RLS, RPC)    | `supabase/migrations/` |
 | Object storage   | Supabase Storage, `product-images` bucket | `0003_product_images_bucket.sql` |
+| Lead notification | Supabase Edge Function → Resend  | `supabase/functions/quote-notification/`, `0007_quote_notification.sql` |
 | Telemetry        | Vercel Analytics + Speed Insights | mounted in `src/App.tsx:55-56` |
 
-The frontend is a pure SPA. There is no server runtime of ours in production —
-the browser talks to Supabase's REST API directly, gated by RLS.
+The frontend is a pure SPA. There is no server runtime of ours in the request path
+— the browser talks to Supabase's REST API directly, gated by RLS.
+
+The one piece of server code we run is the `quote-notification` Edge Function, and
+it is deliberately **out of band**: nothing in the browser calls it or holds a
+credential for it. A Postgres trigger fires it after a lead commits. That is why a
+Resend outage cannot fail a submission, and why the Resend API key never has to
+exist anywhere the public can reach.
 
 ---
 
@@ -71,6 +78,7 @@ just a save.
 | `0004_catalog_presentation.sql` | `presentation` / `recommended_use` product columns. |
 | `0005_quote_submission_rpc.sql` | `submit_quote_request` security-definer RPC — atomic lead + line items, honeypot rejected server-side. The only write path anon has. |
 | `0006_admin_role_rls.sql` | Security fix: replaces "any authenticated user is an admin" with the `admin_users` roster and the `is_admin()` function. |
+| `0007_quote_notification.sql` | `pg_net`, `quote_requests.notified_at`, the private `notification_config` row, and the `after insert` trigger that fires the `quote-notification` Edge Function. |
 
 ### `0006` requires a manual dashboard step
 
@@ -85,6 +93,74 @@ Applying `0006` closes the RLS half. The other half cannot be done in SQL:
 > turn **off** "Allow new users to sign up".
 
 Do both. Defence in depth.
+
+### `0007` requires manual setup
+
+Applying the SQL is only half of it. The trigger is live the moment `0007` runs,
+but it does nothing until `private.notification_config` has a row — an
+unconfigured project saves leads normally and mails nobody. **Do these in order.**
+Deploying the function last would leave a window where a real lead fires at a URL
+that isn't answering.
+
+**1. Resend.** Confirm `labmaremi.com` still shows **Verified** under Domains — an
+unverified domain is the single most common cause of a silent non-delivery. Then
+create an API key for it.
+
+**2. Generate a shared secret.** Any long random string:
+
+```bash
+openssl rand -hex 32
+```
+
+This value goes in three places and must match in all of them: the function
+secret below, the config row below, and `QUOTE_NOTIFICATION_SECRET` in your local
+`.env` (so `scripts/test-quote-notification.mjs` can run).
+
+**3. Set the function secrets and deploy.**
+
+```bash
+npx supabase secrets set \
+  QUOTE_NOTIFICATION_SECRET="<the secret from step 2>" \
+  RESEND_API_KEY="<the key from step 1>" \
+  QUOTE_NOTIFICATION_FROM="LABMAREMI Cotizaciones <cotizaciones@labmaremi.com>" \
+  QUOTE_NOTIFICATION_RECIPIENTS="diego_cango_r@hotmail.com,ricardocango2007@gmail.com" \
+  QUOTE_ADMIN_URL="https://<your-domain>/admin"
+
+npx supabase functions deploy quote-notification
+```
+
+`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically — do not
+set them, and never put the Resend key in `.env` or in Vercel.
+
+**4. Point the trigger at the deployed function**, in the SQL editor:
+
+```sql
+insert into private.notification_config (id, function_url, shared_secret)
+values (
+  true,
+  'https://alyjdwsblnedadlfplgw.supabase.co/functions/v1/quote-notification',
+  '<the same secret from step 2>'
+)
+on conflict (id) do update
+  set function_url  = excluded.function_url,
+      shared_secret = excluded.shared_secret,
+      updated_at    = now();
+```
+
+**5. Prove it.** `node scripts/test-quote-notification.mjs` — then actually open
+both inboxes. Hotmail is the fussier of the two; check its junk folder before
+concluding anything failed.
+
+### Adding or changing notification recipients
+
+One command, no code change, no deploy of the frontend:
+
+```bash
+npx supabase secrets set QUOTE_NOTIFICATION_RECIPIENTS="a@x.com,b@y.com,c@z.com"
+```
+
+The list is comma-separated and read on every invocation. Supabase restarts the
+function on a secret change, so it takes effect on the next lead.
 
 ### Verify, don't assume
 
@@ -154,9 +230,23 @@ duplicating it.
 | Build status | Vercel Deployments | `tsc -b` failures fail the build; the previous deployment stays live. |
 | API errors, RLS denials | Supabase → Logs / API | A spike in 401/403 usually means a policy changed. |
 | Lead flow | `/admin` dashboard | Zero new leads over a normally-busy period is the first sign the quote form is broken. |
+| Notification delivery | `quote_requests.notified_at` | A recent lead with `notified_at` null means the email never went out. This is the one signal that catches a broken notification without anyone noticing the absence of a mail. |
+| Edge Function runs | Supabase → Edge Functions → `quote-notification` → Logs | `resend rejected` lines carry the upstream reason verbatim. |
+| Email delivery | Resend dashboard | Bounces and spam complaints, especially on the Hotmail address. |
 
 There is no alerting configured. Vercel and Supabase email on build/project
 failures; everything else is checked by looking.
+
+A useful weekly glance:
+
+```sql
+select company_name, created_at, notified_at
+from quote_requests
+where notified_at is null and created_at > now() - interval '7 days'
+order by created_at desc;
+```
+
+Empty is healthy.
 
 ---
 
@@ -209,6 +299,60 @@ behaviour, not a bug.
 Left intentionally by `scripts/test-anon-rls.mjs`: proving anon can submit means
 one row survives, and anon has no delete. Remove it from the admin dashboard.
 
+These rows do **not** send a notification — `notify_quote_request()` skips any
+`company_name` starting with `__RLS_TEST__` on purpose. A notification that fires
+on every security run is a notification people learn to ignore.
+
+### Quote submitted but no email arrived
+
+The lead itself is never at risk here: the trigger is out of band and swallows its
+own errors, so the row commits either way. Work down this ladder — each step rules
+out everything above it.
+
+```sql
+-- 1. Did the function even report success?
+select id, company_name, created_at, notified_at
+from quote_requests order by created_at desc limit 5;
+```
+
+- **`notified_at` is set** → the email left Resend. It is a delivery problem, not a
+  code problem. Check the Hotmail junk folder, then the Resend dashboard for a
+  bounce. Verify the recipient list: `npx supabase secrets list`.
+- **`notified_at` is null** → keep going.
+
+```sql
+-- 2. Is the trigger configured at all? No row = it never fired.
+select function_url, updated_at from private.notification_config;
+
+-- 3. What did pg_net get back? net.* is only readable as the service role.
+select created, status_code, content
+from net._http_response order by created desc limit 5;
+```
+
+- **No `net._http_response` rows** → `pg_net` isn't installed, or the config row is
+  missing. Re-run §3 step 4.
+- **`401`** → the secret in `private.notification_config.shared_secret` and the
+  `QUOTE_NOTIFICATION_SECRET` function secret have drifted apart. Set both to the
+  same value again.
+- **`404`** → the function isn't deployed, or `function_url` is wrong.
+  `npx supabase functions deploy quote-notification`.
+- **`500`** → the reason is in the response body and in the function logs.
+  `missing env: …` means a secret was never set. `resend rejected` carries Resend's
+  own message — most often the sending domain is no longer verified, which happens
+  quietly when DNS records get edited.
+
+To re-send for a lead that was missed, once the cause is fixed:
+
+```bash
+curl -X POST "https://alyjdwsblnedadlfplgw.supabase.co/functions/v1/quote-notification" \
+  -H "x-webhook-secret: <the shared secret>" \
+  -H "Content-Type: application/json" \
+  -d '{"quote_request_id":"<uuid>","force":true}'
+```
+
+`force` is needed only if `notified_at` is already set; without it the call is a
+no-op by design.
+
 ---
 
 ## 7. Rollback
@@ -234,6 +378,21 @@ then decide about the schema.
 
 Reverting it re-opens the "any authenticated user is an admin" hole described in
 §3. If something built on `0006` is broken, fix forward.
+
+### `0007` is the one safe exception
+
+Unlike the rest of the schema, the notification is additive and inert on its own —
+disabling it costs nothing but the emails. If it is misbehaving and you want it off
+while you work out why:
+
+```sql
+alter table quote_requests disable trigger quote_requests_notify;
+```
+
+Leads keep saving exactly as before. `enable trigger` puts it back. Emptying
+`private.notification_config` has the same effect. Do **not** drop the
+`notified_at` column to "clean up" — it is the delivery record, and the ladder in
+§6 depends on it.
 
 ---
 
