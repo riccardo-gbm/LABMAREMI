@@ -199,13 +199,16 @@ interface FlipCardProps {
  * values written straight to style inside motion's frame loop. No React state
  * changes per frame — the component renders once per resize, not per frame. */
 function FlipCard({ index, src, scatter, intro, morph, rotate, parallax, size }: FlipCardProps) {
-  const compute = () =>
-    cardTarget(index, scatter, intro.get(), morph.get(), clamp01(rotate.get() / 360), parallax.get(), size);
-  const x = useTransform(() => compute().x);
-  const y = useTransform(() => compute().y);
-  const rotation = useTransform(() => compute().rotation);
-  const scale = useTransform(() => compute().scale);
-  const opacity = useTransform(() => compute().opacity);
+  const target = useTransform(
+    [intro, morph, rotate, parallax],
+    ([i, m, r, p]: number[]) => cardTarget(index, scatter, i, m, clamp01(r / 360), p, size)
+  );
+
+  const x = useTransform(target, t => t.x);
+  const y = useTransform(target, t => t.y);
+  const rotation = useTransform(target, t => t.rotation);
+  const scale = useTransform(target, t => t.scale);
+  const opacity = useTransform(target, t => t.opacity);
 
   return (
     <m.div
