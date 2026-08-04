@@ -61,9 +61,25 @@ Used exclusively by `scripts/*.mjs`. Supply **either** the service role key
 | `ADMIN_EMAIL`               | one of these two    | Signs the script in as a Phase 2 admin; obeys RLS. |
 | `ADMIN_PASSWORD`            | with `ADMIN_EMAIL`  | — |
 
+| `QUOTE_NOTIFICATION_SECRET`  | for the email test  | Shared secret between the `quote_requests_notify` trigger and the `quote-notification` Edge Function. Used only by `scripts/test-quote-notification.mjs`. Must equal `private.notification_config.shared_secret`. |
+
 `scripts/test-admin-rls.mjs` is the exception: it needs the service role key
 **and** the admin login together, because it creates and deletes a throwaway
 account to prove a logged-in stranger sees nothing.
+
+### Edge Function secrets (not in `.env` at all)
+
+The `quote-notification` function's own configuration — `RESEND_API_KEY`,
+`QUOTE_NOTIFICATION_FROM`, `QUOTE_NOTIFICATION_RECIPIENTS`, `QUOTE_ADMIN_URL`,
+and its copy of `QUOTE_NOTIFICATION_SECRET` — lives in Supabase, set with
+`supabase secrets set`. It never touches this repo, `.env`, or Vercel. Setup is in
+`docs/RUNBOOK.md` §3.
+
+**Adding another notification recipient is one command and no deploy:**
+
+```bash
+npx supabase secrets set QUOTE_NOTIFICATION_RECIPIENTS="a@x.com,b@y.com,c@z.com"
+```
 
 ---
 
@@ -90,6 +106,7 @@ Run with plain `node`, from the repo root, with `.env` populated per §3.
 | `node scripts/upload-product-images.mjs <folder>` | `--list`, `--dry-run` | Uploads a folder of photos to the `product-images` Storage bucket and sets each product's `image_url`. Files are matched by slugified product name (`Guantes de Nitrilo Azul` → `guantes-de-nitrilo-azul.jpg`; `.jpg/.jpeg/.png/.webp/.avif`). Run `--list` first to print the exact filename expected for every product. Upserts, so re-uploads overwrite rather than duplicate. |
 | `node scripts/test-anon-rls.mjs` | — | Security proof, anon client. Asserts a logged-out visitor can submit a quote via the RPC but cannot read `quote_requests`, `quote_request_items`, or `customers`, and cannot insert directly. Leaves one marker row `__RLS_TEST__ (delete me)` for an admin to clear from the dashboard. |
 | `node scripts/test-admin-rls.mjs` | — | Security proof for migration `0006`. Asserts the real admin passes `is_admin()`, while a freshly created ordinary account fails it, reads zero leads/items/customers, and cannot write the catalog. Creates and deletes its own throwaway user; touches nothing else. |
+| `node scripts/test-quote-notification.mjs` | `--dry-run` | Verification for migration `0007` and the `quote-notification` Edge Function. Asserts the shared-secret gate rejects wrong and missing secrets, input is validated, an unknown id 404s, the newest real lead is emailed, a repeat call is skipped, and `notified_at` is stamped. **Sends a real email** to everyone in `QUOTE_NOTIFICATION_RECIPIENTS` — `--dry-run` stops before that step. |
 
 `scripts/slugify.mjs` is a shared helper, not a runnable entry point.
 
@@ -104,8 +121,11 @@ src/
   lib/          supabase client, catalog fetching, quote submission, admin derivations
   pages/        Home · Catalog · ProductDetail · Quote · About · Platform · Contact · AdminLogin · Admin · NotFound
   types/        database + application interfaces
-supabase/migrations/   0001 … 0006, applied in order
-scripts/               importers + RLS proofs
+supabase/
+  migrations/   0001 … 0007, applied in order
+  functions/    quote-notification — Deno, the only server code we run
+  config.toml   CLI config, used for `functions deploy` and nothing else
+scripts/               importers + RLS proofs + the notification test
 docs/                  this file, RUNBOOK.md, phase plans, catalog CSV
 ```
 
@@ -148,6 +168,7 @@ Verification is the four gates below. Don't report work as done until they pass.
 | React diagnostics | `npm run doctor` | No new findings. One rule is suppressed in `doctor.config.json` (`artifact-baas-authority-surface`) as a known false positive for the admin bundle. |
 | Security / RLS | `node scripts/test-anon-rls.mjs` and `node scripts/test-admin-rls.mjs` | All assertions pass. Required after any change to `supabase/migrations/` or to auth/admin code. |
 | Manual smoke | `npm run dev` (or `npm run preview`) | Zero console errors; catalog filters and search work; the quote flow submits; `/admin` rejects a non-admin session; responsive on mobile and desktop. |
+| Quote notification (conditional) | `node scripts/test-quote-notification.mjs` | All assertions pass and the mail arrives. Required only after touching `0007`, the `quote-notification` function, or the quote write path. Sends a real email — use `--dry-run` to check the wiring without it. |
 
 Adding a test framework is a real improvement — it just hasn't been done yet.
 If you add one, wire it into `package.json` and update this table.
