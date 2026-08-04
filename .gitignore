@@ -38,8 +38,13 @@ docs
 AGENTS.md
 CLAUDE.md
 
-# Supabase CLI local state (created by `supabase link`)
-supabase
+# Supabase CLI local state (created by `supabase link`).
+# Scoped to .temp deliberately: this used to be a bare `supabase`, which ignored
+# the whole directory — migrations and Edge Functions included. That is why
+# 0006_admin_role_rls.sql existed on disk but never in git, and why the docs
+# carried a note about it being "missing from the repo". Everything else under
+# supabase/ is source and must be tracked.
+supabase/.temp
 
 # Source art for scripts/optimize-images.mjs. Not tracked: these are the same
 # base64-in-SVG files this branch removes from public/, so they already live in
