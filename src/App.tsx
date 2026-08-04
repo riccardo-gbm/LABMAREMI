@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect } from "react"
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
-import { ReactLenis } from "lenis/react"
+import { ReactLenis, useLenis } from "lenis/react"
 
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/react"
@@ -44,11 +44,24 @@ function AdminChunkFallback() {
   )
 }
 
+/**
+ * Lenis owns the scroll position while `<ReactLenis root>` is mounted, and it
+ * keeps its own `animatedScroll` independent of the native one. Calling
+ * `window.scrollTo` behind its back leaves the two out of sync, so the next
+ * wheel event resumes from where Lenis still thinks it is — which reads as the
+ * page snapping back or refusing to move. Go through the instance instead;
+ * `immediate` keeps the old behaviour of jumping rather than smooth-scrolling
+ * to the top on navigation.
+ */
 function ScrollToTop() {
   const { pathname } = useLocation()
+  const lenis = useLenis()
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
+    // Before Lenis has initialised there is nothing to desync — fall back so
+    // the very first navigation still lands at the top.
+    if (lenis) lenis.scrollTo(0, { immediate: true })
+    else window.scrollTo(0, 0)
+  }, [pathname, lenis])
   return null
 }
 

@@ -31,8 +31,13 @@ function Header() {
     navigate("/cotizacion")
   }
 
+  // No backdrop-blur on this header. A sticky element with backdrop-filter
+  // re-samples and re-blurs everything behind it on every scroll frame, and
+  // Lenis ticks scroll on ~every rAF — so this one element was re-blurring
+  // continuously on all seven pages. At 95% opacity the blur sat behind an
+  // almost opaque background anyway, so dropping it costs nothing visually.
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b bg-background/95">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link
           to="/"

@@ -67,8 +67,12 @@ function MediaFrameInner({
         className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.2),transparent_38%,rgba(34,211,238,0.12))]"
       />
 
+      {/* bg-white/90 instead of bg-white/80 + backdrop-blur-md: the blur cost a
+          compositing layer per card — 24 on a full catalog page, all re-sampling
+          while the grid scrolls — to soften a backdrop already 80% covered. The
+          extra 10% opacity buys the legibility back for nothing. */}
       {badge ? (
-        <span className="absolute left-3 top-3 rounded-full border border-white/60 bg-white/80 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-primary shadow-sm backdrop-blur-md">
+        <span className="absolute left-3 top-3 rounded-full border border-white/60 bg-white/90 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-primary shadow-sm">
           {badge}
         </span>
       ) : null}
