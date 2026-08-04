@@ -1,0 +1,15 @@
+# Supabase CLI config — deliberately minimal.
+#
+# This repo does NOT use the CLI for migrations. supabase/migrations/*.sql are
+# forward-only and applied by hand in the SQL editor (docs/RUNBOOK.md §3); the
+# CLI is here for one job only: deploying the quote-notification Edge Function.
+# Keeping this file to the bare minimum means `supabase db push` and friends have
+# nothing here to act on by accident.
+
+project_id = "alyjdwsblnedadlfplgw"
+
+[functions.quote-notification]
+# The caller is a Postgres trigger (migration 0007), not a signed-in user, so the
+# platform's JWT gate has nothing useful to check. The function authenticates the
+# caller itself against the x-webhook-secret header instead.
+verify_jwt = false
