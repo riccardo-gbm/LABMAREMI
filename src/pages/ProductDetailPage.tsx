@@ -259,10 +259,10 @@ export default function ProductDetailPage() {
               ))}
             </dl>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="mt-8 flex flex-wrap items-center gap-2.5 sm:gap-3">
               <InteractiveHoverLink
                 to={`/cotizacion?productos=${product.slug}`}
-                text="Solicitar cotización de este producto"
+                text="Cotizar este producto"
                 size="lg"
               />
               <a
@@ -275,7 +275,7 @@ export default function ProductDetailPage() {
                 )}
               >
                 <MessageCircle className="h-4 w-4 fill-emerald-500/20 stroke-[2.25] text-emerald-600 dark:text-emerald-400" />
-                Consultar por WhatsApp
+                WhatsApp
               </a>
               <Link
                 to="/catalogo"
