@@ -9,6 +9,12 @@ export const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_NUMBER}`
 export const PHONE_DISPLAY = "+593 98 481 4618"
 export const EMAIL_DISPLAY = "ventas1@labmaremi.com"
 
+export function getWhatsAppProductUrl(productName: string, productCode?: string): string {
+  const codeText = productCode ? ` (${productCode})` : ""
+  const message = `Hola, quisiera información y cotización del producto: ${productName}${codeText}.`
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
+}
+
 // Placeholder office location — generic Quito coordinates for the demo.
 export const OFFICE_MAP_SRC =
   "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.8083599905926!2d-78.47317679999999!3d-0.1280261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d58f2d14e4735b%3A0x1f92256f3bbad479!2sLABMAREMI!5e0!3m2!1ses-419!2sec!4v1785990209288!5m2!1ses-419!2sec"

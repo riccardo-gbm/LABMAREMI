@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { Link, useParams } from "react-router-dom"
-import { ArrowLeft, ChevronRight, PackageX } from "lucide-react"
+import { ArrowLeft, ChevronRight, MessageCircle, PackageX } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button-variants"
@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { QueryError } from "@/components/ui/query-error"
 import { ProductCard } from "@/components/catalog/ProductCard"
 import { fetchProductBySlug } from "@/lib/catalogData"
+import { getWhatsAppProductUrl } from "@/lib/contact"
 import { useAsync } from "@/hooks/useAsync"
 import { getCategoryIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -175,7 +176,6 @@ export default function ProductDetailPage() {
     <>
       <Section className="pb-0 pt-8 md:pb-0 md:pt-10">
         {/* Breadcrumb */}
-        <Reveal>
         <nav aria-label="Ruta de navegación">
           <ol className="flex flex-wrap items-center gap-1.5 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
             <li>
@@ -202,12 +202,11 @@ export default function ProductDetailPage() {
             </li>
           </ol>
         </nav>
-        </Reveal>
       </Section>
 
       <Section className="pt-8 md:pt-10">
         <div className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
-          <Reveal direction="right">
+          <div>
             <MediaFrame
               src={product.imageUrl}
               alt={product.name}
@@ -217,12 +216,10 @@ export default function ProductDetailPage() {
               priority={true}
               className="aspect-square shadow-sm"
             />
-          </Reveal>
+          </div>
 
           {/* Spec sheet */}
-          <Reveal direction="left" delay={0.08}>
           <div>
-            <Eyebrow>Ficha de producto</Eyebrow>
             {product.categoryName ? (
               <Badge variant="secondary" className="mt-5">
                 {product.categoryName}
@@ -262,12 +259,24 @@ export default function ProductDetailPage() {
               ))}
             </dl>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <InteractiveHoverLink
                 to={`/cotizacion?productos=${product.slug}`}
                 text="Solicitar cotización de este producto"
                 size="lg"
               />
+              <a
+                href={getWhatsAppProductUrl(product.name, product.code)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "lg" }),
+                  "border-emerald-500/40 text-emerald-700 hover:bg-emerald-500/10 hover:border-emerald-500/60 dark:text-emerald-400 dark:border-emerald-500/50 dark:hover:bg-emerald-500/20"
+                )}
+              >
+                <MessageCircle className="h-4 w-4 fill-emerald-500/20 stroke-[2.25] text-emerald-600 dark:text-emerald-400" />
+                Consultar por WhatsApp
+              </a>
               <Link
                 to="/catalogo"
                 className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
@@ -277,7 +286,6 @@ export default function ProductDetailPage() {
               </Link>
             </div>
           </div>
-          </Reveal>
         </div>
       </Section>
 
