@@ -17,7 +17,6 @@ A modern B2B digital catalog and quotation platform built for **LABMAREMI Cía. 
   - Business intelligence panels displaying top-requested products, customer activity, and lead conversion metrics.
 - **Company & Operations Showcase**:
   - `/nosotros`: Interactive company history timeline.
-  - `/platform`: Visualizer of B2B distribution workflow.
   - Floating glassmorphism hero and floating elements built with Framer Motion.
   - Direct WhatsApp integration widget for instant customer inquiries.
 
