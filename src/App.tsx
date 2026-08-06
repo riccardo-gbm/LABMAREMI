@@ -14,7 +14,6 @@ import HomePage from "@/pages/HomePage"
 import { AboutPage, CatalogPage, ContactPage, QuotePage, routePrefetchers } from "@/lib/publicRoutes"
 
 const ProductDetailPage = lazy(() => import("@/pages/ProductDetailPage"))
-const PlatformPage = lazy(() => import("@/pages/PlatformPage"))
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"))
 
 // Admin is lazy-loaded so its data layer — the quote_requests/customers query
@@ -120,7 +119,6 @@ export default function App() {
             <Route path="/cotizacion" element={<QuotePage />} />
             <Route path="/contacto" element={<ContactPage />} />
             <Route path="/nosotros" element={<AboutPage />} />
-            <Route path="/platform" element={<PlatformPage />} />
 
             {/* Admin: AuthProvider is lazy loaded in AdminRoot so Supabase and auth state
                 are fully code-split from the public bundle. */}
