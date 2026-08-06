@@ -199,7 +199,7 @@ export default function HomePage() {
         {error ? <QueryError className="mt-12" onRetry={retry} /> : null}
 
         <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {(data?.categories ?? []).map((category) => {
+          {(data?.categories ?? []).map((category, idx) => {
             const Icon = getCategoryIcon(category.id)
             return (
               <RevealItem key={category.id} className="flex">
@@ -212,6 +212,7 @@ export default function HomePage() {
                   alt={category.imageAlt ?? category.name}
                   fallbackLabel={category.name}
                   fallbackIcon={Icon}
+                  priority={idx < 3}
                   className="aspect-[16/10] rounded-b-none border-0 border-b"
                 />
                 <div className="flex flex-1 flex-col p-5">
