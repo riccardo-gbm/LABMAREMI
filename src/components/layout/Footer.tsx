@@ -9,10 +9,6 @@ const publicLinks = [
   { to: "/contacto", label: "Contacto" },
 ]
 
-const demoLinks = [
-  { to: "/admin", label: "Panel de administración (demo)" },
-]
-
 interface FooterLinkProps {
   to: string
   label: string
@@ -59,7 +55,7 @@ function Footer() {
   return (
     <footer className="border-t bg-secondary/40">
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-3">
+        <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div>
             <div className="flex items-center gap-2">
               <m.img
@@ -92,11 +88,11 @@ function Footer() {
             />
           </div>
 
-          <nav aria-label="Enlaces del sitio">
+          <nav aria-label="Enlaces del sitio" className="md:text-right">
             <TextReveal
               as="h2"
               mode="line"
-              text="Sitio"
+              text="Navegación"
               delay={0.42}
               className="text-sm font-semibold text-foreground"
             />
@@ -107,26 +103,6 @@ function Footer() {
                   {...link}
                   index={index}
                   baseDelay={0.5}
-                />
-              ))}
-            </ul>
-          </nav>
-
-          <nav aria-label="Vistas de demostración">
-            <TextReveal
-              as="h2"
-              mode="line"
-              text="Vistas de demostración"
-              delay={0.68}
-              className="text-sm font-semibold text-foreground"
-            />
-            <ul className="mt-3 space-y-2">
-              {demoLinks.map((link, index) => (
-                <FooterLink
-                  key={link.to}
-                  {...link}
-                  index={index}
-                  baseDelay={0.76}
                 />
               ))}
             </ul>
