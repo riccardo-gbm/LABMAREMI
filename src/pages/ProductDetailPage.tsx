@@ -276,7 +276,7 @@ export default function ProductDetailPage() {
                 )}
               >
                 <MessageCircle className="h-4 w-4 fill-emerald-500/20 stroke-[2.25] text-emerald-600 dark:text-emerald-400" />
-                WhatsApp
+                Cotizar por WhatsApp
               </a>
               <Link
                 to="/catalogo"
