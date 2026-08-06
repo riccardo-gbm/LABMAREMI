@@ -60,6 +60,31 @@ function SpecValue({ value }: { value: string }) {
   )
 }
 
+function PresentationPills({ value }: { value: string }) {
+  if (!value) return null
+
+  const items = value
+    .split("/")
+    .map((s) => s.trim())
+    .filter(Boolean)
+
+  if (items.length === 0) return null
+
+  return (
+    <div className="flex flex-wrap gap-2 py-0.5">
+      {items.map((item) => (
+        <Badge
+          key={item}
+          variant="outline"
+          className="border-primary/35 bg-primary/5 text-primary font-mono text-xs font-medium tracking-wide rounded-full px-3 py-1 shadow-2xs"
+        >
+          {item}
+        </Badge>
+      ))}
+    </div>
+  )
+}
+
 /** Spec-sheet placeholder mirroring the two-column detail layout. */
 function DetailSkeleton() {
   return (
@@ -142,7 +167,7 @@ export default function ProductDetailPage() {
   const specRows = [
     { label: "Código", value: code, mono: true },
     { label: "Categoría", value: product.categoryName || "—", mono: false },
-    { label: "Presentación", value: product.presentation, mono: false },
+    { label: "Presentación", value: product.presentation, mono: false, isPresentation: true },
     { label: "Uso recomendado", value: product.recommendedUse, mono: false, rich: true },
   ]
 
@@ -189,6 +214,7 @@ export default function ProductDetailPage() {
               fallbackLabel="Imagen referencial del producto"
               fallbackIcon={Icon}
               badge={code}
+              priority={true}
               className="aspect-square shadow-sm"
             />
           </Reveal>
@@ -197,18 +223,11 @@ export default function ProductDetailPage() {
           <Reveal direction="left" delay={0.08}>
           <div>
             <Eyebrow>Ficha de producto</Eyebrow>
-            <div className="mt-5 flex flex-wrap items-center gap-2">
-              {product.categoryName ? (
-                <Badge variant="secondary">
-                  {product.categoryName}
-                </Badge>
-              ) : null}
-              {product.presentation ? (
-                <Badge variant="outline" className="font-mono text-[11px] uppercase tracking-wider text-primary border-primary/30">
-                  {product.presentation}
-                </Badge>
-              ) : null}
-            </div>
+            {product.categoryName ? (
+              <Badge variant="secondary" className="mt-5">
+                {product.categoryName}
+              </Badge>
+            ) : null}
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
               {product.name}
             </h1>
@@ -220,7 +239,7 @@ export default function ProductDetailPage() {
               {specRows.map((row) => (
                 <div
                   key={row.label}
-                  className="grid gap-1 px-5 py-4 sm:grid-cols-[160px_1fr] sm:gap-4"
+                  className="grid gap-1 px-5 py-4 sm:grid-cols-[160px_1fr] sm:gap-4 sm:items-center"
                 >
                   <dt className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground sm:pt-0.5">
                     {row.label}
@@ -231,7 +250,13 @@ export default function ProductDetailPage() {
                       row.mono && "font-mono tracking-widest"
                     )}
                   >
-                    {row.rich ? <SpecValue value={row.value} /> : row.value}
+                    {row.isPresentation ? (
+                      <PresentationPills value={row.value} />
+                    ) : row.rich ? (
+                      <SpecValue value={row.value} />
+                    ) : (
+                      row.value
+                    )}
                   </dd>
                 </div>
               ))}
