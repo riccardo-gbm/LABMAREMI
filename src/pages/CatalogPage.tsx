@@ -11,7 +11,7 @@ import { Reveal } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
 import { Skeleton } from "@/components/ui/skeleton"
 import { QueryError } from "@/components/ui/query-error"
-import { CatalogSearch, CategorySidebar } from "@/components/catalog/CatalogFilters"
+import { CatalogSearch, CategorySidebar, MobileCategoryFilter } from "@/components/catalog/CatalogFilters"
 import { ProductCard } from "@/components/catalog/ProductCard"
 import { fetchCatalog, type CatalogCategory, type CatalogProduct } from "@/lib/catalogData"
 import { useAsync } from "@/hooks/useAsync"
@@ -47,11 +47,11 @@ function CatalogSkeleton() {
       </Card>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[220px_1fr] lg:items-start lg:gap-8">
-        <div className="flex flex-wrap gap-2 lg:flex-col lg:gap-1.5">
+        <div className="hidden lg:flex lg:flex-col lg:gap-1.5">
           {Array.from({ length: 10 }).map((_, i) => (
             <Skeleton
               key={i}
-              className="h-8 w-32 rounded-full lg:h-10 lg:w-full lg:rounded-lg"
+              className="h-10 w-full rounded-lg"
             />
           ))}
         </div>
@@ -94,11 +94,29 @@ export default function CatalogPage() {
   const categories = data?.categories ?? EMPTY_CATEGORIES
   const products = data?.products ?? EMPTY_PRODUCTS
 
-  const rawCategory = searchParams.get(CATEGORY_PARAM)
-  // Ignore unknown category ids in the URL instead of showing zero results.
-  const activeCategory = categories.some((c) => c.id === rawCategory)
-    ? rawCategory
-    : null
+  const rawCategories = searchParams.get(CATEGORY_PARAM)
+  const activeCategories = useMemo(() => {
+    if (!rawCategories) return []
+    const slugs = new Set(rawCategories.split(",").map((s) => s.trim()).filter(Boolean))
+    const result: string[] = []
+    for (const c of categories) {
+      if (slugs.has(c.id)) result.push(c.id)
+    }
+    return result
+  }, [rawCategories, categories])
+
+  const activeCategorySet = useMemo(() => new Set(activeCategories), [activeCategories])
+
+  // Count products per category matching current search query
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const p of products) {
+      if (matchesQuery(p, query)) {
+        counts[p.categoryId] = (counts[p.categoryId] ?? 0) + 1
+      }
+    }
+    return counts
+  }, [products, query])
 
   // Client-side: 138 products is one small fetch, and matchesQuery is
   // accent-insensitive in a way Postgres ilike is not without `unaccent`.
@@ -106,10 +124,10 @@ export default function CatalogPage() {
     () =>
       products.filter(
         (product) =>
-          (!activeCategory || product.categoryId === activeCategory) &&
+          (activeCategorySet.size === 0 || activeCategorySet.has(product.categoryId)) &&
           matchesQuery(product, query)
       ),
-    [products, activeCategory, query]
+    [products, activeCategorySet, query]
   )
 
   // Page is derived from the URL, never mirrored into state. Clamping here
@@ -140,15 +158,34 @@ export default function CatalogPage() {
     }
   }, [filtered, page, totalPages])
 
-  const selectCategory = (categoryId: string | null) => {
+  const toggleCategory = (categoryId: string) => {
     setSearchParams(
       (params) => {
-        if (categoryId) {
-          params.set(CATEGORY_PARAM, categoryId)
+        const raw = params.get(CATEGORY_PARAM)
+        const current = raw ? raw.split(",").map((s) => s.trim()).filter(Boolean) : []
+        let next: string[]
+        if (current.includes(categoryId)) {
+          next = current.filter((id) => id !== categoryId)
+        } else {
+          next = [...current, categoryId]
+        }
+
+        if (next.length > 0) {
+          params.set(CATEGORY_PARAM, next.join(","))
         } else {
           params.delete(CATEGORY_PARAM)
         }
-        // A different result set invalidates the page number.
+        params.delete(PAGE_PARAM)
+        return params
+      },
+      { replace: true }
+    )
+  }
+
+  const clearCategories = () => {
+    setSearchParams(
+      (params) => {
+        params.delete(CATEGORY_PARAM)
         params.delete(PAGE_PARAM)
         return params
       },
@@ -195,10 +232,10 @@ export default function CatalogPage() {
 
   const clearFilters = () => {
     setQuery("")
-    selectCategory(null)
+    clearCategories()
   }
 
-  const hasActiveFilters = Boolean(activeCategory || query.trim())
+  const hasActiveFilters = Boolean(activeCategories.length > 0 || query.trim())
 
   if (loading) {
     return (
@@ -236,8 +273,9 @@ export default function CatalogPage() {
         <div className="mt-8 grid gap-6 lg:grid-cols-[220px_1fr] lg:items-start lg:gap-8">
           <CategorySidebar
             categories={categories}
-            activeCategory={activeCategory}
-            onSelect={selectCategory}
+            activeCategories={activeCategories}
+            onToggleCategory={toggleCategory}
+            onClearCategories={clearCategories}
           />
 
           {/* Results — the grid + its AnimatePresence stay mounted so cards can
@@ -246,7 +284,15 @@ export default function CatalogPage() {
               scroll-mt-24 keeps the first row clear of the sticky Header when
               goToPage scrolls this back into view. */}
           <div ref={resultsRef} className="scroll-mt-24">
-            <div className="mb-5 flex items-center justify-between gap-4 border-b pb-4">
+            <div className="mb-5 flex flex-col gap-4 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
+              <MobileCategoryFilter
+                categories={categories}
+                activeCategories={activeCategories}
+                onToggleCategory={toggleCategory}
+                onClearCategories={clearCategories}
+                categoryCounts={categoryCounts}
+                totalMatchingProducts={filtered.length}
+              />
               <p
                 className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground"
                 aria-live="polite"
