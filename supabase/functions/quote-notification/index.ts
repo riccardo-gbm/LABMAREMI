@@ -87,13 +87,15 @@ function json(body: unknown, status: number): Response {
   })
 }
 
+const DATE_FORMATTER = new Intl.DateTimeFormat("es-EC", {
+  timeZone: "America/Guayaquil",
+  dateStyle: "full",
+  timeStyle: "short",
+})
+
 /** Quito time — the reader is in Ecuador, `created_at` is UTC. */
 function formatTimestamp(iso: string): string {
-  return new Intl.DateTimeFormat("es-EC", {
-    timeZone: "America/Guayaquil",
-    dateStyle: "full",
-    timeStyle: "short",
-  }).format(new Date(iso))
+  return DATE_FORMATTER.format(new Date(iso))
 }
 
 function renderText(lead: LeadRow, products: string[], adminUrl: string): string {
@@ -272,9 +274,8 @@ Deno.serve(async (req: Request): Promise<Response> => {
     },
     body: JSON.stringify(payload),
   })
-  const sendBody = await sendRes.text()
-
   if (!sendRes.ok) {
+    const sendBody = await sendRes.text()
     // Surface the upstream reason rather than a bare 500 — this text is what
     // lands in the Edge logs and in net._http_response, and it is the difference
     // between "domain not verified" and an hour of guessing.
