@@ -127,8 +127,15 @@ export async function fetchCategories(): Promise<CatalogCategory[]> {
   return toCategories(await res.json())
 }
 
-/** Categories (in sort_order) plus every active product (by name). */
-export async function fetchCatalog(): Promise<Catalog> {
+let catalogCache: { data: Catalog; timestamp: number } | null = null
+const CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
+
+/** Categories (in sort_order) plus every active product (by name). Serves from in-memory cache when fresh. */
+export async function fetchCatalog(forceRefresh = false): Promise<Catalog> {
+  if (!forceRefresh && catalogCache && Date.now() - catalogCache.timestamp < CACHE_TTL_MS) {
+    return catalogCache.data
+  }
+
   const headers = getHeaders()
   const baseUrl = import.meta.env.VITE_SUPABASE_URL
 
@@ -157,7 +164,9 @@ export async function fetchCatalog(): Promise<Catalog> {
     return ai - bi || a.name.localeCompare(b.name, "es")
   })
 
-  return { categories, products: toProducts(ordered) }
+  const catalog = { categories, products: toProducts(ordered) }
+  catalogCache = { data: catalog, timestamp: Date.now() }
+  return catalog
 }
 
 export interface ProductDetail {

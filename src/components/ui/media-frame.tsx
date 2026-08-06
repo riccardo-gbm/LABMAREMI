@@ -11,6 +11,7 @@ interface MediaFrameProps {
   className?: string
   imageClassName?: string
   badge?: string
+  priority?: boolean
 }
 
 function MediaFrameInner({
@@ -21,6 +22,7 @@ function MediaFrameInner({
   className,
   imageClassName,
   badge,
+  priority = false,
 }: MediaFrameProps) {
   // A product with no photo yet arrives as src=undefined; a product whose
   // stored image_url 404s fails at load time. Both must land on the same
@@ -39,7 +41,8 @@ function MediaFrameInner({
         <img
           src={src}
           alt={alt ?? fallbackLabel}
-          loading="lazy"
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
           // A catalog page change swaps in a whole grid of these at once;
           // async decode keeps that off the main thread.
           decoding="async"

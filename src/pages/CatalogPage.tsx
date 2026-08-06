@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { AnimatePresence, m } from "framer-motion"
 import { SearchX } from "lucide-react"
@@ -125,6 +125,20 @@ export default function CatalogPage() {
     () => filtered.slice(pageStart, pageStart + PAGE_SIZE),
     [filtered, pageStart]
   )
+
+  // Quietly prefetch product images for the next page into browser cache
+  useEffect(() => {
+    if (page < totalPages) {
+      const nextPageStart = page * PAGE_SIZE
+      const nextPageProducts = filtered.slice(nextPageStart, nextPageStart + PAGE_SIZE)
+      for (const product of nextPageProducts) {
+        if (product.imageUrl) {
+          const img = new Image()
+          img.src = product.imageUrl
+        }
+      }
+    }
+  }, [filtered, page, totalPages])
 
   const selectCategory = (categoryId: string | null) => {
     setSearchParams(
@@ -265,7 +279,7 @@ export default function CatalogPage() {
               starts clipping. */}
           <m.div layout className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <AnimatePresence mode="popLayout">
-              {visible.map((product) => (
+              {visible.map((product, idx) => (
                 <m.div
                   key={product.id}
                   layout
@@ -275,7 +289,7 @@ export default function CatalogPage() {
                   transition={{ duration: 0.28, ease: "easeOut" }}
                   className="flex"
                 >
-                  <ProductCard product={product} />
+                  <ProductCard product={product} priority={idx < 6} />
                 </m.div>
               ))}
             </AnimatePresence>
