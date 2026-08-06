@@ -5,27 +5,35 @@ import { cn } from "@/lib/utils"
 
 interface MediaFrameProps {
   src?: string
+  srcSet?: string
+  sizes?: string
   alt?: string
   fallbackLabel: string
   fallbackIcon?: LucideIcon
   className?: string
   imageClassName?: string
   badge?: string
+  /** Set to true for above-the-fold cards to trigger eager fetch and high priority loading. */
+  priority?: boolean
 }
 
 function MediaFrameInner({
   src,
+  srcSet,
+  sizes,
   alt,
   fallbackLabel,
   fallbackIcon: FallbackIcon,
   className,
   imageClassName,
   badge,
+  priority = false,
 }: MediaFrameProps) {
   // A product with no photo yet arrives as src=undefined; a product whose
   // stored image_url 404s fails at load time. Both must land on the same
   // icon placeholder rather than a broken-image glyph.
   const [failed, setFailed] = useState(false)
+  const [loaded, setLoaded] = useState(false)
   const showImage = Boolean(src) && !failed
 
   return (
@@ -36,19 +44,33 @@ function MediaFrameInner({
       )}
     >
       {showImage ? (
-        <img
-          src={src}
-          alt={alt ?? fallbackLabel}
-          loading="lazy"
-          // A catalog page change swaps in a whole grid of these at once;
-          // async decode keeps that off the main thread.
-          decoding="async"
-          onError={() => setFailed(true)}
-          className={cn(
-            "h-full w-full object-cover transition-transform duration-500 ease-out group-hover/media:scale-[1.03]",
-            imageClassName
-          )}
-        />
+        <>
+          {/* Skeleton shimmer shown while image is loading in the background */}
+          {!loaded ? (
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 animate-pulse bg-muted/50"
+            />
+          ) : null}
+          <img
+            src={src}
+            srcSet={srcSet}
+            sizes={sizes}
+            alt={alt ?? fallbackLabel}
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
+            // A catalog page change swaps in a whole grid of these at once;
+            // async decode keeps that off the main thread.
+            decoding="async"
+            onLoad={() => setLoaded(true)}
+            onError={() => setFailed(true)}
+            className={cn(
+              "h-full w-full object-cover transition-all duration-300 ease-out group-hover/media:scale-[1.03]",
+              loaded ? "opacity-100" : "opacity-0",
+              imageClassName
+            )}
+          />
+        </>
       ) : (
         <div className="flex h-full min-h-[180px] w-full flex-col items-center justify-center gap-3 p-6 text-center">
           {FallbackIcon ? (
