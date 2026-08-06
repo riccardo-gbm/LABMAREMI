@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { QueryError } from "@/components/ui/query-error"
 import { ProductCard } from "@/components/catalog/ProductCard"
-import { fetchProductBySlug } from "@/lib/catalogData"
+import { fetchProductBySlug, getOptimizedImageUrl } from "@/lib/catalogData"
 import { useAsync } from "@/hooks/useAsync"
 import { getCategoryIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -184,11 +184,12 @@ export default function ProductDetailPage() {
         <div className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
           <Reveal direction="right">
             <MediaFrame
-              src={product.imageUrl}
+              src={getOptimizedImageUrl(product.imageUrl, { width: 800, quality: 85 })}
               alt={product.name}
               fallbackLabel="Imagen referencial del producto"
               fallbackIcon={Icon}
               badge={code}
+              priority={true}
               className="aspect-square shadow-sm"
             />
           </Reveal>
