@@ -9,7 +9,6 @@ import type { CatalogProduct } from "@/lib/catalogData"
 
 interface ProductCardProps {
   product: CatalogProduct
-  priority?: boolean
 }
 
 /**
@@ -24,7 +23,7 @@ interface ProductCardProps {
  * anchors is invalid HTML that screen readers report inconsistently. The CTA
  * is lifted above the overlay so it stays independently clickable.
  */
-function ProductCard({ product, priority = false }: ProductCardProps) {
+function ProductCard({ product }: ProductCardProps) {
   const Icon = getCategoryIcon(product.categoryId)
 
   return (
@@ -37,7 +36,6 @@ function ProductCard({ product, priority = false }: ProductCardProps) {
         fallbackLabel="Imagen referencial del producto"
         fallbackIcon={Icon}
         badge={product.code}
-        priority={priority}
         className="aspect-[4/3] rounded-b-none border-0 border-b"
       />
 
