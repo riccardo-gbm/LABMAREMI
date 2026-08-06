@@ -11,7 +11,6 @@ const publicLinks = [
 
 const demoLinks = [
   { to: "/admin", label: "Panel de administración (demo)" },
-  { to: "/platform", label: "Flujo de la plataforma (demo)" },
 ]
 
 interface FooterLinkProps {
