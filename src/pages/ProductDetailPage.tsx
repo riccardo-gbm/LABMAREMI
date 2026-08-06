@@ -259,11 +259,12 @@ export default function ProductDetailPage() {
               ))}
             </dl>
 
-            <div className="mt-8 flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <div className="mt-8 grid w-full grid-cols-1 gap-2.5 sm:grid-cols-3 sm:gap-3">
               <InteractiveHoverLink
                 to={`/cotizacion?productos=${product.slug}`}
-                text="Cotizar este producto"
+                text="Solicitar cotización"
                 size="lg"
+                className="w-full"
               />
               <a
                 href={getWhatsAppProductUrl(product.name, product.code)}
@@ -271,7 +272,7 @@ export default function ProductDetailPage() {
                 rel="noopener noreferrer"
                 className={cn(
                   buttonVariants({ variant: "outline", size: "lg" }),
-                  "border-emerald-500/40 text-emerald-700 hover:bg-emerald-500/10 hover:border-emerald-500/60 dark:text-emerald-400 dark:border-emerald-500/50 dark:hover:bg-emerald-500/20"
+                  "w-full border-emerald-500/40 text-emerald-700 hover:bg-emerald-500/10 hover:border-emerald-500/60 dark:text-emerald-400 dark:border-emerald-500/50 dark:hover:bg-emerald-500/20"
                 )}
               >
                 <MessageCircle className="h-4 w-4 fill-emerald-500/20 stroke-[2.25] text-emerald-600 dark:text-emerald-400" />
@@ -279,7 +280,7 @@ export default function ProductDetailPage() {
               </a>
               <Link
                 to="/catalogo"
-                className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
+                className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full")}
               >
                 <ArrowLeft />
                 Volver al catálogo
