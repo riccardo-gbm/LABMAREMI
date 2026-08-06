@@ -164,7 +164,7 @@ async function main() {
       .upload(objectPath, body, {
         contentType: MIME[m.ext],
         upsert: true,
-        cacheControl: "3600",
+        cacheControl: "31536000, public",
       })
     if (upErr) {
       failures.push({ name: m.product.name, why: `upload: ${upErr.message}` })
