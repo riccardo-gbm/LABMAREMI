@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, NavLink, useNavigate } from "react-router-dom"
 import { AnimatePresence, m } from "framer-motion"
 import { Menu, X } from "lucide-react"
@@ -25,6 +25,17 @@ const prefetchProps = (to: string) => ({
 function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [mobileOpen])
 
   const goToQuote = () => {
     setMobileOpen(false)
@@ -114,24 +125,17 @@ function Header() {
       <AnimatePresence initial={false}>
         {mobileOpen ? (
           <m.nav
-            initial={{ gridTemplateRows: "0fr", opacity: 0 }}
-            animate={{ gridTemplateRows: "1fr", opacity: 1 }}
-            exit={{ gridTemplateRows: "0fr", opacity: 0 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="grid border-t bg-background md:hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="absolute left-0 right-0 top-full z-50 border-b bg-background shadow-lg md:hidden"
             aria-label="Principal móvil"
           >
-            {/* Inner track collapses via the grid row (0fr↔1fr) — a transform-free
-                reveal of unknown height that never animates the `height` property. */}
-            <div className="min-h-0 overflow-hidden px-4 py-4">
+            <div className="px-4 py-4">
               <ul className="flex flex-col gap-1">
-                {navItems.map((item, index) => (
-                  <m.li
-                    key={item.to}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2, delay: index * 0.04 }}
-                  >
+                {navItems.map((item) => (
+                  <li key={item.to}>
                     <NavLink
                       to={item.to}
                       end={item.to === "/"}
@@ -139,16 +143,16 @@ function Header() {
                       {...prefetchProps(item.to)}
                       className={({ isActive }) =>
                         cn(
-                          "block rounded-md px-3 py-2 text-sm font-medium",
+                          "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
                           isActive
-                            ? "bg-secondary text-secondary-foreground"
+                            ? "bg-secondary text-secondary-foreground font-semibold"
                             : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                         )
                       }
                     >
                       {item.label}
                     </NavLink>
-                  </m.li>
+                  </li>
                 ))}
               </ul>
               <InteractiveHoverButton
