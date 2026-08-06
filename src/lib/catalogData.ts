@@ -53,6 +53,43 @@ interface RawProductRow {
   categories: { slug: string; name: string } | null
 }
 
+export interface ImageOptimizationOptions {
+  width?: number
+  quality?: number
+  format?: "webp" | "origin" | "avif"
+}
+
+/**
+ * Transforms a raw Supabase Storage object URL (or existing render URL) into a
+ * Supabase Storage Render API URL. Render URLs perform server-side WebP
+ * compression and resizing, and return `cache-control: max-age=3600` headers so
+ * browsers cache image bytes instead of re-downloading on every scroll or page change.
+ */
+export function getOptimizedImageUrl(
+  url?: string,
+  options: ImageOptimizationOptions = {}
+): string | undefined {
+  if (!url) return undefined
+
+  const baseUrl = import.meta.env.VITE_SUPABASE_URL
+  const objectPrefix = `${baseUrl}/storage/v1/object/public/`
+  const renderPrefix = `${baseUrl}/storage/v1/render/image/public/`
+
+  let path = ""
+  if (url.startsWith(objectPrefix)) {
+    path = url.slice(objectPrefix.length)
+  } else if (url.startsWith(renderPrefix)) {
+    path = url.slice(renderPrefix.length).split("?")[0]
+  } else {
+    return url
+  }
+
+  const width = options.width ?? 400
+  const quality = options.quality ?? 80
+  const format = options.format ?? "webp"
+  return `${baseUrl}/storage/v1/render/image/public/${path}?width=${width}&quality=${quality}&format=${format}`
+}
+
 /**
  * Assigns each product its datasheet code from its position within its own
  * category (products arrive ordered by name, so codes are stable between
@@ -74,7 +111,7 @@ function toProducts(rows: RawProductRow[]): CatalogProduct[] {
       description: row.description,
       presentation: row.presentation,
       recommendedUse: row.recommended_use,
-      imageUrl: row.image_url ?? undefined,
+      imageUrl: getOptimizedImageUrl(row.image_url ?? undefined, { width: 400, quality: 80 }),
       code: `${getCategoryCode(categoryId)}-${String(position).padStart(2, "0")}`,
     }
   })
@@ -105,7 +142,7 @@ function toCategories(rows: RawCategoryRow[]): CatalogCategory[] {
     uuid: row.id,
     name: row.name,
     description: row.description,
-    imageUrl: row.image_url ?? undefined,
+    imageUrl: getOptimizedImageUrl(row.image_url ?? undefined, { width: 400, quality: 80 }),
     imageAlt: row.image_alt ?? undefined,
   }))
 }
@@ -127,8 +164,15 @@ export async function fetchCategories(): Promise<CatalogCategory[]> {
   return toCategories(await res.json())
 }
 
-/** Categories (in sort_order) plus every active product (by name). */
-export async function fetchCatalog(): Promise<Catalog> {
+let catalogCache: { data: Catalog; timestamp: number } | null = null
+const CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
+
+/** Categories (in sort_order) plus every active product (by name). Serves from in-memory cache when fresh. */
+export async function fetchCatalog(forceRefresh = false): Promise<Catalog> {
+  if (!forceRefresh && catalogCache && Date.now() - catalogCache.timestamp < CACHE_TTL_MS) {
+    return catalogCache.data
+  }
+
   const headers = getHeaders()
   const baseUrl = import.meta.env.VITE_SUPABASE_URL
 
@@ -157,7 +201,9 @@ export async function fetchCatalog(): Promise<Catalog> {
     return ai - bi || a.name.localeCompare(b.name, "es")
   })
 
-  return { categories, products: toProducts(ordered) }
+  const catalog = { categories, products: toProducts(ordered) }
+  catalogCache = { data: catalog, timestamp: Date.now() }
+  return catalog
 }
 
 export interface ProductDetail {
