@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { AnimatePresence, m } from "framer-motion"
 import { SearchX } from "lucide-react"
@@ -125,20 +125,6 @@ export default function CatalogPage() {
     () => filtered.slice(pageStart, pageStart + PAGE_SIZE),
     [filtered, pageStart]
   )
-
-  // Quietly prefetch product images for the next page into browser cache
-  useEffect(() => {
-    if (page < totalPages) {
-      const nextPageStart = page * PAGE_SIZE
-      const nextPageProducts = filtered.slice(nextPageStart, nextPageStart + PAGE_SIZE)
-      for (const product of nextPageProducts) {
-        if (product.imageUrl) {
-          const img = new Image()
-          img.src = product.imageUrl
-        }
-      }
-    }
-  }, [filtered, page, totalPages])
 
   const selectCategory = (categoryId: string | null) => {
     setSearchParams(
@@ -277,22 +263,23 @@ export default function CatalogPage() {
           {/* Three across only from xl. At lg the sidebar leaves ~185px per
               card, under the ~195px the CTA needs before its nowrap label
               starts clipping. */}
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <m.div layout className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <AnimatePresence mode="popLayout">
-              {visible.map((product, idx) => (
+              {visible.map((product) => (
                 <m.div
                   key={product.id}
+                  layout
                   initial={{ opacity: 0, y: 16, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.98 }}
-                  transition={{ duration: 0.22, ease: "easeOut" }}
+                  transition={{ duration: 0.28, ease: "easeOut" }}
                   className="flex"
                 >
-                  <ProductCard product={product} priority={idx < 6} />
+                  <ProductCard product={product} />
                 </m.div>
               ))}
             </AnimatePresence>
-          </div>
+          </m.div>
 
           {filtered.length > 0 ? (
             <Pagination
