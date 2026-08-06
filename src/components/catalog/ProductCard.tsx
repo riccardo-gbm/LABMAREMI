@@ -36,24 +36,18 @@ function ProductCard({ product, priority = false }: ProductCardProps) {
         alt={product.name}
         fallbackLabel="Imagen referencial del producto"
         fallbackIcon={Icon}
-        badge={product.code}
         priority={priority}
         className="aspect-[4/3] rounded-b-none border-0 border-b"
       />
 
       <div className="flex flex-1 flex-col p-5">
-      <div className="flex items-center justify-between gap-3">
-        {product.categoryName ? (
+      {product.categoryName ? (
+        <div className="flex items-center justify-between gap-3">
           <Badge variant="secondary" className="w-fit">
             {product.categoryName}
           </Badge>
-        ) : (
-          <span />
-        )}
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ring">
-          {product.presentation}
-        </span>
-      </div>
+        </div>
+      ) : null}
 
       <h3 className="mt-4 font-display text-lg font-semibold leading-snug tracking-tight text-foreground">
         {/* `after:` stretches this link's hit area over the whole card. It

@@ -197,11 +197,18 @@ export default function ProductDetailPage() {
           <Reveal direction="left" delay={0.08}>
           <div>
             <Eyebrow>Ficha de producto</Eyebrow>
-            {product.categoryName ? (
-              <Badge variant="secondary" className="mt-5">
-                {product.categoryName}
-              </Badge>
-            ) : null}
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              {product.categoryName ? (
+                <Badge variant="secondary">
+                  {product.categoryName}
+                </Badge>
+              ) : null}
+              {product.presentation ? (
+                <Badge variant="outline" className="font-mono text-[11px] uppercase tracking-wider text-primary border-primary/30">
+                  {product.presentation}
+                </Badge>
+              ) : null}
+            </div>
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
               {product.name}
             </h1>
