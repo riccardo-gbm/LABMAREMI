@@ -23,6 +23,7 @@ import { Card } from "@/components/ui/card"
 import { MediaFrame } from "@/components/ui/media-frame"
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
+import { LazyMapFrame } from "@/components/ui/lazy-map-frame"
 import {
   coverageSectors,
   EMAIL_DISPLAY,
@@ -302,13 +303,10 @@ export default function HomePage() {
           </div>
 
           <Reveal className="overflow-hidden rounded-xl border shadow-sm" direction="left">
-            <iframe
+            <LazyMapFrame
               title="Ubicación de LABMAREMI en Quito"
               src={OFFICE_MAP_SRC}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
-              className="h-[320px] w-full border-0 md:h-[400px]"
+              heightClassName="h-[320px] md:h-[400px]"
             />
           </Reveal>
         </Reveal>

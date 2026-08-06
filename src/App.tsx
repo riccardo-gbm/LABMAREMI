@@ -106,7 +106,7 @@ function RoutePrefetchWarmup() {
 
 export default function App() {
   return (
-    <ReactLenis root>
+    <ReactLenis root options={{ duration: 0.75, lerp: 0.14, wheelMultiplier: 1.1, touchMultiplier: 1.2 }}>
       <BrowserRouter>
         <ScrollToTop />
         <VercelBeacons />

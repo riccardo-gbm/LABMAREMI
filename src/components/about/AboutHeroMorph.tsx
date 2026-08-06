@@ -18,13 +18,12 @@ const TOTAL_IMAGES = 20;
 // Intro choreography, single source of truth. The headline reveal derives from
 // these instead of carrying its own delay, so retuning the intro can never
 // leave the phrase firing mid-sweep. See the headline gate in AboutHeroMorph.
-const INTRO_SPRING = { stiffness: 70, damping: 18 } as const;
-const INTRO_LINE_MS = 300;
-const INTRO_CIRCLE_MS = 1200;
-const HEADLINE_BEAT_MS = 300;
-// `intro` targets 2 for the circle. INTRO_SPRING is overdamped (ζ ≈ 1.08), so
-// introProgress rises monotonically and can't cross this threshold early.
-const CIRCLE_SETTLED = 1.98;
+const INTRO_SPRING = { stiffness: 180, damping: 22 } as const;
+const INTRO_LINE_MS = 100;
+const INTRO_CIRCLE_MS = 400;
+const HEADLINE_BEAT_MS = 100;
+// `intro` targets 2 for the circle.
+const CIRCLE_SETTLED = 1.95;
 
 // Product and team/workplace shots interleaved on purpose so the circle doesn't
 // read as visually segregated. Decorative brand imagery, not "meet our team" —
