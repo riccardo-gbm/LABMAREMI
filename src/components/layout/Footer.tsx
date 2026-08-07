@@ -50,7 +50,7 @@ function FooterLink({ to, label, index, baseDelay }: FooterLinkProps) {
 function Footer() {
   const reduceMotion = useReducedMotion()
   const year = new Date().getFullYear()
-  const copyright = `© ${year} LABMAREMI Cía. Ltda. Todos los derechos reservados.`
+  const copyright = `© ${year} LABMAREMI ECUADOR Cía. Ltda. Todos los derechos reservados.`
 
   return (
     <footer className="border-t bg-secondary/40">
@@ -72,8 +72,7 @@ function Footer() {
                 className="h-20 w-20 object-contain"
               />
               <TextReveal
-                text="LABMAREMI"
-                mode="letters"
+                text="LABMAREMI ECUADOR CIA. LTDA."
                 delay={0.08}
                 stagger={0.025}
                 className="text-base font-bold text-foreground"
@@ -81,7 +80,7 @@ function Footer() {
             </div>
             <TextReveal
               as="p"
-              text="Distribuidor de productos de limpieza, desinfección, protección e higiene para empresas en Quito y provincias cercanas."
+              text="Distribuidor de productos de limpieza, desinfección, protección e higiene para empresas en Pichincha y provincias cercanas."
               delay={0.2}
               stagger={0.035}
               className="mt-3 max-w-xs text-sm text-muted-foreground"
