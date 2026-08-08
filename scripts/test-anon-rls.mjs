@@ -123,5 +123,16 @@ check(
   direct.error ? `blocked: ${direct.error.message}` : "UNEXPECTEDLY SUCCEEDED",
 )
 
+// 6. anon can read public products and categories (for sitemap & bot social previews).
+const catRead = await anon.from("categories").select("slug").limit(5)
+const prodRead = await anon.from("products").select("slug").eq("is_active", true).limit(5)
+check(
+  "anon can read active categories and products for sitemap",
+  !catRead.error && !prodRead.error && (catRead.data?.length ?? 0) > 0 && (prodRead.data?.length ?? 0) > 0,
+  catRead.error || prodRead.error
+    ? `error: ${catRead.error?.message || prodRead.error?.message}`
+    : `categories: ${catRead.data?.length}, products: ${prodRead.data?.length}`,
+)
+
 console.log(`\n${passed} passed, ${failed} failed.\n`)
 process.exit(failed === 0 ? 0 : 1)
