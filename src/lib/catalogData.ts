@@ -105,8 +105,8 @@ function toCategories(rows: RawCategoryRow[]): CatalogCategory[] {
     uuid: row.id,
     name: row.name,
     description: row.description,
-    imageUrl: row.image_url ?? undefined,
-    imageAlt: row.image_alt ?? undefined,
+    imageUrl: row.image_url ?? `/cat-${row.slug}.webp`,
+    imageAlt: row.image_alt ?? row.name,
   }))
 }
 
