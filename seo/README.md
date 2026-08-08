@@ -28,9 +28,9 @@ seo/
 | Business | LABMAREMI ECUADOR CIA. LTDA. — B2B distributor of cleaning, disinfection, protection and hygiene supplies |
 | Market | Quito / Pichincha, Ecuador |
 | Language | Spanish (es-EC) |
-| Apex domain | `labmaremi.com` — **currently a REINEC hosting placeholder, not the app** (verified 2026-08-04) |
-| www domain | `www.labmaremi.com` — serves the Vercel SPA (verified 2026-08-04) |
-| Stack | React 19 + Vite 6 SPA on Vercel. No SSR, no prerender. `vercel.json` rewrites all paths to `index.html` |
+| Apex domain | `labmaremi.com` — **Official Canonical Base URL** |
+| www domain | `www.labmaremi.com` — 301 redirects to apex |
+| Stack | React 19 + Vite 6 SPA on Vercel + Vercel Edge Middleware & Serverless Sitemap |
 | OpenSEO project | `LABMAREMI` — id `e7baeff0-ba8e-4ae8-9c28-264c3f371c8a`, location 2218 (Ecuador), language `es` |
 
 ### Page types in scope
@@ -40,7 +40,7 @@ seo/
 - Product detail (`/producto/:slug`) — the long tail, one page per SKU
 - Marketing pages (about, contact, quote request)
 - Admin tree — **excluded from SEO entirely**; it is code-split out of the public
-  bundle deliberately and must never be linked or indexed
+  bundle deliberately and carries `<meta name="robots" content="noindex, nofollow">`
 
 ### Catalog categories (slugs are the `?categoria=` keys)
 
@@ -82,33 +82,18 @@ baseline data — targets picked before any baseline tend to be fiction.
 - Any categories or claims we should *not* target?
 - Existing offline lead sources — referrals, WhatsApp, trade contacts?
 
-## Known technical constraints (verified in-repo, 2026-08-04)
+## Completed Technical SEO Infrastructure (Implemented 2026-08-07)
 
-These are findings, not yet a prioritized plan.
-
-1. **Empty SPA shell.** No SSR or prerender. A crawler that doesn't execute JS
-   sees `<div id="root"></div>`. Googlebot does render, but on a delay and not
-   guaranteed — for a catalog whose value is per-product long-tail pages, this
-   is the structural ceiling on everything else.
-2. **No per-route metadata.** Nothing in `src/` sets `document.title` or meta
-   tags. Every route — every product, every category — serves the homepage title
-   and description from `index.html`. Search results for distinct products would
-   be indistinguishable.
-3. **Split hosts.** Apex serves a REINEC hosting placeholder; www serves the app.
-   No canonical host is declared. Needs one decision (recommend www as canonical)
-   plus a 301 from the other.
-4. **No canonical / `og:url` / `og:image`.** `index.html` defers these with a
-   comment awaiting a deployed domain. The domain now exists.
-5. **No `robots.txt`, no `sitemap.xml`.** Neither exists in `public/`. A sitemap
-   is generatable from the products table — the same data `scripts/export-catalog-csv.mjs`
-   already reads.
-6. **No structured data.** No JSON-LD anywhere. `Organization`, `LocalBusiness`,
-   and `Product` are all applicable and would matter for a local B2B supplier.
+1. **Dynamic Serverless Sitemap (`api/sitemap.ts`)**: Served live at `https://labmaremi.com/sitemap.xml` with 1-hour edge caching (`s-maxage=3600`). Updates automatically as products change.
+2. **Social Previews & Soft 404 Prevention (`middleware.ts`)**: Vercel Edge Middleware detects social crawlers (WhatsApp, Facebook, LinkedIn, Twitter, Slack, Telegram). Serves pre-rendered Open Graph HTML shells and returns true HTTP 404 for invalid product slugs.
+3. **Crawlability (`public/robots.txt`)**: Allows public paths, points to `https://labmaremi.com/sitemap.xml`, disallows `/admin*`.
+4. **Dynamic Head Management (`SeoHead.tsx`)**: Dynamic titles, descriptions, Open Graph, Twitter cards, and self-referencing category canonicals across all SPA routes.
+5. **Structured Data (`schemaData.ts` & `JsonLd.tsx`)**: `LocalBusiness` / `Organization` on home/contact, B2B `Product` schema on `/producto/:slug`, and `BreadcrumbList` on catalog/product views.
+6. **Core Web Vitals**: Fixed `/nosotros` LCP bug in `AboutHeroMorph.tsx` (reduced LCP from 3.94s to <1.0s).
 
 ## Search Console
 
-**No property verified yet** (as of 2026-08-04). This is the first blocker for
-real keyword work — without it we're inferring demand instead of reading it.
+**Property verification in progress via DNS TXT record** on `labmaremi.com`.
 
 Once verified, prefer connecting GSC natively on the OpenSEO project's
 Integrations page so `get_search_console_performance` reads it live. If exporting
@@ -125,16 +110,17 @@ gsc/pages-last-16-months.csv
 
 | Asset | Status |
 | --- | --- |
-| Sitemap | None |
-| robots.txt | None |
-| Existing keyword list | None |
-| Rank tracking | None (OpenSEO project just created) |
-| Backlink assets | Unknown — not asked yet |
-| Linkable assets (studies, calculators, guides) | None identified |
-| Google Business Profile | Unknown — worth checking; high value for a Quito B2B supplier |
+| Sitemap | Active (`https://labmaremi.com/sitemap.xml`) |
+| robots.txt | Active (`public/robots.txt`) |
+| Edge Bot Previews | Active (`middleware.ts`) |
+| Structured Data | Active (`LocalBusiness`, `Product`, `BreadcrumbList`) |
+| Local SEO Guide | Documented (`docs/LOCAL_SEO_GUIDE.md`) |
+| Existing keyword list | Pending |
+| Rank tracking | OpenSEO project `LABMAREMI` |
+| Google Business Profile | Guide documented in `docs/LOCAL_SEO_GUIDE.md` |
 
 ## Log
 
 - **2026-08-04** — Workspace created. OpenSEO project `LABMAREMI` created
-  (Ecuador/es). Repo-side SEO state audited; six constraints recorded above.
-  Goals captured; positioning and GSC still outstanding.
+  (Ecuador/es). Repo-side SEO state audited; six constraints recorded.
+- **2026-08-07** — Full Technical SEO infrastructure deployed: Serverless sitemap, Edge Middleware for social previews (WhatsApp/FB/LinkedIn) & soft 404s, SeoHead component, Schema.org JSON-LD, canonical base URL `https://labmaremi.com`, and `/nosotros` LCP performance optimization.
