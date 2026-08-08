@@ -16,6 +16,9 @@ import { ProductCard } from "@/components/catalog/ProductCard"
 import { fetchCatalog, type CatalogCategory, type CatalogProduct } from "@/lib/catalogData"
 import { useAsync } from "@/hooks/useAsync"
 import { matchesQuery } from "@/lib/catalog"
+import { SeoHead } from "@/components/common/SeoHead"
+import { JsonLd } from "@/components/common/JsonLd"
+import { getBreadcrumbSchema } from "@/lib/schemaData"
 
 const CATEGORY_PARAM = "categoria"
 const PAGE_PARAM = "pagina"
@@ -237,9 +240,32 @@ export default function CatalogPage() {
 
   const hasActiveFilters = Boolean(activeCategories.length > 0 || query.trim())
 
+  const singleCategory =
+    activeCategories.length === 1 ? categories.find((c) => c.id === activeCategories[0]) : null
+
+  const pageTitle = singleCategory
+    ? `${singleCategory.name} e Higiene Industrial en Quito — LABMAREMI`
+    : "Catálogo de Productos de Limpieza e Higiene Industrial — LABMAREMI"
+
+  const pageDesc = singleCategory
+    ? singleCategory.description ||
+      `Distribuidor de ${singleCategory.name} para empresas en Quito y Pichincha. Cotización directa y entregas inmediatas.`
+    : "Explore nuestro catálogo completo de productos de limpieza, desinfección, protección e higiene industrial para empresas en Quito, Ecuador."
+
+  const canonicalUrl = singleCategory
+    ? `https://labmaremi.com/catalogo?categoria=${encodeURIComponent(singleCategory.id)}`
+    : "https://labmaremi.com/catalogo"
+
+  const breadcrumbs = [
+    { name: "Inicio", url: "/" },
+    { name: "Catálogo", url: "/catalogo" },
+    ...(singleCategory ? [{ name: singleCategory.name, url: `/catalogo?categoria=${singleCategory.id}` }] : []),
+  ]
+
   if (loading) {
     return (
       <>
+        <SeoHead title={pageTitle} description={pageDesc} canonicalUrl={canonicalUrl} />
         {HEADER}
         <CatalogSkeleton />
       </>
@@ -249,6 +275,7 @@ export default function CatalogPage() {
   if (error) {
     return (
       <>
+        <SeoHead title={pageTitle} description={pageDesc} canonicalUrl={canonicalUrl} />
         {HEADER}
         <Section className="pt-8 md:pt-10">
           <QueryError
@@ -263,6 +290,13 @@ export default function CatalogPage() {
 
   return (
     <>
+      <SeoHead
+        title={pageTitle}
+        description={pageDesc}
+        canonicalUrl={canonicalUrl}
+        ogImage={singleCategory?.imageUrl ? `https://labmaremi.com${singleCategory.imageUrl}` : undefined}
+      />
+      <JsonLd data={getBreadcrumbSchema(breadcrumbs)} id="catalog-breadcrumb-schema" />
       {HEADER}
 
       <Section className="pt-8 md:pt-10">

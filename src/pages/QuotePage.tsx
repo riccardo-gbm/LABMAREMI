@@ -25,6 +25,7 @@ import {
 } from "@/lib/catalogData"
 import { submitQuoteRequest } from "@/lib/quoteSubmission"
 import { useAsync } from "@/hooks/useAsync"
+import { SeoHead } from "@/components/common/SeoHead"
 
 const PRODUCTS_PARAM = "productos"
 
@@ -145,6 +146,11 @@ export default function QuotePage() {
 
   return (
     <>
+      <SeoHead
+        title="Solicitar Cotización — LABMAREMI ECUADOR | Insumos de Limpieza"
+        description="Solicite una cotización personalizada de productos de limpieza, desinfección e higiene para su empresa en Quito y Pichincha. Respuesta rápida."
+        canonicalUrl="https://labmaremi.com/cotizacion"
+      />
       <PageHeader title={PAGE_TITLE} description={PAGE_DESCRIPTION} />
       {loading ? <QuoteFormSkeleton /> : null}
       {error ? (

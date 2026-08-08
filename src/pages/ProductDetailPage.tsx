@@ -18,6 +18,9 @@ import { getWhatsAppProductUrl } from "@/lib/contact"
 import { useAsync } from "@/hooks/useAsync"
 import { getCategoryIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
+import { SeoHead } from "@/components/common/SeoHead"
+import { JsonLd } from "@/components/common/JsonLd"
+import { getProductSchema, getBreadcrumbSchema } from "@/lib/schemaData"
 
 /**
  * "Uso recomendado" is free text with three shapes in the catalog: most
@@ -165,6 +168,28 @@ export default function ProductDetailPage() {
   const Icon = getCategoryIcon(product.categoryId)
   const code = product.code
 
+  const productTitle = `${product.name} — Suministros de Limpieza en Quito | LABMAREMI`
+  const productDesc = `${product.description} Presentación: ${product.presentation || "Consultar"}. Distribuidor B2B en Quito y Pichincha.`
+  const canonicalUrl = `https://labmaremi.com/producto/${product.slug}`
+  const imageUrl = product.imageUrl ? (product.imageUrl.startsWith("http") ? product.imageUrl : `https://labmaremi.com${product.imageUrl}`) : undefined
+
+  const productSchema = getProductSchema({
+    name: product.name,
+    description: product.description,
+    slug: product.slug,
+    imageUrl: product.imageUrl,
+    categoryName: product.categoryName,
+    sku: product.code,
+    presentation: product.presentation,
+  })
+
+  const breadcrumbs = [
+    { name: "Inicio", url: "/" },
+    { name: "Catálogo", url: "/catalogo" },
+    { name: product.categoryName || "Categoría", url: `/catalogo?categoria=${product.categoryId}` },
+    { name: product.name, url: `/producto/${product.slug}` },
+  ]
+
   const specRows = [
     { label: "Código", value: code, mono: true },
     { label: "Categoría", value: product.categoryName || "—", mono: false },
@@ -174,6 +199,16 @@ export default function ProductDetailPage() {
 
   return (
     <>
+      <SeoHead
+        title={productTitle}
+        description={productDesc}
+        canonicalUrl={canonicalUrl}
+        ogType="product"
+        ogImage={imageUrl}
+      />
+      <JsonLd data={productSchema} id="product-jsonld-schema" />
+      <JsonLd data={getBreadcrumbSchema(breadcrumbs)} id="product-breadcrumb-schema" />
+
       <Section className="pb-0 pt-8 md:pb-0 md:pt-10">
         {/* Breadcrumb */}
         <nav aria-label="Ruta de navegación">

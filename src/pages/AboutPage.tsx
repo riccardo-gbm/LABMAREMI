@@ -20,6 +20,7 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
 import { Timeline, type TimelineEntry } from "@/components/about/Timeline"
 import AboutHeroMorph from "@/components/about/AboutHeroMorph"
+import { SeoHead } from "@/components/common/SeoHead"
 
 const timelineEntries: TimelineEntry[] = [
   {
@@ -134,6 +135,11 @@ function TeamCard({ person }: { person: TeamPerson }) {
 export default function AboutPage() {
   return (
     <>
+      <SeoHead
+        title="Sobre Nosotros — LABMAREMI ECUADOR | Distribuidor de Limpieza en Quito"
+        description="Conozca a LABMAREMI ECUADOR CIA. LTDA., distribuidor de insumos de limpieza, desinfección e higiene institucional en Quito y Pichincha desde 2021."
+        canonicalUrl="https://labmaremi.com/nosotros"
+      />
       <AboutHeroMorph />
 
       <Section className="border-t">

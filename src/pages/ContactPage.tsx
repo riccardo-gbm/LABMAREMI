@@ -19,10 +19,19 @@ import {
   PHONE_DISPLAY,
   WHATSAPP_HREF,
 } from "@/lib/contact"
+import { SeoHead } from "@/components/common/SeoHead"
+import { JsonLd } from "@/components/common/JsonLd"
+import { getLocalBusinessSchema } from "@/lib/schemaData"
 
 export default function ContactPage() {
   return (
     <>
+      <SeoHead
+        title="Contacto y Ubicación — LABMAREMI ECUADOR | Distribuidor Quito"
+        description="Póngase en contacto con LABMAREMI ECUADOR CIA. LTDA. por WhatsApp o correo. Atención directa para abastecimiento de limpieza en Quito y Pichincha."
+        canonicalUrl="https://labmaremi.com/contacto"
+      />
+      <JsonLd data={getLocalBusinessSchema()} id="contact-localbusiness-schema" />
       <PageHeader
         title="Contacto"
         description="Escríbanos por WhatsApp o correo y le respondemos con la información que necesita para abastecer su negocio."

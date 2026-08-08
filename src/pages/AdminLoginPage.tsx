@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Section } from "@/components/ui/section"
 import { supabase } from "@/lib/supabase"
+import { SeoHead } from "@/components/common/SeoHead"
 
 export default function AdminLoginPage() {
   const { session, loading: authLoading } = useAuth()
@@ -54,6 +55,7 @@ export default function AdminLoginPage() {
 
   return (
     <Section className="flex min-h-[60vh] items-center justify-center py-16">
+      <SeoHead title="Acceso Administrativo — LABMAREMI" noindex />
       <Card className="w-full max-w-sm p-6">
         <div className="flex flex-col items-center text-center">
           <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">

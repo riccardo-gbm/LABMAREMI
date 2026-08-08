@@ -37,6 +37,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { QueryError } from "@/components/ui/query-error"
 import { fetchBusinessTypes, fetchCategories } from "@/lib/catalogData"
 import { useAsync } from "@/hooks/useAsync"
+import { SeoHead } from "@/components/common/SeoHead"
+import { JsonLd } from "@/components/common/JsonLd"
+import { getLocalBusinessSchema } from "@/lib/schemaData"
 
 const reasons = [
     {
@@ -106,6 +109,12 @@ export default function HomePage() {
 
   return (
     <>
+      <SeoHead
+        title="LABMAREMI ECUADOR — Distribuidor de Limpieza, Desinfección e Higiene en Quito"
+        description="Distribuidor B2B de productos de limpieza, desinfección, protección e higiene industrial para empresas en Quito y Pichincha. Entregas inmediatas y cotización directa."
+        canonicalUrl="https://labmaremi.com/"
+      />
+      <JsonLd data={getLocalBusinessSchema()} id="home-localbusiness-schema" />
       <HeroSection />
 
       {/* Image-led procurement band */}

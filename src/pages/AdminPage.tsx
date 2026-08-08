@@ -29,6 +29,7 @@ import {
 } from "@/lib/adminDashboard"
 import type { QuoteStatus } from "@/types/database"
 import { getCategoryCode } from "@/lib/catalog"
+import { SeoHead } from "@/components/common/SeoHead"
 
 export default function AdminPage() {
   const [leads, setLeads] = useState<DashboardLead[] | null>(null)
@@ -177,6 +178,7 @@ export default function AdminPage() {
 
   return (
     <>
+      <SeoHead title="Panel de Administración — LABMAREMI" noindex />
       <PageHeader
         title="Panel de administración"
         description="Seguimiento de solicitudes de cotización y leads comerciales."
