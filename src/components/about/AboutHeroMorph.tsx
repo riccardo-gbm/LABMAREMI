@@ -6,7 +6,6 @@ import {
   useSpring,
   useMotionValue,
   useScroll,
-  useMotionValueEvent,
   type AnimationPlaybackControls,
   type MotionValue,
 } from "framer-motion";
@@ -15,16 +14,10 @@ const IMG_WIDTH = 70;
 const IMG_HEIGHT = 95;
 const TOTAL_IMAGES = 20;
 
-// Intro choreography, single source of truth. The headline reveal derives from
-// these instead of carrying its own delay, so retuning the intro can never
-// leave the phrase firing mid-sweep. See the headline gate in AboutHeroMorph.
+// Intro choreography, single source of truth.
 const INTRO_SPRING = { stiffness: 70, damping: 18 } as const;
 const INTRO_LINE_MS = 300;
 const INTRO_CIRCLE_MS = 1200;
-const HEADLINE_BEAT_MS = 300;
-// `intro` targets 2 for the circle. INTRO_SPRING is overdamped (ζ ≈ 1.08), so
-// introProgress rises monotonically and can't cross this threshold early.
-const CIRCLE_SETTLED = 1.98;
 
 // Product and team/workplace shots interleaved on purpose so the circle doesn't
 // read as visually segregated. Decorative brand imagery, not "meet our team" —
@@ -340,12 +333,13 @@ export default function AboutHeroMorph() {
   // useMotionValueEvent owns the subscribe/unsubscribe; the ref guard makes the
   // handler fire exactly once. Springs rest asymptotically, so crossing
   // CIRCLE_SETTLED is the frame the circle has visually landed.
-  useMotionValueEvent(introProgress, "change", (value) => {
-    if (prefersReducedMotion || value < CIRCLE_SETTLED || beatRef.current) return;
-    beatRef.current = setTimeout(() => {
-      fadeRef.current = animate(headlineGate, 1, { duration: 0.6, ease: "easeOut" });
-    }, HEADLINE_BEAT_MS);
-  });
+  useEffect(() => {
+    if (prefersReducedMotion) return
+    const timer = setTimeout(() => {
+      fadeRef.current = animate(headlineGate, 1, { duration: 0.5, ease: "easeOut" })
+    }, 150)
+    return () => clearTimeout(timer)
+  }, [prefersReducedMotion, headlineGate])
 
   useEffect(
     () => () => {
