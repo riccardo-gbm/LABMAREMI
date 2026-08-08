@@ -20,14 +20,14 @@ export default async function handler(_req: IncomingMessage, res: ServerResponse
     }
 
     const [categoriesRes, productsRes] = await Promise.all([
-      fetch(`${supabaseUrl}/rest/v1/categories?select=slug,updated_at&order=sort_order.asc`, { headers }),
-      fetch(`${supabaseUrl}/rest/v1/products?select=slug,updated_at&is_active=eq.true&order=name.asc`, { headers }),
+      fetch(`${supabaseUrl}/rest/v1/categories?select=slug,created_at&order=sort_order.asc`, { headers }),
+      fetch(`${supabaseUrl}/rest/v1/products?select=slug,created_at&is_active=eq.true&order=name.asc`, { headers }),
     ])
 
-    const categories: Array<{ slug: string; updated_at?: string }> = categoriesRes.ok
+    const categories: Array<{ slug: string; created_at?: string }> = categoriesRes.ok
       ? await categoriesRes.json()
       : []
-    const products: Array<{ slug: string; updated_at?: string }> = productsRes.ok
+    const products: Array<{ slug: string; created_at?: string }> = productsRes.ok
       ? await productsRes.json()
       : []
 
@@ -58,8 +58,8 @@ export default async function handler(_req: IncomingMessage, res: ServerResponse
       xmlLines.push(`    <loc>${DOMAIN}/catalogo?categoria=${encodeURIComponent(c.slug)}</loc>`)
       xmlLines.push("    <changefreq>weekly</changefreq>")
       xmlLines.push("    <priority>0.85</priority>")
-      if (c.updated_at) {
-        xmlLines.push(`    <lastmod>${new Date(c.updated_at).toISOString()}</lastmod>`)
+      if (c.created_at) {
+        xmlLines.push(`    <lastmod>${new Date(c.created_at).toISOString()}</lastmod>`)
       }
       xmlLines.push("  </url>")
     }
@@ -70,8 +70,8 @@ export default async function handler(_req: IncomingMessage, res: ServerResponse
       xmlLines.push(`    <loc>${DOMAIN}/producto/${encodeURIComponent(p.slug)}</loc>`)
       xmlLines.push("    <changefreq>weekly</changefreq>")
       xmlLines.push("    <priority>0.80</priority>")
-      if (p.updated_at) {
-        xmlLines.push(`    <lastmod>${new Date(p.updated_at).toISOString()}</lastmod>`)
+      if (p.created_at) {
+        xmlLines.push(`    <lastmod>${new Date(p.created_at).toISOString()}</lastmod>`)
       }
       xmlLines.push("  </url>")
     }
