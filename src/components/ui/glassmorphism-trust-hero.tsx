@@ -67,6 +67,10 @@ export default function GlassmorphismTrustHero() {
               </h1>
             </div>
 
+            <p className="labmaremi-hero-fade-in labmaremi-hero-delay-300 max-w-2xl text-center text-sm font-medium leading-relaxed text-muted-foreground sm:text-base md:text-lg">
+              Distribuidor al por mayor de productos de limpieza, desinfección, protección e higiene industrial para empresas en Quito y Pichincha.
+            </p>
+
             <div className="labmaremi-hero-fade-in labmaremi-hero-delay-400 flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-3">
               <InteractiveHoverLink
                 to="/cotizacion"

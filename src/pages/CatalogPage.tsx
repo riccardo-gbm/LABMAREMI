@@ -32,14 +32,6 @@ const PAGE_SIZE = 24
 const EMPTY_CATEGORIES: CatalogCategory[] = []
 const EMPTY_PRODUCTS: CatalogProduct[] = []
 
-// Static — no props — so it's built once, not rebuilt on every render.
-const HEADER = (
-  <PageHeader
-    title="Catálogo de productos"
-    description="Explore nuestro catálogo de limpieza, desinfección, protección e higiene. Seleccione una categoría o busque un producto específico."
-  />
-)
-
 /** Search bar, category column and card grid placeholders, matching the
  *  loaded layout so nothing jumps when the data lands. */
 function CatalogSkeleton() {
@@ -262,11 +254,18 @@ export default function CatalogPage() {
     ...(singleCategory ? [{ name: singleCategory.name, url: `/catalogo?categoria=${singleCategory.id}` }] : []),
   ]
 
+  const headerTitle = singleCategory ? singleCategory.name : "Catálogo de productos"
+  const headerDesc = singleCategory
+    ? (singleCategory.description || `Explore nuestra línea de ${singleCategory.name} al por mayor para empresas en Quito y Pichincha.`)
+    : "Explore nuestro catálogo completo de limpieza, desinfección, protección e higiene industrial. Entregas en Quito y provincias cercanas."
+
+  const headerComponent = <PageHeader title={headerTitle} description={headerDesc} />
+
   if (loading) {
     return (
       <>
         <SeoHead title={pageTitle} description={pageDesc} canonicalUrl={canonicalUrl} />
-        {HEADER}
+        {headerComponent}
         <CatalogSkeleton />
       </>
     )
@@ -276,7 +275,7 @@ export default function CatalogPage() {
     return (
       <>
         <SeoHead title={pageTitle} description={pageDesc} canonicalUrl={canonicalUrl} />
-        {HEADER}
+        {headerComponent}
         <Section className="pt-8 md:pt-10">
           <QueryError
             onRetry={retry}
@@ -297,7 +296,7 @@ export default function CatalogPage() {
         ogImage={singleCategory?.imageUrl ? `https://labmaremi.com${singleCategory.imageUrl}` : undefined}
       />
       <JsonLd data={getBreadcrumbSchema(breadcrumbs)} id="catalog-breadcrumb-schema" />
-      {HEADER}
+      {headerComponent}
 
       <Section className="pt-8 md:pt-10">
         <Reveal>

@@ -116,7 +116,7 @@ function quoteFormReducer(
 
 const PAGE_TITLE = "Solicitar cotización"
 const PAGE_DESCRIPTION =
-  "Complete el formulario y nuestro equipo le enviará una propuesta a la medida de su negocio."
+  "Complete el formulario y nuestro equipo le enviará una propuesta al por mayor a la medida de su negocio. Entregas en 24 a 48 horas en Quito y Pichincha."
 
 /** Form-shaped placeholder so the page never flashes empty. */
 function QuoteFormSkeleton() {

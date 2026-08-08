@@ -195,6 +195,7 @@ export default function ProductDetailPage() {
     { label: "Categoría", value: product.categoryName || "—", mono: false },
     { label: "Presentación", value: product.presentation, mono: false, isPresentation: true },
     { label: "Uso recomendado", value: product.recommendedUse, mono: false, rich: true },
+    { label: "Cobertura B2B", value: "Atención directa, fichas técnicas y entregas garantizadas para empresas en Quito, Pichincha y provincias aledañas.", mono: false },
   ]
 
   return (
