@@ -1,0 +1,7 @@
+# LABMAREMI ECUADOR CIA. LTDA. — robots.txt
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/*
+
+Sitemap: https://labmaremi.com/sitemap.xml
