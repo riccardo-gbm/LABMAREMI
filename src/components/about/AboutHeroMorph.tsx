@@ -5,6 +5,7 @@ import {
   useTransform,
   useSpring,
   useMotionValue,
+  useMotionValueEvent,
   useScroll,
   type AnimationPlaybackControls,
   type MotionValue,
@@ -322,28 +323,21 @@ export default function AboutHeroMorph() {
     };
   }, [prefersReducedMotion, introTarget]);
 
-  // 0 hidden → 1 revealed. Driven off introProgress landing rather than a fixed
-  // delay so it tracks the real spring settle, and written as a motion value so
-  // the reveal costs zero re-renders (a state change here would re-render all
-  // 20 unmemoized FlipCards).
+  // 0 hidden → 1 revealed. Triggered when introProgress reaches circle completion (>= 1.92).
   const headlineGate = useMotionValue(0);
-  const beatRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const fadeRef = useRef<AnimationPlaybackControls | undefined>(undefined);
+  const revealedRef = useRef(false);
 
-  // useMotionValueEvent owns the subscribe/unsubscribe; the ref guard makes the
-  // handler fire exactly once. Springs rest asymptotically, so crossing
-  // CIRCLE_SETTLED is the frame the circle has visually landed.
-  useEffect(() => {
-    if (prefersReducedMotion) return
-    const timer = setTimeout(() => {
-      fadeRef.current = animate(headlineGate, 1, { duration: 0.5, ease: "easeOut" })
-    }, 150)
-    return () => clearTimeout(timer)
-  }, [prefersReducedMotion, headlineGate])
+  useMotionValueEvent(introProgress, "change", (latest) => {
+    if (prefersReducedMotion) return;
+    if (latest >= 1.92 && !revealedRef.current) {
+      revealedRef.current = true;
+      fadeRef.current = animate(headlineGate, 1, { duration: 0.5, ease: "easeOut" });
+    }
+  });
 
   useEffect(
     () => () => {
-      clearTimeout(beatRef.current);
       fadeRef.current?.stop();
     },
     [],
