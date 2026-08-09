@@ -11,6 +11,7 @@ export const CatalogPage = lazyWithPrefetch(() => import("@/pages/CatalogPage"))
 export const QuotePage = lazyWithPrefetch(() => import("@/pages/QuotePage"))
 export const ContactPage = lazyWithPrefetch(() => import("@/pages/ContactPage"))
 export const AboutPage = lazyWithPrefetch(() => import("@/pages/AboutPage"))
+export const ProductDetailPage = lazyWithPrefetch(() => import("@/pages/ProductDetailPage"))
 
 export const routePrefetchers: Record<string, () => void> = {
   "/catalogo": CatalogPage.prefetch,
