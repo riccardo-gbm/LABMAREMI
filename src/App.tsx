@@ -11,9 +11,8 @@ import { Layout } from "@/components/layout/Layout"
 import HomePage from "@/pages/HomePage"
 // Nav-reachable pages live in publicRoutes.ts as prefetchable lazies shared
 // with Header's hover/focus warm-up.
-import { AboutPage, CatalogPage, ContactPage, QuotePage, routePrefetchers } from "@/lib/publicRoutes"
+import { AboutPage, CatalogPage, ContactPage, ProductDetailPage, QuotePage, routePrefetchers } from "@/lib/publicRoutes"
 
-const ProductDetailPage = lazy(() => import("@/pages/ProductDetailPage"))
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"))
 
 // Admin is lazy-loaded so its data layer — the quote_requests/customers query
