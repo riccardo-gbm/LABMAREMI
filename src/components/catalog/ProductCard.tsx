@@ -5,7 +5,8 @@ import { Card } from "@/components/ui/card"
 import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
 import { MediaFrame } from "@/components/ui/media-frame"
 import { getCategoryIcon } from "@/lib/icons"
-import type { CatalogProduct } from "@/lib/catalogData"
+import { prefetchProductDetail, type CatalogProduct } from "@/lib/catalogData"
+import { ProductDetailPage } from "@/lib/publicRoutes"
 
 interface ProductCardProps {
   product: CatalogProduct
@@ -26,6 +27,11 @@ interface ProductCardProps {
  */
 function ProductCard({ product, priority = false }: ProductCardProps) {
   const Icon = getCategoryIcon(product.categoryId)
+
+  const prefetch = () => {
+    ProductDetailPage.prefetch()
+    prefetchProductDetail(product.slug)
+  }
 
   return (
     <Card className="group relative flex w-full flex-col overflow-hidden transition hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md has-[a:focus-visible]:border-ring/60 has-[a:focus-visible]:shadow-md">
@@ -55,6 +61,9 @@ function ProductCard({ product, priority = false }: ProductCardProps) {
             positioned itself. */}
         <Link
           to={`/producto/${product.slug}`}
+          onMouseEnter={prefetch}
+          onFocus={prefetch}
+          onTouchStart={prefetch}
           className="rounded-sm outline-none transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
         >
           {product.name}
