@@ -9,9 +9,9 @@ export interface SeoHeadProps {
   noindex?: boolean
 }
 
-const DEFAULT_TITLE = "LABMAREMI ECUADOR CIA. LTDA. — Suministros de limpieza e higiene para empresas"
+const DEFAULT_TITLE = "LABMAREMI ECUADOR CIA. LTDA. | Suministros de limpieza e higiene para empresas"
 const DEFAULT_DESCRIPTION =
-  "LABMAREMI ECUADOR CIA. LTDA. — Distribuidor de productos de limpieza, desinfección, protección e higiene para empresas en Pichincha, Ecuador."
+  "LABMAREMI ECUADOR CIA. LTDA. | Distribuidor de productos de limpieza, desinfección, protección e higiene para empresas en Pichincha, Ecuador."
 const DOMAIN = "https://labmaremi.com"
 
 function updateOrCreateMeta(selector: string, attrName: string, attrVal: string, content: string) {

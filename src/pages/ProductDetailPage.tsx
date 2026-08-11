@@ -168,7 +168,7 @@ export default function ProductDetailPage() {
   const Icon = getCategoryIcon(product.categoryId)
   const code = product.code
 
-  const productTitle = `${product.name} — Suministros de Limpieza en Quito | LABMAREMI`
+  const productTitle = `${product.name} | Suministros de Limpieza en Quito | LABMAREMI`
   const productDesc = `${product.description} Presentación: ${product.presentation || "Consultar"}. Distribuidor B2B en Quito y Pichincha.`
   const canonicalUrl = `https://labmaremi.com/producto/${product.slug}`
   const imageUrl = product.imageUrl ? (product.imageUrl.startsWith("http") ? product.imageUrl : `https://labmaremi.com${product.imageUrl}`) : undefined
@@ -192,10 +192,10 @@ export default function ProductDetailPage() {
 
   const specRows = [
     { label: "Código", value: code, mono: true },
-    { label: "Categoría", value: product.categoryName || "—", mono: false },
+    { label: "Categoría", value: product.categoryName || "-", mono: false },
     { label: "Presentación", value: product.presentation, mono: false, isPresentation: true },
     { label: "Uso recomendado", value: product.recommendedUse, mono: false, rich: true },
-    { label: "Cobertura B2B", value: "Atención directa, fichas técnicas y entregas garantizadas para empresas en Quito, Pichincha y provincias aledañas.", mono: false },
+    { label: "Cobertura", value: "Atención corporativa y entregas en Quito, Pichincha y provincias aledañas.", mono: false },
   ]
 
   return (

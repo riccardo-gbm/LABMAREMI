@@ -116,7 +116,7 @@ function quoteFormReducer(
 
 const PAGE_TITLE = "Solicitar cotización"
 const PAGE_DESCRIPTION =
-  "Complete el formulario y nuestro equipo le enviará una propuesta al por mayor a la medida de su negocio. Entregas en 24 a 48 horas en Quito y Pichincha."
+  "Complete el formulario para recibir una propuesta al por mayor para su empresa. Entregas en Quito y Pichincha."
 
 /** Form-shaped placeholder so the page never flashes empty. */
 function QuoteFormSkeleton() {
@@ -147,8 +147,8 @@ export default function QuotePage() {
   return (
     <>
       <SeoHead
-        title="Solicitar Cotización — LABMAREMI ECUADOR | Insumos de Limpieza"
-        description="Solicite una cotización personalizada de productos de limpieza, desinfección e higiene para su empresa en Quito y Pichincha. Respuesta rápida."
+        title="Solicitar Cotización | LABMAREMI ECUADOR | Insumos de Limpieza"
+        description="Solicite una cotización de productos de limpieza, desinfección e higiene para su empresa en Quito y Pichincha."
         canonicalUrl="https://labmaremi.com/cotizacion"
       />
       <PageHeader title={PAGE_TITLE} description={PAGE_DESCRIPTION} />

@@ -236,8 +236,8 @@ export default function CatalogPage() {
     activeCategories.length === 1 ? categories.find((c) => c.id === activeCategories[0]) : null
 
   const pageTitle = singleCategory
-    ? `${singleCategory.name} e Higiene Industrial en Quito — LABMAREMI`
-    : "Catálogo de Productos de Limpieza e Higiene Industrial — LABMAREMI"
+    ? `${singleCategory.name} e Higiene Industrial en Quito | LABMAREMI`
+    : "Catálogo de Productos de Limpieza e Higiene Industrial | LABMAREMI"
 
   const pageDesc = singleCategory
     ? singleCategory.description ||

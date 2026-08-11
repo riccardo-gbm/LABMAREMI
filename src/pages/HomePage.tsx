@@ -110,7 +110,7 @@ export default function HomePage() {
   return (
     <>
       <SeoHead
-        title="LABMAREMI ECUADOR — Distribuidor de Limpieza, Desinfección e Higiene en Quito"
+        title="LABMAREMI ECUADOR | Distribuidor de Limpieza, Desinfección e Higiene en Quito"
         description="Distribuidor B2B de productos de limpieza, desinfección, protección e higiene industrial para empresas en Quito y Pichincha. Entregas inmediatas y cotización directa."
         canonicalUrl="https://labmaremi.com/"
       />

@@ -27,7 +27,7 @@ export default function ContactPage() {
   return (
     <>
       <SeoHead
-        title="Contacto y Ubicación — LABMAREMI ECUADOR | Distribuidor Quito"
+        title="Contacto y Ubicación | LABMAREMI ECUADOR | Distribuidor Quito"
         description="Póngase en contacto con LABMAREMI ECUADOR CIA. LTDA. por WhatsApp o correo. Atención directa para abastecimiento de limpieza en Quito y Pichincha."
         canonicalUrl="https://labmaremi.com/contacto"
       />
@@ -92,7 +92,7 @@ export default function ContactPage() {
           <Card className="flex h-full w-full flex-col overflow-hidden">
             <MediaFrame
               src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=900&auto=format&fit=crop"
-              alt="Equipo operativo coordinando servicios de limpieza"
+              alt="Despacho y logística de distribución de productos de limpieza"
               fallbackLabel="Imagen referencial de cobertura operativa"
               fallbackIcon={MapPin}
               badge="Quito-EC"
