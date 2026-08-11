@@ -41,7 +41,7 @@ const timelineEntries: TimelineEntry[] = [
     year: "2023",
     title: "Cobertura a provincias cercanas",
     description:
-      "Empezamos a entregar fuera de Quito, llegando a negocios en el Valle de los Chillos, Cumbayá y Machachi con rutas periódicas y nuestro propio camión de entregas",
+      "Empezamos a entregar fuera de Quito, llegando a negocios en el Valle de los Chillos, Cumbayá y Machachi con rutas periódicas y nuestro propio camión de entregas.",
     icon: Truck,
   },
   {
@@ -136,7 +136,7 @@ export default function AboutPage() {
   return (
     <>
       <SeoHead
-        title="Sobre Nosotros — LABMAREMI ECUADOR | Distribuidor de Limpieza en Quito"
+        title="Sobre Nosotros | LABMAREMI ECUADOR | Distribuidor de Limpieza en Quito"
         description="Conozca a LABMAREMI ECUADOR CIA. LTDA., distribuidor de insumos de limpieza, desinfección e higiene institucional en Quito y Pichincha desde 2021."
         canonicalUrl="https://labmaremi.com/nosotros"
       />
@@ -146,13 +146,12 @@ export default function AboutPage() {
         <Reveal className="grid gap-8 lg:grid-cols-[3fr_2fr] lg:items-center">
           <div>
             <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              Un proveedor de limpieza único y confiable para su negocio
+              Un proveedor de limpieza confiable para su negocio
             </h2>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-              LABMAREMI nació en 2021 como el proyecto que
-              vió la necesidad de un proveedor confiable de insumos de limpieza,
+              LABMAREMI nació en 2021 para responder a la necesidad de un proveedor confiable de insumos de limpieza,
               desinfección e higiene para pequeños y medianos negocios. Cinco
-              años y entrega tras entrega después, seguimos siendo una empresa
+              años después, seguimos siendo una empresa
               con los mismos valores, ahora con un equipo que comparte el mismo compromiso con
               el que empezamos.
             </p>
@@ -169,7 +168,7 @@ export default function AboutPage() {
       <Section className="border-t">
         <Reveal>
           <h2 className="mt-1 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Lo que nos mueve
+            Nuestra misión y visión
           </h2>
         </Reveal>
 
@@ -230,7 +229,7 @@ export default function AboutPage() {
           <div>
             <Eyebrow>Nuestra historia</Eyebrow>
             <h2 className="mt-4 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              Seis años de crecimiento, un paso a la vez
+              Cinco años de servicio y abastecimiento continuo
             </h2>
             <MediaFrame
               src="https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?q=80&w=1000&auto=format&fit=crop"
