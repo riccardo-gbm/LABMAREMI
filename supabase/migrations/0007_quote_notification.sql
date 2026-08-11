@@ -57,7 +57,9 @@ create table if not exists private.notification_config (
   shared_secret  text not null,
   updated_at     timestamptz not null default now()
 );
+alter table private.notification_config enable row level security;
 revoke all on private.notification_config from public, anon, authenticated;
+
 
 -- ---------------------------------------------------------------------------
 -- Trigger
