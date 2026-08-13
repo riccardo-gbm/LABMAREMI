@@ -4,7 +4,6 @@ import { AnimatePresence, m } from "framer-motion"
 
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
 import { Card } from "@/components/ui/card"
-import { Eyebrow } from "@/components/ui/eyebrow"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { PageHeader } from "@/components/ui/page-header"
@@ -399,7 +398,6 @@ function QuoteForm({ catalog, businessTypes }: QuoteFormProps) {
         >
           <Reveal>
           <Card className="p-6 md:p-8">
-            <Eyebrow>Datos de la empresa</Eyebrow>
             <CompanyFields
               form={form}
               setField={setField}
@@ -407,7 +405,6 @@ function QuoteForm({ catalog, businessTypes }: QuoteFormProps) {
             />
 
             <div className="mt-8 border-t pt-8">
-              <Eyebrow>Detalle de la solicitud</Eyebrow>
 
               <div ref={productsPickerRef} className="mt-5 space-y-1.5">
                 <Label id={`${productsErrorId}-label`}>

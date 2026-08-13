@@ -3,7 +3,6 @@ import { CheckCircle2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Eyebrow } from "@/components/ui/eyebrow"
 
 interface QuoteSuccessProps {
   companyName: string
@@ -70,7 +69,6 @@ function QuoteSuccess({
           transition={{ duration: 0.3, ease: "easeOut", delay: 0.3 }}
           className="mt-6 rounded-lg border bg-secondary/40 px-5 py-3"
         >
-          <Eyebrow className="justify-center">Referencia de esta solicitud</Eyebrow>
           <p className="mt-1.5 font-mono text-lg tracking-widest text-foreground">
             {referenceCode}
           </p>

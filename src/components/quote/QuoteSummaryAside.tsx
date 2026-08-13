@@ -2,7 +2,6 @@ import { AnimatePresence, m } from "framer-motion"
 import { CheckCircle2, Clock, FileText, PackageCheck } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
-import { Eyebrow } from "@/components/ui/eyebrow"
 import { Reveal } from "@/components/ui/reveal"
 import type { CatalogProduct } from "@/lib/catalogData"
 
@@ -21,7 +20,6 @@ function QuoteSummaryAside({
       <aside className="space-y-4">
         <Card className="overflow-hidden">
           <div className="border-b bg-secondary/50 px-5 py-4">
-            <Eyebrow>Resumen de solicitud</Eyebrow>
             <p className="mt-2 font-display text-xl font-bold tracking-tight text-foreground">
               {productSummary === 0
                 ? "Seleccione productos para cotizar"
@@ -72,7 +70,6 @@ function QuoteSummaryAside({
         </Card>
 
         <Card className="p-5">
-          <Eyebrow>Qué ocurre después</Eyebrow>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
             <li className="flex gap-3">
               <Clock className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
