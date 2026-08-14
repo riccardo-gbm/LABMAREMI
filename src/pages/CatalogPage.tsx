@@ -177,6 +177,23 @@ export default function CatalogPage() {
     )
   }
 
+  const selectSingleCategory = (categoryId: string) => {
+    setSearchParams(
+      (params) => {
+        const raw = params.get(CATEGORY_PARAM)
+        const current = raw ? raw.split(",").map((s) => s.trim()).filter(Boolean) : []
+        if (current.length === 1 && current[0] === categoryId) {
+          params.delete(CATEGORY_PARAM)
+        } else {
+          params.set(CATEGORY_PARAM, categoryId)
+        }
+        params.delete(PAGE_PARAM)
+        return params
+      },
+      { replace: true }
+    )
+  }
+
   const clearCategories = () => {
     setSearchParams(
       (params) => {
@@ -307,7 +324,7 @@ export default function CatalogPage() {
           <CategorySidebar
             categories={categories}
             activeCategories={activeCategories}
-            onToggleCategory={toggleCategory}
+            onSelectCategory={selectSingleCategory}
             onClearCategories={clearCategories}
           />
 
