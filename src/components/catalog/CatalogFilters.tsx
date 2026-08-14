@@ -40,7 +40,7 @@ function CatalogSearch({ value, onChange }: CatalogSearchProps) {
 interface CategorySidebarProps {
   categories: CatalogCategory[]
   activeCategories: string[]
-  onToggleCategory: (categoryId: string) => void
+  onSelectCategory: (categoryId: string) => void
   onClearCategories: () => void
   className?: string
 }
@@ -65,7 +65,7 @@ function ItemHighlight() {
 function CategorySidebar({
   categories,
   activeCategories,
-  onToggleCategory,
+  onSelectCategory,
   onClearCategories,
   className,
 }: CategorySidebarProps) {
@@ -100,7 +100,7 @@ function CategorySidebar({
               <button
                 key={category.id}
                 type="button"
-                onClick={() => onToggleCategory(category.id)}
+                onClick={() => onSelectCategory(category.id)}
                 aria-pressed={isActive}
                 className={cn(ITEM_BASE, isActive ? ITEM_ACTIVE : ITEM_IDLE)}
               >
