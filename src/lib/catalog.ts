@@ -15,15 +15,17 @@
  * Keyed by the DB `categories.slug`.
  */
 const categoryCodes: Record<string, string> = {
-  desinfectantes: "DSF",
-  desengrasantes: "DGR",
-  papel: "PAP",
+  "desinfectantes": "INS",
+  "desechables": "DSC",
+  "papel": "PAP",
   "materiales-limpieza": "HER",
+  "empaques": "EMP",
   "fundas-basura": "FND",
-  "insumos-bano": "BAN",
+  "insumos-bano": "PLI",
   "limpieza-industrial": "IND",
   "higiene-personal": "HIG",
   "equipos-proteccion": "EPP",
+  "salud": "SLD",
 }
 
 export function getCategoryCode(categorySlug: string): string {
