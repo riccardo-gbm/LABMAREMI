@@ -5,7 +5,6 @@ import { ArrowLeft, ChevronRight, MessageCircle, PackageX } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button-variants"
 import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
-import { Eyebrow } from "@/components/ui/eyebrow"
 import { MediaFrame } from "@/components/ui/media-frame"
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
@@ -330,7 +329,6 @@ export default function ProductDetailPage() {
       {related.length > 0 ? (
         <Section className="border-t bg-secondary/40">
           <Reveal>
-            <Eyebrow>Misma categoría</Eyebrow>
             <h2 className="mt-4 font-display text-2xl font-bold tracking-tight text-foreground">
               Productos relacionados
             </h2>
