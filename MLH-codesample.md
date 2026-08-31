@@ -7,4 +7,4 @@ This code sample is the functionality of a quote submittion system for LABMAREMI
 3. `supabase/migrations/0005_quote_submission_rpc.sql` — atomic write, honeypot check, zero direct table access
 4. `supabase/migrations/0007_quote_notification.sql` — trigger enqueues async notification, never blocks the insert
 5. `supabase/functions/quote-notification/index.ts` — edge function, constant-time secret check, idempotent send
-
+6. `scripts/test-quote-notification.mjs`  — Automated CLI test script with --dry-run verification
