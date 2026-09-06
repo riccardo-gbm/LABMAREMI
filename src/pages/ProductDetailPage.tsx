@@ -91,24 +91,35 @@ function PresentationPills({ value }: { value: string }) {
 /** Spec-sheet placeholder mirroring the two-column detail layout. */
 function DetailSkeleton() {
   return (
-    <Section className="pt-8 md:pt-10">
-      <div className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
-        <Card className="aspect-square overflow-hidden">
-          <Skeleton className="h-full w-full rounded-none" />
-        </Card>
-        <div className="space-y-4">
-          <Skeleton className="h-3 w-32" />
-          <Skeleton className="h-6 w-28 rounded-full" />
-          <Skeleton className="h-10 w-3/4" />
-          <Skeleton className="h-16 w-full" />
-          <div className="space-y-2 pt-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-14 w-full" />
-            ))}
+    <>
+      <Section className="pb-0 pt-8 md:pb-0 md:pt-10">
+        <div className="flex items-center gap-1.5 py-1">
+          <Skeleton className="h-3.5 w-16" />
+          <Skeleton className="h-3.5 w-3.5" />
+          <Skeleton className="h-3.5 w-24" />
+          <Skeleton className="h-3.5 w-3.5" />
+          <Skeleton className="h-3.5 w-16" />
+        </div>
+      </Section>
+
+      <Section className="pt-8 md:pt-10">
+        <div className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
+          <Card className="aspect-square overflow-hidden">
+            <Skeleton className="h-full w-full rounded-none" />
+          </Card>
+          <div className="space-y-4">
+            <Skeleton className="mt-5 h-6 w-28 rounded-full" />
+            <Skeleton className="mt-3 h-10 w-3/4" />
+            <Skeleton className="mt-4 h-16 w-full" />
+            <div className="space-y-2 pt-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-14 w-full" />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </Section>
+      </Section>
+    </>
   )
 }
 
