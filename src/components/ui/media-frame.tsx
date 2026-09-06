@@ -12,6 +12,8 @@ interface MediaFrameProps {
   imageClassName?: string
   badge?: string
   priority?: boolean
+  width?: number
+  height?: number
 }
 
 function MediaFrameInner({
@@ -23,6 +25,8 @@ function MediaFrameInner({
   imageClassName,
   badge,
   priority = false,
+  width = 600,
+  height = 600,
 }: MediaFrameProps) {
   // A product with no photo yet arrives as src=undefined; a product whose
   // stored image_url 404s fails at load time. Both must land on the same
@@ -41,6 +45,8 @@ function MediaFrameInner({
         <img
           src={src}
           alt={alt ?? fallbackLabel}
+          width={width}
+          height={height}
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : "auto"}
           // A catalog page change swaps in a whole grid of these at once;
