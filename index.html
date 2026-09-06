@@ -30,20 +30,47 @@
        none on Unsplash: <img> is no-CORS. -->
   <link rel="preconnect" href="https://images.unsplash.com" />
   <link rel="preconnect" href="https://alyjdwsblnedadlfplgw.supabase.co" crossorigin />
-  <!-- The four fetchPriority="high" hero clouds otherwise wait for entry JS +
-       the lazy HeroFloatingCanvas chunk before the browser even learns their
-       URLs. Preload starts them at t≈0; default (low) priority so they never
-       preempt the critical JS. -->
-  <link rel="preload" as="image" href="/photo1.webp" />
-  <link rel="preload" as="image" href="/photo2.webp" />
-  <link rel="preload" as="image" href="/photo3.webp" />
-  <link rel="preload" as="image" href="/photo4.webp" />
-  <!-- Fonts load synchronously to prevent Cumulative Layout Shift (CLS) from FOUT -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+  <!-- Fonts load asynchronously to unblock FCP, authorized by CSP hash for this.media='all' -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Quantico:wght@400;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Quantico:wght@400;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Quantico:wght@400;700&display=swap" />
+  </noscript>
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <div style="min-height: 100vh; display: flex; flex-direction: column; background-color: #ffffff; color: #0f172a; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+      <header style="height: 64px; border-bottom: 1px solid #e2e8f0; background: rgba(255, 255, 255, 0.95); display: flex; align-items: center; position: sticky; top: 0; z-index: 40; padding: 0 16px;">
+        <div style="max-width: 1152px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
+          <a href="/" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+            <img src="/logo1.webp?v=2" alt="LABMAREMI" width="168" height="38" style="height: 38px; width: auto; display: block;" />
+          </a>
+        </div>
+      </header>
+      <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 24px 16px;">
+        <div style="max-width: 1152px; width: 100%; margin: 0 auto;">
+          <div style="height: 28px; width: 240px; background-color: #e2e8f0; border-radius: 6px; margin-bottom: 8px;"></div>
+          <div style="height: 16px; width: 400px; max-width: 80%; background-color: #f1f5f9; border-radius: 4px;"></div>
+        </div>
+      </div>
+      <main style="flex: 1; max-width: 1152px; width: 100%; margin: 0 auto; padding: 32px 16px;">
+        <style>
+          @keyframes appShellPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+          .app-shell-pulse { animation: appShellPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        </style>
+        <div class="app-shell-pulse" style="display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+          <div style="aspect-ratio: 1/1; background-color: #f1f5f9; border-radius: 12px; border: 1px solid #e2e8f0;"></div>
+          <div style="display: flex; flex-direction: column; gap: 16px; justify-content: center;">
+            <div style="height: 16px; width: 120px; background-color: #e2e8f0; border-radius: 4px;"></div>
+            <div style="height: 28px; width: 90px; background-color: #e2e8f0; border-radius: 9999px;"></div>
+            <div style="height: 36px; width: 75%; background-color: #e2e8f0; border-radius: 6px;"></div>
+            <div style="height: 64px; width: 100%; background-color: #f1f5f9; border-radius: 6px;"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 
