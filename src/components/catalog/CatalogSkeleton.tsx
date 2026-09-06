@@ -13,6 +13,7 @@ export function CatalogSkeleton() {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[220px_1fr] lg:items-start lg:gap-8">
         <div className="hidden lg:flex lg:flex-col lg:gap-1.5">
+          <Skeleton className="mb-3 h-4 w-28" />
           {Array.from({ length: 10 }).map((_, i) => (
             <Skeleton
               key={i}
@@ -22,7 +23,12 @@ export function CatalogSkeleton() {
         </div>
 
         <div>
-          <Skeleton className="mb-5 h-4 w-44" />
+          <div className="mb-5 flex flex-col gap-4 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2 lg:hidden">
+              <Skeleton className="h-10 w-full rounded-lg sm:w-44" />
+            </div>
+            <Skeleton className="h-4 w-44" />
+          </div>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 9 }).map((_, i) => (
               <Card key={i} className="flex h-full w-full flex-col overflow-hidden">
