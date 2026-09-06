@@ -2,7 +2,6 @@ import { useRef } from "react"
 
 import { PageHeader } from "@/components/ui/page-header"
 import { Pagination } from "@/components/ui/pagination"
-import { Reveal } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
 import { QueryError } from "@/components/ui/query-error"
 import { CatalogSearch, CategorySidebar } from "@/components/catalog/CatalogFilters"
@@ -132,9 +131,7 @@ export default function CatalogPage() {
       {headerComponent}
 
       <Section className="pt-8 md:pt-10">
-        <Reveal>
-          <CatalogSearch value={query} onChange={updateQuery} />
-        </Reveal>
+        <CatalogSearch value={query} onChange={updateQuery} />
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[220px_1fr] lg:items-start lg:gap-8">
           <CategorySidebar
