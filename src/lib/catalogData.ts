@@ -128,6 +128,7 @@ export async function fetchCategories(): Promise<CatalogCategory[]> {
 }
 
 let catalogCache: { data: Catalog; timestamp: number } | null = null
+let catalogInFlightPromise: Promise<Catalog> | null = null
 const CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
 
 /** Categories (in sort_order) plus every active product (by name). Serves from in-memory cache when fresh. */
@@ -136,37 +137,50 @@ export async function fetchCatalog(forceRefresh = false): Promise<Catalog> {
     return catalogCache.data
   }
 
-  const headers = getHeaders()
-  const baseUrl = import.meta.env.VITE_SUPABASE_URL
+  if (!forceRefresh && catalogInFlightPromise) {
+    return catalogInFlightPromise
+  }
 
-  const [categoriesRes, productsRes] = await Promise.all([
-    fetch(`${baseUrl}/rest/v1/categories?select=id,slug,name,description,image_url,image_alt&order=sort_order.asc`, { headers }),
-    fetch(`${baseUrl}/rest/v1/products?select=id,slug,name,description,presentation,recommended_use,image_url,categories(slug,name)&is_active=eq.true&order=name.asc`, { headers })
-  ])
+  const runFetch = async (): Promise<Catalog> => {
+    try {
+      const headers = getHeaders()
+      const baseUrl = import.meta.env.VITE_SUPABASE_URL
 
-  if (!categoriesRes.ok) throw new Error(`HTTP error ${categoriesRes.status}`)
-  if (!productsRes.ok) throw new Error(`HTTP error ${productsRes.status}`)
+      const [categoriesRes, productsRes] = await Promise.all([
+        fetch(`${baseUrl}/rest/v1/categories?select=id,slug,name,description,image_url,image_alt&order=sort_order.asc`, { headers }),
+        fetch(`${baseUrl}/rest/v1/products?select=id,slug,name,description,presentation,recommended_use,image_url,categories(slug,name)&is_active=eq.true&order=name.asc`, { headers })
+      ])
 
-  const [categoriesData, productsData] = await Promise.all([
-    categoriesRes.json(),
-    productsRes.json()
-  ])
+      if (!categoriesRes.ok) throw new Error(`HTTP error ${categoriesRes.status}`)
+      if (!productsRes.ok) throw new Error(`HTTP error ${productsRes.status}`)
 
-  const categories = toCategories(categoriesData as RawCategoryRow[])
+      const [categoriesData, productsData] = await Promise.all([
+        categoriesRes.json(),
+        productsRes.json()
+      ])
 
-  // Codes are per-category positions, so they must be computed over the whole
-  // catalog ordered by category — not the flat name order the query returns.
-  const bySortOrder = new Map(categories.map((c, i) => [c.id, i]))
-  const rows = productsData as RawProductRow[]
-  const ordered = [...rows].sort((a, b) => {
-    const ai = bySortOrder.get(a.categories?.slug ?? "") ?? Number.MAX_SAFE_INTEGER
-    const bi = bySortOrder.get(b.categories?.slug ?? "") ?? Number.MAX_SAFE_INTEGER
-    return ai - bi || a.name.localeCompare(b.name, "es")
-  })
+      const categories = toCategories(categoriesData as RawCategoryRow[])
 
-  const catalog = { categories, products: toProducts(ordered) }
-  catalogCache = { data: catalog, timestamp: Date.now() }
-  return catalog
+      // Codes are per-category positions, so they must be computed over the whole
+      // catalog ordered by category — not the flat name order the query returns.
+      const bySortOrder = new Map(categories.map((c, i) => [c.id, i]))
+      const rows = productsData as RawProductRow[]
+      const ordered = [...rows].sort((a, b) => {
+        const ai = bySortOrder.get(a.categories?.slug ?? "") ?? Number.MAX_SAFE_INTEGER
+        const bi = bySortOrder.get(b.categories?.slug ?? "") ?? Number.MAX_SAFE_INTEGER
+        return ai - bi || a.name.localeCompare(b.name, "es")
+      })
+
+      const catalog = { categories, products: toProducts(ordered) }
+      catalogCache = { data: catalog, timestamp: Date.now() }
+      return catalog
+    } finally {
+      catalogInFlightPromise = null
+    }
+  }
+
+  catalogInFlightPromise = runFetch()
+  return catalogInFlightPromise
 }
 
 export interface ProductDetail {
