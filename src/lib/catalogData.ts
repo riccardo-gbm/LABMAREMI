@@ -198,19 +198,18 @@ export interface ProductDetail {
  */
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
-/**
- * One product by slug, plus its category siblings — needed both for the
- * "productos relacionados" row and to derive the product's own spec code.
- *
- * Serves instantly (<1ms) when catalogCache is fresh, or performs a single
- * parallel fetch (~390ms) populating catalogCache site-wide on cold load.
- */
-export async function fetchProductBySlug(
-  slug: string,
-): Promise<ProductDetail | null> {
-  if (!SLUG_PATTERN.test(slug)) return null
+const PRODUCT_SELECT =
+  "id,slug,name,description,presentation,recommended_use,image_url,category_id,categories(slug,name)"
 
-  const catalog = await fetchCatalog()
+interface RawProductDetailRow extends RawProductRow {
+  category_id: string | null
+}
+
+const productDetailCache = new Map<string, { data: ProductDetail | null; timestamp: number }>()
+const productDetailInFlight = new Map<string, Promise<ProductDetail | null>>()
+
+/** Pick one product and its siblings out of an already-loaded catalog. */
+function detailFromCatalog(catalog: Catalog, slug: string): ProductDetail | null {
   const product = catalog.products.find((p) => p.slug === slug)
   if (!product) return null
 
@@ -221,10 +220,109 @@ export async function fetchProductBySlug(
   return { product, related }
 }
 
-/** Pre-warms catalog data into memory on hover/focus over product links. */
+/**
+ * One product by slug, plus its category siblings — needed both for the
+ * "productos relacionados" row and to derive the product's own spec code.
+ *
+ * WHY THIS IS NOT JUST fetchCatalog(). The spec code is a product's position
+ * within its own category, so this used to load the entire catalog — 161 rows
+ * with full description and recommended_use copy, ~205 KB — to render a single
+ * page. useAsync kills any fetch at 5 s, and Googlebot's throttled renderer lost
+ * that race often enough to leave 18 live product pages sitting in Search
+ * Console under "Soft 404" and "Duplicada: el usuario no ha indicado ninguna
+ * versión canónica".
+ *
+ * A position within one category only needs that one category, so the cold path
+ * is now two scoped queries: the product, then its siblings ordered by name.
+ * Both orderings match what the full catalog produced — it sorted by category
+ * sort_order then name, and within a single category that reduces to name
+ * order — so the codes and the related row are unchanged.
+ *
+ * Three tiers, cheapest first:
+ *   1. catalogCache is fresh (arrived via /catalogo) — no network at all.
+ *   2. this slug was fetched or prefetched recently — no network at all.
+ *   3. cold — two small queries, falling back to the full catalog if the
+ *      sibling query fails, since a missing sibling list would silently
+ *      renumber the spec code rather than fail loudly.
+ */
+export async function fetchProductBySlug(
+  slug: string,
+): Promise<ProductDetail | null> {
+  if (!SLUG_PATTERN.test(slug)) return null
+
+  if (catalogCache && Date.now() - catalogCache.timestamp < CACHE_TTL_MS) {
+    return detailFromCatalog(catalogCache.data, slug)
+  }
+
+  const cached = productDetailCache.get(slug)
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) return cached.data
+
+  const existing = productDetailInFlight.get(slug)
+  if (existing) return existing
+
+  const run = (async (): Promise<ProductDetail | null> => {
+    try {
+      const headers = getHeaders()
+      const baseUrl = import.meta.env.VITE_SUPABASE_URL
+
+      const res = await fetch(
+        `${baseUrl}/rest/v1/products?select=${PRODUCT_SELECT}&is_active=eq.true&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+        { headers },
+      )
+      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+
+      const row = ((await res.json()) as RawProductDetailRow[])[0]
+      if (!row) {
+        productDetailCache.set(slug, { data: null, timestamp: Date.now() })
+        return null
+      }
+
+      let siblings: RawProductDetailRow[] | null = null
+      if (row.category_id) {
+        const sibRes = await fetch(
+          `${baseUrl}/rest/v1/products?select=${PRODUCT_SELECT}&is_active=eq.true&category_id=eq.${encodeURIComponent(row.category_id)}&order=name.asc`,
+          { headers },
+        )
+        if (sibRes.ok) {
+          const rows = (await sibRes.json()) as RawProductDetailRow[]
+          if (rows.some((r) => r.slug === slug)) siblings = rows
+        }
+      }
+
+      // The sibling query is what makes the code correct. Without it, fall back
+      // to the old full-catalog path rather than numbering this product "01".
+      if (!siblings) {
+        const detail = detailFromCatalog(await fetchCatalog(), slug)
+        productDetailCache.set(slug, { data: detail, timestamp: Date.now() })
+        return detail
+      }
+
+      const products = toProducts(siblings)
+      const product = products.find((p) => p.slug === slug)
+      if (!product) {
+        productDetailCache.set(slug, { data: null, timestamp: Date.now() })
+        return null
+      }
+
+      const detail = {
+        product,
+        related: products.filter((p) => p.id !== product.id).slice(0, 3),
+      }
+      productDetailCache.set(slug, { data: detail, timestamp: Date.now() })
+      return detail
+    } finally {
+      productDetailInFlight.delete(slug)
+    }
+  })()
+
+  productDetailInFlight.set(slug, run)
+  return run
+}
+
+/** Pre-warms one product's data into memory on hover/focus over its link. */
 export function prefetchProductDetail(slug: string): void {
   if (SLUG_PATTERN.test(slug)) {
-    fetchCatalog().catch(() => {})
+    fetchProductBySlug(slug).catch(() => {})
   }
 }
 
