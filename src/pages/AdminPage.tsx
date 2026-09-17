@@ -98,6 +98,7 @@ export default function AdminPage() {
   if (loadError) {
     return (
       <>
+        <SeoHead title="Panel de Administración | LABMAREMI" noindex />
         <PageHeader
           title="Panel de administración"
           description="Seguimiento de solicitudes de cotización y leads comerciales."
@@ -125,6 +126,7 @@ export default function AdminPage() {
   if (!derived) {
     return (
       <>
+        <SeoHead title="Panel de Administración | LABMAREMI" noindex />
         <PageHeader
           title="Panel de administración"
           description="Seguimiento de solicitudes de cotización y leads comerciales."
