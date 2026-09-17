@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { useLocation } from "react-router-dom"
 
 export interface SeoHeadProps {
   title?: string
@@ -42,6 +43,8 @@ export function SeoHead({
   ogImage = `${DOMAIN}/logo1.webp`,
   noindex = false,
 }: SeoHeadProps) {
+  const { pathname, search } = useLocation()
+
   useEffect(() => {
     document.title = title
 
@@ -54,8 +57,10 @@ export function SeoHead({
       noindex ? "noindex, nofollow" : "index, follow",
     )
 
-    // Canonical link
-    const canonical = canonicalUrl || `${DOMAIN}${window.location.pathname}${window.location.search}`
+    // Canonical link. Falls back to the current route, which is why pathname
+    // and search are dependencies below — reading them off `window` alone left
+    // the fallback frozen at whatever the URL was when the effect last ran.
+    const canonical = canonicalUrl || `${DOMAIN}${pathname}${search}`
     updateOrCreateLink("canonical", canonical)
 
     // Open Graph
@@ -72,7 +77,19 @@ export function SeoHead({
     updateOrCreateMeta('meta[name="twitter:title"]', "name", "twitter:title", title)
     updateOrCreateMeta('meta[name="twitter:description"]', "name", "twitter:description", description)
     updateOrCreateMeta('meta[name="twitter:image"]', "name", "twitter:image", ogImage)
-  }, [title, description, canonicalUrl, ogType, ogImage, noindex])
+    // NO CLEANUP ON PURPOSE. These are singleton tags — one <link rel=canonical>,
+    // one robots meta — shared by every route, unlike JsonLd.tsx which owns a
+    // uniquely-id'd <script> it can safely remove. Tearing them down on unmount
+    // would race the incoming route: React can mount the next page's SeoHead
+    // before unmounting this one, and the stale cleanup would then delete the
+    // canonical the new page had just written.
+    //
+    // What makes that safe is coverage, not cleanup: every route renders a
+    // SeoHead on every branch — including loading, error and not-found — so the
+    // tags are always overwritten rather than left behind. Adding a route or a
+    // new early return without a SeoHead reopens this, which is how 18 product
+    // pages ended up canonical-less in Search Console.
+  }, [title, description, canonicalUrl, ogType, ogImage, noindex, pathname, search])
 
   return null
 }
