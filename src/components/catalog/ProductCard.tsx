@@ -79,8 +79,12 @@ function ProductCard({ product, priority = false }: ProductCardProps) {
           slug would only be announced twice. `relative z-10` lifts this above
           the stretched overlay so the quote link still wins its own clicks. */}
       <div className="mt-auto pt-5">
+        {/* nofollow: this is a pre-filled form deep link, not a page. Google
+            had discovered 56 of these and folded them all into /cotizacion;
+            there is nothing here for it to index. */}
         <InteractiveHoverLink
           to={`/cotizacion?productos=${product.slug}`}
+          rel="nofollow"
           text="Solicitar cotización"
           className="relative z-10 w-full"
         />
