@@ -6,10 +6,21 @@ import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { Reveal } from "@/components/ui/reveal"
 import { Section } from "@/components/ui/section"
+import { SeoHead } from "@/components/common/SeoHead"
 
 export default function NotFoundPage() {
   return (
-    <Section className="flex min-h-[60vh] items-center">
+    <>
+      {/* The catch-all route. Without this, any unrecognised URL rendered an
+          app shell carrying no canonical and no robots directive at all — and
+          Vercel's /(.*) rewrite serves it at HTTP 200, so Google had nothing to
+          distinguish one junk URL from another. */}
+      <SeoHead
+        title="Página no encontrada | LABMAREMI"
+        description="La página que busca no existe o fue movida."
+        noindex
+      />
+      <Section className="flex min-h-[60vh] items-center">
       <Reveal className="mx-auto max-w-xl text-center">
         <Eyebrow className="justify-center">Error / 404</Eyebrow>
         <p
@@ -41,7 +52,8 @@ export default function NotFoundPage() {
             Contacto
           </Link>
         </div>
-      </Reveal>
-    </Section>
+        </Reveal>
+      </Section>
+    </>
   )
 }
