@@ -67,17 +67,13 @@ export function getProductSchema(input: ProductSchemaInput) {
       "@type": "Brand",
       name: "LABMAREMI",
     },
-    offers: {
-      "@type": "Offer",
-      url: productUrl,
-      priceCurrency: "USD",
-      availability: "https://schema.org/InStock",
-      itemCondition: "https://schema.org/NewCondition",
-      seller: {
-        "@type": "Organization",
-        name: "LABMAREMI ECUADOR CIA. LTDA.",
-      },
-    },
+    // NO `offers` BLOCK. This is a quote-based B2B catalog — prices are
+    // negotiated per client and never published, so there is no price to state.
+    // The previous Offer declared priceCurrency and availability with no `price`
+    // or `priceSpecification`, which Google's Product validator rejects
+    // outright: the result was not a partial rich result but none at all, on all
+    // 161 product pages. A valid Product without offers is worth more than an
+    // invalid one with them.
   }
 }
 
