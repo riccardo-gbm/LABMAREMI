@@ -123,6 +123,22 @@ function DetailSkeleton() {
   )
 }
 
+/**
+ * A readable product name recovered from the URL slug, for the title shown
+ * before the catalog fetch resolves.
+ *
+ * Only ever a placeholder — the success branch replaces it with the real
+ * `product.name`. Its job is to keep each URL's title distinct while loading,
+ * so a slow crawl doesn't see 161 identically-titled pages.
+ */
+function titleFromSlug(slug: string | undefined): string {
+  if (!slug) return "Producto"
+  return slug
+    .split("-")
+    .map((word) => (word ? word[0].toUpperCase() + word.slice(1) : word))
+    .join(" ")
+}
+
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>()
 
@@ -132,45 +148,79 @@ export default function ProductDetailPage() {
   )
   const { data, loading, error, retry } = useAsync(fetcher)
 
-  if (loading) return <DetailSkeleton />
+  // Derived from the URL, not from the fetch, so the canonical is correct the
+  // moment the route mounts.
+  //
+  // WHY THIS MATTERS. Rendering one product costs a full-catalog fetch (~205 KB)
+  // on a 5 s useAsync deadline. Googlebot's renderer loses that race often
+  // enough that 18 live product pages sat in Search Console as "Duplicada: el
+  // usuario no ha indicado ninguna versión canónica" or "Soft 404" — every
+  // branch below except the last used to render no SeoHead at all, so a slow
+  // crawl produced a canonical-less shell. The slug is known immediately;
+  // nothing here needs to wait for data.
+  const slugCanonical = `https://labmaremi.com/producto/${slug ?? ""}`
+  const slugTitle = `${titleFromSlug(slug)} | Suministros de Limpieza en Quito | LABMAREMI`
+
+  if (loading) {
+    return (
+      <>
+        <SeoHead title={slugTitle} canonicalUrl={slugCanonical} />
+        <DetailSkeleton />
+      </>
+    )
+  }
 
   if (error) {
     return (
-      <Section className="pt-8 md:pt-10">
-        <QueryError
-          onRetry={retry}
-          title="No se pudo cargar el producto."
-          description="Verifique su conexión e intente nuevamente."
-        />
-      </Section>
+      <>
+        {/* Deliberately not noindex: a transient Supabase failure or a missed
+            timeout must not deindex a product that exists. The canonical is
+            what Google needs here. */}
+        <SeoHead title={slugTitle} canonicalUrl={slugCanonical} />
+        <Section className="pt-8 md:pt-10">
+          <QueryError
+            onRetry={retry}
+            title="No se pudo cargar el producto."
+            description="Verifique su conexión e intente nuevamente."
+          />
+        </Section>
+      </>
     )
   }
 
   // Distinct from the error state above: the fetch succeeded, the slug just
-  // doesn't match any active product.
+  // doesn't match any active product. middleware.ts already answers 404 for
+  // these; noindex is the belt to that braces.
   if (!data) {
     return (
-      <Section>
-        <div className="flex flex-col items-center rounded-xl border border-dashed px-6 py-20 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-secondary text-primary">
-            <PackageX className="h-6 w-6" aria-hidden="true" />
-          </span>
-          <h1 className="mt-5 font-display text-2xl font-bold tracking-tight text-foreground">
-            Producto no encontrado
-          </h1>
-          <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
-            El producto que busca no existe o fue retirado del catálogo. Revise
-            el catálogo completo para encontrar una alternativa.
-          </p>
-          <Link
-            to="/catalogo"
-            className={cn(buttonVariants({ variant: "outline" }), "mt-6")}
-          >
-            <ArrowLeft />
-            Volver al catálogo
-          </Link>
-        </div>
-      </Section>
+      <>
+        <SeoHead
+          title="Producto no encontrado | LABMAREMI"
+          description="El producto solicitado no existe o fue retirado del catálogo."
+          noindex
+        />
+        <Section>
+          <div className="flex flex-col items-center rounded-xl border border-dashed px-6 py-20 text-center">
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-secondary text-primary">
+              <PackageX className="h-6 w-6" aria-hidden="true" />
+            </span>
+            <h1 className="mt-5 font-display text-2xl font-bold tracking-tight text-foreground">
+              Producto no encontrado
+            </h1>
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
+              El producto que busca no existe o fue retirado del catálogo. Revise
+              el catálogo completo para encontrar una alternativa.
+            </p>
+            <Link
+              to="/catalogo"
+              className={cn(buttonVariants({ variant: "outline" }), "mt-6")}
+            >
+              <ArrowLeft />
+              Volver al catálogo
+            </Link>
+          </div>
+        </Section>
+      </>
     )
   }
 
@@ -308,6 +358,7 @@ export default function ProductDetailPage() {
             <div className="mt-8 grid w-full grid-cols-1 gap-2.5 sm:grid-cols-3 sm:gap-3">
               <InteractiveHoverLink
                 to={`/cotizacion?productos=${product.slug}`}
+                rel="nofollow"
                 text="Solicitar cotización"
                 size="lg"
                 className="w-full"
