@@ -1,4 +1,5 @@
 import { useRef } from "react"
+import { useSearchParams } from "react-router-dom"
 
 import { PageHeader } from "@/components/ui/page-header"
 import { Pagination } from "@/components/ui/pagination"
@@ -11,7 +12,7 @@ import { CatalogProductGrid } from "@/components/catalog/CatalogProductGrid"
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState"
 import { fetchCatalog, type CatalogCategory, type CatalogProduct } from "@/lib/catalogData"
 import { useAsync } from "@/hooks/useAsync"
-import { useCatalogFilters } from "@/hooks/useCatalogFilters"
+import { useCatalogFilters, CATEGORY_PARAM } from "@/hooks/useCatalogFilters"
 import { SeoHead } from "@/components/common/SeoHead"
 import { JsonLd } from "@/components/common/JsonLd"
 import { getBreadcrumbSchema } from "@/lib/schemaData"
@@ -31,7 +32,28 @@ interface CatalogSeoData {
   headerDesc: string
 }
 
-function getCatalogSeo(singleCategory?: CatalogCategory | null): CatalogSeoData {
+/**
+ * @param singleCategory  the resolved category, or null while the catalog is
+ *   still loading, on error, or when the filter isn't exactly one category.
+ * @param rawCategorySlug the untouched `?categoria=` value, used for the
+ *   canonical only.
+ *
+ * WHY THE RAW SLUG IS NEEDED. `singleCategory` is resolved by intersecting the
+ * URL param against the loaded category list, so it is null until Supabase
+ * answers — even for a perfectly valid slug. Deriving the canonical from it
+ * alone made `/catalogo?categoria=desinfectantes` announce
+ * `canonical=/catalogo` during loading, and permanently on the error branch.
+ * All 11 category URLs are in the sitemap at priority 0.85, so that told Google
+ * the pages we submit are duplicates of one another.
+ *
+ * An unknown slug is the cheaper mistake to make here: those URLs aren't in the
+ * sitemap, and once the fetch lands the resolved path corrects them back to
+ * `/catalogo`.
+ */
+function getCatalogSeo(
+  singleCategory?: CatalogCategory | null,
+  rawCategorySlug?: string | null,
+): CatalogSeoData {
   const title = singleCategory
     ? `${singleCategory.name} e Higiene Industrial en Quito | LABMAREMI`
     : "Catálogo de Productos de Limpieza e Higiene Industrial | LABMAREMI"
@@ -41,8 +63,9 @@ function getCatalogSeo(singleCategory?: CatalogCategory | null): CatalogSeoData 
       `Distribuidor de ${singleCategory.name} para empresas en Quito y Pichincha. Cotización directa y entregas inmediatas.`
     : "Explore nuestro catálogo completo de productos de limpieza, desinfección, protección e higiene industrial para empresas en Quito, Ecuador."
 
-  const canonicalUrl = singleCategory
-    ? `https://labmaremi.com/catalogo?categoria=${encodeURIComponent(singleCategory.id)}`
+  const canonicalSlug = singleCategory?.id ?? rawCategorySlug ?? null
+  const canonicalUrl = canonicalSlug
+    ? `https://labmaremi.com/catalogo?categoria=${encodeURIComponent(canonicalSlug)}`
     : "https://labmaremi.com/catalogo"
 
   const breadcrumbs = [
@@ -62,6 +85,7 @@ function getCatalogSeo(singleCategory?: CatalogCategory | null): CatalogSeoData 
 export default function CatalogPage() {
   const { data, loading, error, retry } = useAsync(fetchCatalog)
   const resultsRef = useRef<HTMLDivElement>(null)
+  const [searchParams] = useSearchParams()
 
   const categories = data?.categories ?? EMPTY_CATEGORIES
   const products = data?.products ?? EMPTY_PRODUCTS
@@ -90,7 +114,13 @@ export default function CatalogPage() {
   const singleCategory =
     activeCategories.length === 1 ? categories.find((c) => c.id === activeCategories[0]) : null
 
-  const seo = getCatalogSeo(singleCategory)
+  // Only a lone slug earns its own canonical; a multi-select like `?categoria=a,b`
+  // is a filter view, not a page, and belongs to /catalogo.
+  const rawCategoryParam = searchParams.get(CATEGORY_PARAM)
+  const rawSingleCategory =
+    rawCategoryParam && !rawCategoryParam.includes(",") ? rawCategoryParam : null
+
+  const seo = getCatalogSeo(singleCategory, rawSingleCategory)
   const headerComponent = <PageHeader title={seo.headerTitle} description={seo.headerDesc} />
 
   if (loading) {
