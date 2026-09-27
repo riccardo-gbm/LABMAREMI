@@ -20,7 +20,7 @@ import { getCategoryIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { SeoHead } from "@/components/common/SeoHead"
 import { JsonLd } from "@/components/common/JsonLd"
-import { getProductSchema, getBreadcrumbSchema } from "@/lib/schemaData"
+import { getBreadcrumbSchema } from "@/lib/schemaData"
 
 /**
  * "Uso recomendado" is free text with three shapes in the catalog: most
@@ -234,16 +234,6 @@ export default function ProductDetailPage() {
   const canonicalUrl = `https://labmaremi.com/producto/${product.slug}`
   const imageUrl = product.imageUrl ? (product.imageUrl.startsWith("http") ? product.imageUrl : `https://labmaremi.com${product.imageUrl}`) : undefined
 
-  const productSchema = getProductSchema({
-    name: product.name,
-    description: product.description,
-    slug: product.slug,
-    imageUrl: product.imageUrl,
-    categoryName: product.categoryName,
-    sku: product.code,
-    presentation: product.presentation,
-  })
-
   const breadcrumbs = [
     { name: "Inicio", url: "/" },
     { name: "Catálogo", url: "/catalogo" },
@@ -268,7 +258,6 @@ export default function ProductDetailPage() {
         ogType="product"
         ogImage={imageUrl}
       />
-      <JsonLd data={productSchema} id="product-jsonld-schema" />
       <JsonLd data={getBreadcrumbSchema(breadcrumbs)} id="product-breadcrumb-schema" />
 
       <Section className="pb-0 pt-8 md:pb-0 md:pt-10">
