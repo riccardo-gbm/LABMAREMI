@@ -122,7 +122,7 @@ src/
   pages/        Home · Catalog · ProductDetail · Quote · About · Platform · Contact · AdminLogin · Admin · NotFound
   types/        database + application interfaces
 supabase/
-  migrations/   0001 … 0007, applied in order
+  migrations/   0001 … 0008, applied in order
   functions/    quote-notification — Deno, the only server code we run
   config.toml   CLI config, used for `functions deploy` and nothing else
 scripts/               importers + RLS proofs + the notification test

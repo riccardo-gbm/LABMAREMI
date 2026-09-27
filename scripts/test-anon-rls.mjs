@@ -10,9 +10,14 @@
  *   3. anon CANNOT read quote_request_items
  *   4. anon CANNOT read customers
  *   5. anon CANNOT insert into quote_requests directly (RPC is the only path)
+ *   7. anon CAN log a WhatsApp click via log_whatsapp_click (migration 0008),
+ *      which rejects an unknown source, and CANNOT read or insert
+ *      whatsapp_clicks directly
  *
- * Test 1 leaves one marker row ("__RLS_TEST__ (delete me)") that an admin can
- * remove from the dashboard — anon has no delete.
+ * Test 1 leaves a marker lead ("__RLS_TEST__ (delete me)") and test 7 a marker
+ * click. anon has no delete, so with SUPABASE_SERVICE_ROLE_KEY set the script
+ * removes both itself at the end; without it they stay (the dashboard hides the
+ * lead) and must be deleted by hand.
  *
  * Run:  node scripts/test-anon-rls.mjs
  */
@@ -64,6 +69,14 @@ if (!url || !anonKey) {
 // Anon client: no session, publishable key — the logged-out visitor's shoes.
 const anon = createClient(url, anonKey, { auth: { persistSession: false } })
 
+// Optional: only used to clean up the marker rows this script creates.
+const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY
+const service = serviceKey
+  ? createClient(url, serviceKey, { auth: { persistSession: false } })
+  : null
+const TEST_LEAD = "__RLS_TEST__ (delete me)"
+const TEST_CLICK_PATH = "/__RLS_TEST__"
+
 console.log(`\nAnon RLS check against ${url}\n`)
 
 // A real product id to attach, read from the public-read products table.
@@ -77,7 +90,7 @@ if (!product) die("No products found — run scripts/import-catalog.mjs first.")
 
 // 1. anon can submit via the RPC.
 const { error: rpcErr } = await anon.rpc("submit_quote_request", {
-  company_name: "__RLS_TEST__ (delete me)",
+  company_name: TEST_LEAD,
   contact_person: "Anon Tester",
   phone: "+593 99 000 0000",
   email: "anon-rls-test@example.com",
@@ -133,6 +146,54 @@ check(
     ? `error: ${catRead.error?.message || prodRead.error?.message}`
     : `categories: ${catRead.data?.length}, products: ${prodRead.data?.length}`,
 )
+
+// 7. WhatsApp click logging: RPC-only, validated, unreadable by anon.
+const badSource = await anon.rpc("log_whatsapp_click", { source: "__bogus__" })
+check(
+  "log_whatsapp_click rejects an unknown source",
+  Boolean(badSource.error),
+  badSource.error ? `rejected: ${badSource.error.message}` : "UNEXPECTEDLY ACCEPTED",
+)
+
+if (service) {
+  // Only log a real click when it can be cleaned up — otherwise it would
+  // count in the dashboard's metrics.
+  const click = await anon.rpc("log_whatsapp_click", {
+    source: "product",
+    product_id: product.id,
+    page_path: TEST_CLICK_PATH,
+  })
+  check("anon can log a WhatsApp click via RPC", !click.error, click.error ? click.error.message : "logged")
+} else {
+  console.log("-  SKIP  anon can log a WhatsApp click via RPC — needs SUPABASE_SERVICE_ROLE_KEY to clean up")
+}
+
+const clickRead = await anon.from("whatsapp_clicks").select("*")
+check(
+  "anon cannot read whatsapp_clicks",
+  !clickRead.error && (clickRead.data?.length ?? 0) === 0,
+  clickRead.error ? `error: ${clickRead.error.message}` : `rows visible: ${clickRead.data?.length ?? 0}`,
+)
+
+const clickInsert = await anon.from("whatsapp_clicks").insert({ source: "home" })
+check(
+  "anon direct insert into whatsapp_clicks is blocked",
+  Boolean(clickInsert.error),
+  clickInsert.error ? `blocked: ${clickInsert.error.message}` : "UNEXPECTEDLY SUCCEEDED",
+)
+
+// Cleanup: the marker rows must not linger in the admin dashboard.
+if (service) {
+  const delLead = await service.from("quote_requests").delete().eq("company_name", TEST_LEAD)
+  const delClick = await service.from("whatsapp_clicks").delete().eq("page_path", TEST_CLICK_PATH)
+  if (delLead.error || delClick.error) {
+    console.log(`!  cleanup failed: ${delLead.error?.message ?? delClick.error?.message}`)
+  } else {
+    console.log("-  cleanup: marker lead and click removed")
+  }
+} else {
+  console.log(`!  SUPABASE_SERVICE_ROLE_KEY not set — delete the "${TEST_LEAD}" lead by hand`)
+}
 
 console.log(`\n${passed} passed, ${failed} failed.\n`)
 process.exit(failed === 0 ? 0 : 1)
