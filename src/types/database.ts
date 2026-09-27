@@ -199,6 +199,20 @@ export interface Database {
         }
         Relationships: []
       }
+      whatsapp_clicks: {
+        Row: {
+          id: string
+          created_at: string
+          source: "product" | "widget" | "home" | "contact"
+          product_id: string | null
+          category_id: string | null
+          page_path: string | null
+        }
+        // Written only through the log_whatsapp_click RPC; admins may delete.
+        Insert: Record<string, never>
+        Update: Record<string, never>
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -215,6 +229,14 @@ export interface Database {
           message: string
           product_ids: string[]
           honeypot: string
+        }
+        Returns: undefined
+      }
+      log_whatsapp_click: {
+        Args: {
+          source: "product" | "widget" | "home" | "contact"
+          product_id?: string | null
+          page_path?: string | null
         }
         Returns: undefined
       }

@@ -40,42 +40,14 @@ export function getLocalBusinessSchema() {
   }
 }
 
-export interface ProductSchemaInput {
-  name: string
-  description: string
-  slug: string
-  imageUrl?: string
-  categoryName?: string
-  sku?: string
-  presentation?: string
-}
-
-export function getProductSchema(input: ProductSchemaInput) {
-  const productUrl = `${DOMAIN}/producto/${encodeURIComponent(input.slug)}`
-  const image = input.imageUrl || `${DOMAIN}/logo1.webp`
-
-  return {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "@id": `${productUrl}/#product`,
-    name: input.name,
-    description: input.description || `${input.name} - Suministros de limpieza e higiene industrial LABMAREMI.`,
-    image: [image],
-    sku: input.sku || input.slug,
-    category: input.categoryName || "Limpieza e Higiene",
-    brand: {
-      "@type": "Brand",
-      name: "LABMAREMI",
-    },
-    // NO `offers` BLOCK. This is a quote-based B2B catalog — prices are
-    // negotiated per client and never published, so there is no price to state.
-    // The previous Offer declared priceCurrency and availability with no `price`
-    // or `priceSpecification`, which Google's Product validator rejects
-    // outright: the result was not a partial rich result but none at all, on all
-    // 161 product pages. A valid Product without offers is worth more than an
-    // invalid one with them.
-  }
-}
+// NO PRODUCT SCHEMA. Google's product snippets require one of `offers`,
+// `review` or `aggregateRating`, and this quote-only B2B catalog publishes
+// none: prices are negotiated per client and there are no reviews. A Product
+// with an Offer lacking `price` was rejected, and so was a Product with no
+// Offer at all (Search Console, Sept 2026: every product page flagged under
+// "Fragmentos de productos" and "Fichas de comerciantes"). No markup beats
+// invalid markup; product pages carry BreadcrumbList only. Revisit if public
+// prices or reviews are ever added.
 
 export interface BreadcrumbItem {
   name: string

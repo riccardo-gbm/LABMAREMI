@@ -31,6 +31,7 @@ import {
   PHONE_DISPLAY,
   WHATSAPP_HREF,
 } from "@/lib/contact"
+import { trackWhatsAppClick } from "@/lib/whatsappTracking"
 import { getBusinessTypeIconByName, getCategoryIcon } from "@/lib/icons"
 import { HeroSection } from "@/components/hero/HeroSection"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -341,6 +342,7 @@ export default function HomePage() {
               />
               <InteractiveHoverAnchor
                 href={WHATSAPP_HREF}
+                onClick={() => trackWhatsAppClick("home")}
                 target="_blank"
                 rel="noreferrer"
                 text="Escribir por WhatsApp"

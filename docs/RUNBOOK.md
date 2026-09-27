@@ -79,6 +79,7 @@ just a save.
 | `0005_quote_submission_rpc.sql` | `submit_quote_request` security-definer RPC — atomic lead + line items, honeypot rejected server-side. The only write path anon has. |
 | `0006_admin_role_rls.sql` | Security fix: replaces "any authenticated user is an admin" with the `admin_users` roster and the `is_admin()` function. |
 | `0007_quote_notification.sql` | `pg_net`, `quote_requests.notified_at`, the private `notification_config` row, and the `after insert` trigger that fires the `quote-notification` Edge Function. |
+| `0008_whatsapp_clicks.sql` | `whatsapp_clicks` table (admin read/delete only) and the anon `log_whatsapp_click` RPC behind the admin dashboard's WhatsApp metrics. Until it runs, the site's click logging fails silently and the dashboard section shows its error state. |
 
 ### `0006` requires a manual dashboard step
 

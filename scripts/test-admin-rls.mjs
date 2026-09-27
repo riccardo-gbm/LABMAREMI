@@ -119,7 +119,7 @@ if (!serviceKey) {
     const { data: isAdmin } = await stranger.rpc("is_admin")
     check("signed-in stranger fails is_admin()", isAdmin !== true, `is_admin=${isAdmin}`)
 
-    for (const table of ["quote_requests", "quote_request_items", "customers"]) {
+    for (const table of ["quote_requests", "quote_request_items", "customers", "whatsapp_clicks"]) {
       const res = await stranger.from(table).select("*")
       check(
         `signed-in stranger cannot read ${table}`,

@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { m, AnimatePresence } from "framer-motion";
 
 import { WHATSAPP_NUMBER } from "@/lib/contact";
+import { trackWhatsAppClick } from "@/lib/whatsappTracking";
 
 // The WhatsApp number lives in src/lib/contact.ts (WHATSAPP_NUMBER) — that is
 // the single place to change it. It is shared with the Home and Contact page
@@ -71,6 +72,7 @@ export default function WhatsAppWidget() {
                 href={chatLink}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick("widget")}
                 className="mt-3 flex items-center justify-center gap-2 w-full rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-sm font-semibold py-2.5 transition-colors"
               >
                 <WhatsAppIcon className="w-4 h-4" />
