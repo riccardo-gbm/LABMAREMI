@@ -14,6 +14,7 @@ import { QueryError } from "@/components/ui/query-error"
 import { ProductCard } from "@/components/catalog/ProductCard"
 import { fetchProductBySlug } from "@/lib/catalogData"
 import { getWhatsAppProductUrl } from "@/lib/contact"
+import { trackWhatsAppClick } from "@/lib/whatsappTracking"
 import { useAsync } from "@/hooks/useAsync"
 import { getCategoryIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -367,6 +368,7 @@ export default function ProductDetailPage() {
                 href={getWhatsAppProductUrl(product.name, product.code)}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick("product", product.id)}
                 className={cn(
                   buttonVariants({ variant: "outline", size: "lg" }),
                   "w-full border-emerald-500/40 text-emerald-700 hover:bg-emerald-500/10 hover:border-emerald-500/60 dark:text-emerald-400 dark:border-emerald-500/50 dark:hover:bg-emerald-500/20"

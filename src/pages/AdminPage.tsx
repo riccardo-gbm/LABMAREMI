@@ -17,6 +17,7 @@ import { StatusBadge } from "@/components/admin/StatusBadge"
 import { RecentLeadsTable } from "@/components/admin/RecentLeadsTable"
 import { ProductInterestPanels } from "@/components/admin/ProductInterestPanels"
 import { DashboardSkeleton } from "@/components/admin/DashboardSkeleton"
+import { WhatsAppMetricsSection } from "@/components/admin/WhatsAppMetricsSection"
 import {
   deriveProductRanking,
   deriveStatusCounts,
@@ -314,6 +315,9 @@ export default function AdminPage() {
             />
           </>
         )}
+
+        {/* WhatsApp clicks — independent of the leads above */}
+        <WhatsAppMetricsSection />
       </Section>
     </>
   )

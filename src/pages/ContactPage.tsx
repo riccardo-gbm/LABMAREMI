@@ -18,6 +18,7 @@ import {
   PHONE_DISPLAY,
   WHATSAPP_HREF,
 } from "@/lib/contact"
+import { trackWhatsAppClick } from "@/lib/whatsappTracking"
 import { SeoHead } from "@/components/common/SeoHead"
 import { JsonLd } from "@/components/common/JsonLd"
 import { getLocalBusinessSchema } from "@/lib/schemaData"
@@ -55,6 +56,7 @@ export default function ContactPage() {
                 </p>
                 <InteractiveHoverAnchor
                   href={WHATSAPP_HREF}
+                  onClick={() => trackWhatsAppClick("contact")}
                   target="_blank"
                   rel="noreferrer"
                   text="Escribir por WhatsApp"
