@@ -140,6 +140,37 @@ function titleFromSlug(slug: string | undefined): string {
     .join(" ")
 }
 
+/**
+ * Search-result title. The old "| Suministros de Limpieza en Quito" suffix
+ * misdescribed half the catalog (food containers, PPE); "al por mayor"
+ * carries the B2B intent for every product and keeps most titles under the
+ * ~60 characters Google shows. Shared by the loading state and the loaded
+ * page so the title never changes under a crawler.
+ */
+function productPageTitle(name: string): string {
+  return `${name} al por mayor en Quito | LABMAREMI`
+}
+
+const META_DESCRIPTION_SUFFIX = " Cotización para empresas en Quito."
+const META_DESCRIPTION_MAX = 155
+
+/**
+ * Product copy runs 300–650 characters and Google truncates at ~155, which
+ * cut off the Quito/B2B hook that used to sit at the end. Lead with the first
+ * sentence (trimmed on a word boundary) and always keep the hook.
+ */
+function productMetaDescription(description: string): string {
+  const budget = META_DESCRIPTION_MAX - META_DESCRIPTION_SUFFIX.length
+  const text = description.replace(/\s+/g, " ").trim()
+  const firstSentence = text.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? text
+  let lead = firstSentence
+  if (lead.length > budget) {
+    const cut = lead.slice(0, budget - 1)
+    lead = `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:]$/, "")}…`
+  }
+  return `${lead}${META_DESCRIPTION_SUFFIX}`
+}
+
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>()
 
@@ -160,7 +191,7 @@ export default function ProductDetailPage() {
   // crawl produced a canonical-less shell. The slug is known immediately;
   // nothing here needs to wait for data.
   const slugCanonical = `https://labmaremi.com/producto/${slug ?? ""}`
-  const slugTitle = `${titleFromSlug(slug)} | Suministros de Limpieza en Quito | LABMAREMI`
+  const slugTitle = productPageTitle(titleFromSlug(slug))
 
   if (loading) {
     return (
@@ -229,8 +260,8 @@ export default function ProductDetailPage() {
   const Icon = getCategoryIcon(product.categoryId)
   const code = product.code
 
-  const productTitle = `${product.name} | Suministros de Limpieza en Quito | LABMAREMI`
-  const productDesc = `${product.description} Presentación: ${product.presentation || "Consultar"}. Distribuidor B2B en Quito y Pichincha.`
+  const productTitle = productPageTitle(product.name)
+  const productDesc = productMetaDescription(product.description)
   const canonicalUrl = `https://labmaremi.com/producto/${product.slug}`
   const imageUrl = product.imageUrl ? (product.imageUrl.startsWith("http") ? product.imageUrl : `https://labmaremi.com${product.imageUrl}`) : undefined
 
