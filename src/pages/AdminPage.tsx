@@ -3,7 +3,6 @@ import { AlertTriangle, Inbox, Trophy, UserPlus, Users } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Eyebrow } from "@/components/ui/eyebrow"
 import { PageHeader } from "@/components/ui/page-header"
 import {
   AnimatedMetric,
@@ -238,7 +237,6 @@ export default function AdminPage() {
           <>
             {/* Status distribution */}
             <Card className="mt-4 p-5">
-              <Eyebrow>Leads por estado</Eyebrow>
               <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
                 {QUOTE_STATUSES.map((status) => (
                   <span key={status} className="flex items-center gap-2">
@@ -255,7 +253,6 @@ export default function AdminPage() {
             <Card className="mt-4 p-5">
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                  <Eyebrow>Pipeline comercial</Eyebrow>
                   <p className="mt-2 text-sm text-muted-foreground">
                     Distribución de solicitudes por estado.
                   </p>
