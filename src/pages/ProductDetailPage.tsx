@@ -328,7 +328,6 @@ export default function ProductDetailPage() {
     // Category is already in the badge above the title and the breadcrumb;
     // coverage is the same for every product and sits as a note under the
     // table. Both left it to keep the spec sheet within the first screen.
-    { label: "Código", value: code, mono: true },
     { label: "Presentación", value: product.presentation, mono: false, isPresentation: true },
     { label: "Uso recomendado", value: product.recommendedUse, mono: false, rich: true },
   ]
@@ -382,7 +381,6 @@ export default function ProductDetailPage() {
               alt={product.name}
               fallbackLabel="Imagen referencial del producto"
               fallbackIcon={Icon}
-              badge={code}
               priority={true}
               // Narrower on phones so the title and CTAs reach the first screen.
               className="aspect-square shadow-sm max-sm:mx-auto max-sm:w-3/4"
