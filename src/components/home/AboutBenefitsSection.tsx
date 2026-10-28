@@ -128,10 +128,10 @@ const readDesktop = () => window.matchMedia(DESKTOP).matches
 function Intro() {
   return (
     <>
-      <h2 className="font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl xl:text-5xl">
+      <h2 className="font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl xl:text-3xl">
         ¿Quiénes somos?
       </h2>
-      <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground lg:mt-5 lg:text-lg xl:text-xl">
+      <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground lg:mt-4 lg:text-lg xl:text-m">
         LABMAREMI es un distribuidor que centraliza todos los productos de
         limpieza, protección e higiene para su negocio.
       </p>
@@ -266,10 +266,10 @@ export function AboutBenefitsSection() {
                       : "translate-y-2 opacity-0",
                   )}
                 >
-                  <h3 className="font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl xl:text-4xl">
+                  <h3 className="font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl xl:text-2xl">
                     {slide.title}
                   </h3>
-                  <p className="mt-2 text-base leading-relaxed text-muted-foreground md:text-lg lg:mt-3 xl:text-xl">
+                  <p className="mt-2 text-base leading-relaxed text-muted-foreground md:text-lg lg:mt-3 xl:text-m">
                     {slide.line}
                   </p>
                 </div>
