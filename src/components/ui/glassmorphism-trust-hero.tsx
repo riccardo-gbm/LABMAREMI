@@ -62,7 +62,7 @@ export default function GlassmorphismTrustHero() {
                 immediately. The cascade around it (tagline, CTAs, marquee)
                 keeps the entrance choreography. */}
             <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-4">
-              <h1 className="text-4xl font-goodtimes font-bold leading-none text-[#0066cc] sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight break-words">
+              <h1 className="text-4xl font-display font-bold leading-none text-[#0066cc] sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight break-words">
                 LABMAREMI
               </h1>
             </div>
@@ -89,7 +89,7 @@ export default function GlassmorphismTrustHero() {
 
         {/* Bottom: sector marquee panel. Shortened on mobile to make room for WhatsApp widget. */}
         <div className="labmaremi-hero-fade-in labmaremi-hero-delay-500 relative flex w-[calc(100%-4.5rem)] sm:w-full self-start flex-col justify-center overflow-hidden rounded-xl border border-slate-200 bg-white py-3 sm:py-4 shadow-sm">
-          <h2 className="mb-2 px-4 text-xs font-semibold tracking-wider text-muted-foreground sm:px-6 sm:text-[15px] md:px-8">
+          <h2 className="mb-2 px-4 text-xs font-bold tracking-wider text-muted-foreground sm:px-6 sm:text-[15px] md:px-8">
             Atendemos sectores como:
           </h2>
 
@@ -113,7 +113,7 @@ export default function GlassmorphismTrustHero() {
                       className="h-6 w-6 text-primary"
                       aria-hidden="true"
                     />
-                    <span className="text-lg font-bold">{client.name}</span>
+                    <span className="text-lg font-semibold">{client.name}</span>
                   </div>
                 ))
               )}
