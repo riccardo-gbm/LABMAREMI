@@ -66,7 +66,7 @@ function Header() {
             // and '-translate-y-1' to move it up/down
             className="h-12 w-12 object-contain scale-80 -translate-y-[1px]"
           />
-          <span className="font-quantico text-xl tracking-tight text-[#0066cc] ml-2">
+          <span className="font-display text-xl font-semibold tracking-tight text-[#0066cc] ml-2">
             LABMAREMI
           </span>
         </Link>
