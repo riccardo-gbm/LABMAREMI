@@ -37,14 +37,10 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* Manrope carries body/UI text. Playfair is reserved for brand moments,
-     page titles, and large metrics. IBM Plex Mono remains for codes/labels. */
-  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", monospace;
-  --font-playfair: "Playfair Display", Georgia, serif;
-  --font-goodtimes: "Good Times", sans-serif;
-  --font-quantico: "Quantico", sans-serif;
+  /* Karla carries body/UI text. Lato is reserved for titles, lead copy,
+     brand marks, and large metrics. */
+  --font-sans: "Karla", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Lato", ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
