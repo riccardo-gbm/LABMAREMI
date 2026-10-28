@@ -76,6 +76,10 @@ export interface MoltenRingCarouselProps extends Omit<
       the no-WebGL fallback needs it, to show the matching picture.
       @default 0 */
   activeIndex?: number
+  /** Called once the arrival animation has finished and every card is in its
+      slot - straight away under reduced motion or without WebGL. Lets nearby
+      content wait for the spreading deck to clear it. @default undefined */
+  onEntered?: () => void
   /** Fusion radius between neighbours, in card long-edges. @default 0.087 */
   fuse?: number
   /** String threads between cards as they pull apart. @default true */
@@ -551,6 +555,7 @@ interface RingOptions {
   /** Present when the page drives the ring; see `scrollProgress`. */
   scrollProgress: React.RefObject<number> | null
   onActive: (index: number) => void
+  onEntered: () => void
 }
 
 interface RingSettings {
@@ -570,7 +575,16 @@ interface RingSettings {
     Returns the teardown, or null when WebGL2 or the shader is unavailable. */
 function startRing(
   canvas: HTMLCanvasElement,
-  { items, count, reduced, settings, step, scrollProgress, onActive }: RingOptions,
+  {
+    items,
+    count,
+    reduced,
+    settings,
+    step,
+    scrollProgress,
+    onActive,
+    onEntered,
+  }: RingOptions,
 ): (() => void) | null {
   // Transparent, so whatever the ring does not cover is simply the surface
   // underneath - the shader never needs to be handed the palette. One flat
@@ -673,6 +687,7 @@ function startRing(
   let pointerY = -1
   let pointerSpeed = 0
   let entry = 0
+  let entered = false
   let clock = 0
   let previous = 0
   let ticks = 0
@@ -839,6 +854,10 @@ function startRing(
 
     if (atlas)
       entry = reduced ? 1 : Math.min(1, entry + (dt * 1000) / ENTRY_MS)
+    if (entry >= 1 && !entered) {
+      entered = true
+      onEntered()
+    }
     const spread = inOutCubic(entry)
 
     // --- turn -----------------------------------------------------------
@@ -1194,6 +1213,7 @@ export function MoltenRingCarousel({
   spacing = SPACING,
   scrollProgress,
   activeIndex = 0,
+  onEntered,
   className,
   ...props
 }: MoltenRingCarouselProps) {
@@ -1245,6 +1265,11 @@ export function MoltenRingCarousel({
   /** Populated by the render loop so keys drive the same rotation a drag
       does. */
   const step = React.useRef<(by: number) => void>(() => {})
+  // Held in a ref so a fresh callback each render never rebuilds the loop.
+  const enteredCallback = React.useRef(onEntered)
+  React.useLayoutEffect(() => {
+    enteredCallback.current = onEntered
+  }, [onEntered])
 
   const count = Math.min(items.length, MAX_CARDS)
   const sources = items.map((item) => item.image).join(" ")
@@ -1268,9 +1293,12 @@ export function MoltenRingCarousel({
       step,
       scrollProgress: scrollProgress ?? null,
       onActive: setActive,
+      onEntered: () => enteredCallback.current?.(),
     })
     if (!stop) {
       setSupported(false)
+      // The fallback has no arrival to wait for.
+      enteredCallback.current?.()
       return
     }
     return stop

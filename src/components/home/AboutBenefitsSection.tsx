@@ -202,6 +202,9 @@ export function AboutBenefitsSection() {
   const [active, setActive] = useState(0)
   /** Whether its benefit is showing; always on lg+, where the text sits beside the card. */
   const [textShown, setTextShown] = useState(true)
+  /** Whether the deck has finished spreading out on arrival. Below lg the
+      spreading cards pass straight through the benefit, so it waits. */
+  const [entered, setEntered] = useState(false)
   const [mobileRing, setMobileRing] = useState(MOBILE_FALLBACK)
   const desktop = useSyncExternalStore(subscribeDesktop, readDesktop)
 
@@ -298,6 +301,7 @@ export function AboutBenefitsSection() {
               labels={false}
               scrollProgress={progress}
               activeIndex={active}
+              onEntered={() => setEntered(true)}
               fit="height"
               cardRatio={CARD_RATIO}
               cardSize={ring.cardSize}
@@ -325,7 +329,7 @@ export function AboutBenefitsSection() {
           <div ref={slotRef} aria-hidden="true" className="min-h-0 flex-1 lg:hidden" />
           <Benefits
             active={active}
-            shown={textShown}
+            shown={textShown && entered}
             className="relative px-4 text-center sm:px-6 lg:hidden"
           />
           {/* Keeps the benefit clear of the floating WhatsApp button. */}
