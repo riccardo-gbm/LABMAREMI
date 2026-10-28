@@ -72,13 +72,13 @@ export default function ContactPage() {
                       <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-foreground/10">
                         <Phone className="h-4 w-4" aria-hidden="true" />
                       </span>
-                      <span className="font-mono text-sm">{PHONE_DISPLAY}</span>
+                      <span className="tabular-nums text-sm">{PHONE_DISPLAY}</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-foreground/10">
                         <Mail className="h-4 w-4" aria-hidden="true" />
                       </span>
-                      <span className="font-mono text-sm">{EMAIL_DISPLAY}</span>
+                      <span className="tabular-nums text-sm">{EMAIL_DISPLAY}</span>
                     </li>
                   </ul>
                 </div>
