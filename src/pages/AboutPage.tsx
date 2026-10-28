@@ -175,7 +175,7 @@ export default function AboutPage() {
         <RevealGroup className="mt-10 grid gap-6 md:grid-cols-2">
           <RevealItem>
             <Card className="h-full p-6">
-              <p className="mt-5 font-mono text-xl uppercase tracking-[0.16em] text-primary">
+              <p className="mt-5 tabular-nums text-xl uppercase tracking-[0.16em] text-primary">
                 Misión
               </p>
               <p className="mt-3 text-base leading-relaxed text-muted-foreground">
@@ -188,7 +188,7 @@ export default function AboutPage() {
           </RevealItem>
           <RevealItem>
             <Card className="h-full p-6">
-              <p className="mt-5 font-mono text-xl uppercase tracking-[0.16em] text-primary">
+              <p className="mt-5 tabular-nums text-xl uppercase tracking-[0.16em] text-primary">
                 Visión
               </p>
               <p className="mt-3 text-base leading-relaxed text-muted-foreground">
@@ -255,7 +255,7 @@ export default function AboutPage() {
         </Reveal>
 
         <Reveal className="mt-10" delay={0.05}>
-          <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="tabular-nums text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Dirección
           </p>
           <RevealGroup className="mt-4 grid gap-6 sm:grid-cols-2">
@@ -268,7 +268,7 @@ export default function AboutPage() {
         </Reveal>
 
         <Reveal className="mt-10" delay={0.08}>
-          <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="tabular-nums text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Equipo operativo
           </p>
           <MediaFrame

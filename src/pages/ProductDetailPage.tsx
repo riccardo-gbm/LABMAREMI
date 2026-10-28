@@ -122,7 +122,7 @@ function PresentationPills({ value }: { value: string }) {
           key={item}
           variant="outline"
           hidden={collapsible && !expanded && i >= PRESENTATION_PREVIEW}
-          className="border-primary/35 bg-primary/5 text-primary font-mono text-xs font-medium tracking-wide rounded-full px-3 py-1 shadow-2xs"
+          className="border-primary/35 bg-primary/5 text-primary tabular-nums text-xs font-medium tracking-wide rounded-full px-3 py-1 shadow-2xs"
         >
           {item}
         </Badge>
@@ -346,7 +346,7 @@ export default function ProductDetailPage() {
       <Section className="pb-0 pt-8 md:pb-0 md:pt-10">
         {/* Breadcrumb */}
         <nav aria-label="Ruta de navegación">
-          <ol className="flex flex-wrap items-center gap-1.5 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+          <ol className="flex flex-wrap items-center gap-1.5 tabular-nums text-xs uppercase tracking-[0.14em] text-muted-foreground">
             <li>
               <Link to="/catalogo" className="transition-colors hover:text-primary">
                 Catálogo
@@ -439,13 +439,13 @@ export default function ProductDetailPage() {
                   key={row.label}
                   className="grid gap-1 px-5 py-3 sm:grid-cols-[160px_1fr] sm:gap-4 sm:items-baseline"
                 >
-                  <dt className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground sm:pt-0.5">
+                  <dt className="tabular-nums text-xs uppercase tracking-[0.14em] text-muted-foreground sm:pt-0.5">
                     {row.label}
                   </dt>
                   <dd
                     className={cn(
                       "text-sm leading-relaxed text-foreground",
-                      row.mono && "font-mono tracking-widest"
+                      row.mono && "tabular-nums tracking-widest"
                     )}
                   >
                     {row.isPresentation ? (

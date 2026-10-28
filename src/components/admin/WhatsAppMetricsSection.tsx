@@ -48,7 +48,7 @@ function WhatsAppMetricsSection() {
           <Eyebrow>WhatsApp</Eyebrow>
           <h2
             id="whatsapp-metrics-title"
-            className="mt-2 font-playfair text-2xl font-bold tracking-tight text-foreground"
+            className="mt-2 font-display text-2xl font-bold tracking-tight text-foreground"
           >
             Consultas por WhatsApp
           </h2>
@@ -150,12 +150,12 @@ function MetricsBody({ clicks, days }: { clicks: WhatsAppClick[]; days: RangeDay
         {statCards.map((stat) => (
           <Card key={stat.label} className="h-full p-4">
             <div className="flex items-center justify-between">
-              <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="tabular-nums text-xs uppercase tracking-[0.14em] text-muted-foreground">
                 {stat.label}
               </p>
               <stat.icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
             </div>
-            <p className="mt-3 font-playfair text-4xl font-bold tracking-tight text-foreground">
+            <p className="mt-3 font-display text-4xl font-bold tracking-tight text-foreground">
               {Number.isInteger(stat.value) ? (
                 <AnimatedMetric value={stat.value} />
               ) : (
@@ -220,7 +220,7 @@ function MetricsBody({ clicks, days }: { clicks: WhatsAppClick[]; days: RangeDay
                     <span className="text-sm text-foreground">
                       {CLICK_SOURCE_LABEL[source]}
                     </span>
-                    <span className="font-mono text-sm text-foreground">{count}</span>
+                    <span className="tabular-nums text-sm text-foreground">{count}</span>
                   </div>
                   <AnimatedProgress
                     value={(count / total) * 100}
@@ -259,7 +259,7 @@ function RankCard({
             <li key={entry.key}>
               <div className="flex items-baseline justify-between gap-3">
                 <p className="truncate text-sm font-medium text-foreground">{entry.name}</p>
-                <p className="font-mono text-sm text-foreground">{entry.count}</p>
+                <p className="tabular-nums text-sm text-foreground">{entry.count}</p>
               </div>
               <AnimatedProgress
                 value={(entry.count / max) * 100}
@@ -302,7 +302,7 @@ function ColumnChart({ columns }: { columns: Column[] }) {
           >
             {column.id === peakId && column.value > 0 ? (
               <span
-                className="absolute inset-x-0 text-center font-mono text-[10px] text-muted-foreground"
+                className="absolute inset-x-0 text-center tabular-nums text-[10px] text-muted-foreground"
                 style={{ bottom: `calc(${(column.value / max) * 100}% + 2px)` }}
               >
                 {column.value}
@@ -317,7 +317,7 @@ function ColumnChart({ columns }: { columns: Column[] }) {
       </ol>
       <div className="mt-1.5 flex gap-0.5" aria-hidden="true">
         {columns.map((column) => (
-          <span key={column.id} className="flex-1 text-center font-mono text-[10px] text-muted-foreground">
+          <span key={column.id} className="flex-1 text-center tabular-nums text-[10px] text-muted-foreground">
             {column.label}
           </span>
         ))}

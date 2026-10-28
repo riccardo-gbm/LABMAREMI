@@ -41,7 +41,7 @@ function Timeline({ entries }: TimelineProps) {
             <span className="absolute -left-[2.6rem] flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-primary text-primary-foreground shadow-sm">
               <entry.icon className="h-4 w-4" aria-hidden="true" />
             </span>
-            <p className="font-mono text-sm font-medium tracking-widest text-primary">
+            <p className="tabular-nums text-sm font-medium tracking-widest text-primary">
               {entry.year}
             </p>
             <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-foreground">
@@ -75,7 +75,7 @@ function Timeline({ entries }: TimelineProps) {
           >
             <entry.icon className="h-4 w-4" aria-hidden="true" />
           </m.span>
-          <p className="font-mono text-sm font-medium tracking-widest text-primary">
+          <p className="tabular-nums text-sm font-medium tracking-widest text-primary">
             {entry.year}
           </p>
           <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-foreground">

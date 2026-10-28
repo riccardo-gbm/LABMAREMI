@@ -37,14 +37,11 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* Manrope carries body/UI text. Playfair is reserved for brand moments,
-     page titles, and large metrics. IBM Plex Mono remains for codes/labels. */
-  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", monospace;
-  --font-playfair: "Playfair Display", Georgia, serif;
-  --font-goodtimes: "Good Times", sans-serif;
-  --font-quantico: "Quantico", sans-serif;
+  /* Open Sans carries both body/UI text and titles. --font-display stays its
+     own token (titles, lead copy, brand marks, large metrics) so headings can
+     take a different face later without touching every component. */
+  --font-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Open Sans", ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

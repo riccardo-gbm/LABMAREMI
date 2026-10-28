@@ -2,16 +2,10 @@ import { Link } from "react-router-dom"
 import {
   ArrowRight,
   ArrowUpRight,
-  Boxes,
-  ClipboardCheck,
-  Handshake,
   Mail,
   MapPin,
   MessageCircle,
-  PackageCheck,
   Phone,
-  Route,
-  Truck,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -34,6 +28,7 @@ import {
 import { trackWhatsAppClick } from "@/lib/whatsappTracking"
 import { getBusinessTypeIconByName, getCategoryIcon } from "@/lib/icons"
 import { HeroSection } from "@/components/hero/HeroSection"
+import { AboutBenefitsSection } from "@/components/home/AboutBenefitsSection"
 import { Skeleton } from "@/components/ui/skeleton"
 import { QueryError } from "@/components/ui/query-error"
 import { fetchBusinessTypes, fetchCategories } from "@/lib/catalogData"
@@ -41,56 +36,6 @@ import { useAsync } from "@/hooks/useAsync"
 import { SeoHead } from "@/components/common/SeoHead"
 import { JsonLd } from "@/components/common/JsonLd"
 import { getLocalBusinessSchema } from "@/lib/schemaData"
-
-const reasons = [
-    {
-    icon: Truck,
-    title: "Entregas inmediatas",
-    description:
-      "Coordinamos entregas el mismo día o hasta 48 horas a Quito, Pichincha y provincias cercanas. Sin costo adicional sobre su pedido.",
-  },
-  {
-    icon: PackageCheck,
-    title: "Continuidad de inventario",
-    description:
-      "Planificamos reposición para productos como papel, desinfectantes, guantes y químicos de uso diario. Si un producto no está en el catálogo, le ofrecemos una cotización personalizada al momento.",
-  },
-  {
-    icon: Boxes,
-    title: "Catálogo completo",
-    description:
-      "Agrupamos limpieza, higiene, protección y consumibles para reducir compras dispersas entre varios proveedores. Todo lo que su negocio necesita lo encuentra en LABMAREMI.",
-  },
-  {
-    icon: Handshake,
-    title: "Atención personalizada",
-    description:
-      "Acompañamos pedidos recurrentes con asesoría por tipo de negocio, presentación y frecuencia de consumo. Así como capacitaciones de uso seguro de químicos y productos de limpieza para su personal.",
-  },
-]
-
-const procurementTiles = [
-  {
-    icon: Boxes,
-    title: "Producto en inventario",
-    imageUrl: "/warehouse-inventory.webp",
-    imageAlt:
-      "Bodega con inventario de químicos, papel, fundas, herramientas de limpieza y protección",
-  },
-  {
-    icon: Route,
-    title: "Entrega inmediata",
-    imageUrl: "/delivery-truck.webp",
-    imageAlt: "Camión de reparto en carretera con carga hacia el cliente",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Cotización personalizada",
-    imageUrl:
-      "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=900&auto=format&fit=crop",
-    imageAlt: "Guantes y protección para equipos operativos",
-  },
-]
 
 function fetchHomeData() {
   // Categories only — the full catalog fetch pulled ~138 product rows onto the
@@ -118,62 +63,7 @@ export default function HomePage() {
       <JsonLd data={getLocalBusinessSchema()} id="home-localbusiness-schema" />
       <HeroSection />
 
-      {/* Image-led procurement band */}
-      <Section id="abastecimiento" className="bg-background">
-        <Reveal className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:items-end">
-          <div className="flex h-full flex-col justify-center">
-            <h2 className="mt-4 font-display text-xl font-bold tracking-tight text-foreground md:text-4xl">
-              ¿Quienes somos?
-            </h2>
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-              LABMAREMI es un distribuidor que centraliza todos los productos de limpieza, protección e higiene para su negocio. Ofrecemos cotización directa personalizada, entregas inmediatas y
-              seguimiento periódico.
-            </p>
-          </div>
-          <RevealGroup className="grid gap-4 sm:grid-cols-3" stagger={0.07}>
-            {procurementTiles.map((tile) => (
-              <RevealItem key={tile.title} className="group">
-                <MediaFrame
-                  src={tile.imageUrl}
-                  alt={tile.imageAlt}
-                  fallbackLabel={tile.title}
-                  fallbackIcon={tile.icon}
-                  className="aspect-[4/5] shadow-sm transition group-hover:-translate-y-0.5 group-hover:shadow-md"
-                />
-                <p className="mt-3 font-display text-base font-semibold tracking-tight text-foreground">
-                  {tile.title}
-                </p>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </Reveal>
-      </Section>
-
-      {/* Why choose us */}
-      <Section id="por-que-labmaremi" className="border-y bg-secondary/40">
-        <Reveal>
-          <h2 className="mt-4 max-w-full font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Trabajar con nosotros le da estos beneficios a su negocio 
-          </h2>
-        </Reveal>
-        <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {reasons.map((reason) => (
-            <RevealItem key={reason.title}>
-            <Card className="h-full overflow-hidden bg-white p-6 shadow-sm border border-slate-200 transition hover:-translate-y-0.5 hover:border-ring/60 hover:shadow-md">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <reason.icon className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <h3 className="mt-5 font-display text-lg font-semibold tracking-tight text-foreground">
-                {reason.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {reason.description}
-              </p>
-            </Card>
-            </RevealItem>
-          ))}
-        </RevealGroup>
-      </Section>
+      <AboutBenefitsSection />
 
       {/* Product category preview */}
       <Section id="categorias" className="bg-background">
@@ -186,7 +76,7 @@ export default function HomePage() {
           </div>
           <Link
             to="/catalogo"
-            className="group inline-flex items-center gap-1.5 font-mono text-sm font-medium text-primary hover:underline"
+            className="group inline-flex items-center gap-1.5 tabular-nums text-sm font-medium text-primary hover:underline"
           >
             Ver catálogo completo
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -354,7 +244,7 @@ export default function HomePage() {
           </div>
 
           <div className="rounded-xl border border-primary-foreground/20 bg-primary-foreground/5 p-6 backdrop-blur-sm">
-            <p className="font-mono text-xs uppercase tracking-[0.16em] text-primary-foreground/60">
+            <p className="tabular-nums text-xs uppercase tracking-[0.16em] text-primary-foreground/60">
               Contacto directo
             </p>
             <ul className="mt-5 space-y-4">
@@ -362,13 +252,13 @@ export default function HomePage() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-foreground/10">
                   <Phone className="h-4 w-4" aria-hidden="true" />
                 </span>
-                <span className="font-mono text-sm">{PHONE_DISPLAY}</span>
+                <span className="tabular-nums text-sm">{PHONE_DISPLAY}</span>
               </li>
               <li className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-foreground/10">
                   <Mail className="h-4 w-4" aria-hidden="true" />
                 </span>
-                <span className="font-mono text-sm">{EMAIL_DISPLAY}</span>
+                <span className="tabular-nums text-sm">{EMAIL_DISPLAY}</span>
               </li>
               <li className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-foreground/10">

@@ -37,22 +37,22 @@ function RecentLeadsTable({
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead>
             <tr className="border-b bg-secondary/40">
-              <th className="px-5 py-3 font-mono text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              <th className="px-5 py-3 tabular-nums text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Empresa
               </th>
-              <th className="px-5 py-3 font-mono text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              <th className="px-5 py-3 tabular-nums text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Tipo de negocio
               </th>
-              <th className="px-5 py-3 font-mono text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              <th className="px-5 py-3 tabular-nums text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Sector
               </th>
-              <th className="px-5 py-3 text-right font-mono text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              <th className="px-5 py-3 text-right tabular-nums text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Productos
               </th>
-              <th className="px-5 py-3 font-mono text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              <th className="px-5 py-3 tabular-nums text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Fecha
               </th>
-              <th className="px-5 py-3 font-mono text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              <th className="px-5 py-3 tabular-nums text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Estado
               </th>
             </tr>
@@ -107,7 +107,7 @@ function RecentLeadsTable({
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <span
-                      className="font-mono text-foreground"
+                      className="tabular-nums text-foreground"
                       title={productNames.join(", ") || undefined}
                     >
                       {lead.products.length}
@@ -118,7 +118,7 @@ function RecentLeadsTable({
                       </span>
                     ) : null}
                   </td>
-                  <td className="px-5 py-3.5 font-mono text-xs text-muted-foreground">
+                  <td className="px-5 py-3.5 tabular-nums text-xs text-muted-foreground">
                     {formatDate(lead.createdAt)}
                   </td>
                   <td className="px-5 py-3.5">

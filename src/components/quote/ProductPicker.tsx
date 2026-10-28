@@ -123,7 +123,7 @@ function ProductPicker({
             const Icon = getCategoryIcon(category.id)
             return (
               <div key={category.id}>
-                <p className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                <p className="flex items-center gap-1.5 tabular-nums text-xs uppercase tracking-[0.14em] text-muted-foreground">
                   <Icon className="h-3.5 w-3.5" aria-hidden="true" />
                   {category.name}
                   <span className="text-muted-foreground/60">

@@ -46,7 +46,7 @@ function QuoteSummaryAside({
                         <p className="text-sm font-semibold leading-snug text-foreground">
                           {product.name}
                         </p>
-                        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ring">
+                        <span className="tabular-nums text-[10px] uppercase tracking-[0.14em] text-ring">
                           {product.code}
                         </span>
                       </div>

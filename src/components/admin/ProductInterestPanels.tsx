@@ -34,12 +34,12 @@ function ProductInterestPanels({
                 <p className="truncate text-sm font-medium text-foreground">
                   {entry.name}
                   {entry.categorySlug ? (
-                    <span className="ml-2 font-mono text-xs tracking-widest text-muted-foreground">
+                    <span className="ml-2 tabular-nums text-xs tracking-widest text-muted-foreground">
                       {getCategoryCode(entry.categorySlug)}
                     </span>
                   ) : null}
                 </p>
-                <p className="font-mono text-sm text-foreground">{entry.count}</p>
+                <p className="tabular-nums text-sm text-foreground">{entry.count}</p>
               </div>
               <AnimatedProgress
                 value={(entry.count / maxProductCount) * 100}
@@ -68,7 +68,7 @@ function ProductInterestPanels({
                 key={entry.slug ?? entry.name}
                 className="flex items-center gap-3 rounded-lg border px-3.5 py-3"
               >
-                <span className="font-mono text-xs text-muted-foreground">
+                <span className="tabular-nums text-xs text-muted-foreground">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
@@ -77,7 +77,7 @@ function ProductInterestPanels({
                 <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
                   {entry.name}
                 </span>
-                <span className="font-mono text-sm text-foreground">
+                <span className="tabular-nums text-sm text-foreground">
                   {entry.count}
                 </span>
               </li>

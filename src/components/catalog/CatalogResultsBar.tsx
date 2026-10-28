@@ -41,7 +41,7 @@ export function CatalogResultsBar({
         totalMatchingProducts={filteredCount}
       />
       <p
-        className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground"
+        className="tabular-nums text-xs uppercase tracking-[0.16em] text-muted-foreground"
         aria-live="polite"
       >
         <AnimatePresence mode="wait" initial={false}>

@@ -63,7 +63,7 @@ export function LazyMapFrame({
             <p className="mt-3 font-display text-base font-semibold text-foreground">
               Ubicación de LABMAREMI
             </p>
-            <p className="mt-1 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+            <p className="mt-1 tabular-nums text-xs uppercase tracking-wider text-muted-foreground">
               Quito, Ecuador • Cobertura Pichincha
             </p>
           </div>
