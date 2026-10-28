@@ -37,9 +37,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* Karla carries body/UI text. Lato is reserved for titles, lead copy,
+  /* Open Sans carries body/UI text. Lato is reserved for titles, lead copy,
      brand marks, and large metrics. */
-  --font-sans: "Karla", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Lato", ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
