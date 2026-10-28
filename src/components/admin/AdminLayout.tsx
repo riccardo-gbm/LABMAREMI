@@ -25,7 +25,7 @@ export function AdminLayout() {
     <>
       <div className="border-b bg-muted/40">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6">
-          <span className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+          <span className="tabular-nums text-xs uppercase tracking-[0.14em] text-muted-foreground">
             Sesión de administrador
             {user?.email ? (
               <span className="ml-2 normal-case tracking-normal text-foreground">
