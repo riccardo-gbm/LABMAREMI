@@ -25,7 +25,7 @@ export default function NotFoundPage() {
         <Eyebrow className="justify-center">Error / 404</Eyebrow>
         <p
           aria-hidden="true"
-          className="mt-6 font-mono text-7xl font-medium tracking-tight text-primary/20 md:text-8xl"
+          className="mt-6 tabular-nums text-7xl font-medium tracking-tight text-primary/20 md:text-8xl"
         >
           404
         </p>
