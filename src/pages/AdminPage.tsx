@@ -193,7 +193,7 @@ export default function AdminPage() {
             <RevealItem key={stat.label}>
               <Card className="h-full p-4">
                 <div className="flex items-center justify-between">
-                  <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  <p className="tabular-nums text-xs uppercase tracking-[0.14em] text-muted-foreground">
                     {stat.label}
                   </p>
                   <stat.icon
@@ -201,7 +201,7 @@ export default function AdminPage() {
                     aria-hidden="true"
                   />
                 </div>
-                <p className="mt-3 font-playfair text-4xl font-bold tracking-tight text-foreground">
+                <p className="mt-3 font-display text-4xl font-bold tracking-tight text-foreground">
                   {typeof stat.numericValue === "number" ? (
                     <AnimatedMetric value={stat.numericValue} />
                   ) : (
@@ -257,7 +257,7 @@ export default function AdminPage() {
                     Distribución de solicitudes por estado.
                   </p>
                 </div>
-                <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                <p className="tabular-nums text-xs uppercase tracking-[0.16em] text-muted-foreground">
                   {totalRequests} solicitudes
                 </p>
               </div>
@@ -272,7 +272,7 @@ export default function AdminPage() {
                     <div key={status} className="rounded-lg border bg-background p-3">
                       <div className="flex items-center justify-between gap-2">
                         <StatusBadge status={status} />
-                        <span className="font-mono text-sm text-foreground">
+                        <span className="tabular-nums text-sm text-foreground">
                           {count}
                         </span>
                       </div>
