@@ -85,7 +85,7 @@ function Pagination({ page, totalPages, onPageChange, className }: PaginationPro
                     variant: item === page ? "default" : "ghost",
                     size: "icon",
                   }),
-                  "font-mono text-xs"
+                  "tabular-nums text-xs"
                 )}
               >
                 {item}
