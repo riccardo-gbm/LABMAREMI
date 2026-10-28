@@ -74,7 +74,7 @@ function CategorySidebar({
 
   return (
     <div className={cn("hidden lg:block lg:sticky lg:top-24", className)}>
-      <h2 className="mb-3 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+      <h2 className="mb-3 tabular-nums text-xs uppercase tracking-[0.16em] text-muted-foreground">
         Categorías
       </h2>
 
@@ -108,7 +108,7 @@ function CategorySidebar({
                 <span className="relative z-10 text-left">{category.name}</span>
                 <span
                   className={cn(
-                    "relative z-10 font-mono text-[10px] tracking-widest",
+                    "relative z-10 tabular-nums text-[10px] tracking-widest",
                     isActive
                       ? "text-primary-foreground/70"
                       : "text-muted-foreground/70"
@@ -233,7 +233,7 @@ function MobileCategoryFilter({
 
               {/* Quick Actions / Summary Bar */}
               <div className="flex items-center justify-between border-b bg-muted/30 px-5 py-2.5 text-xs">
-                <span className="font-mono text-muted-foreground">
+                <span className="tabular-nums text-muted-foreground">
                   {activeCount > 0
                     ? `${activeCount} de ${categories.length} seleccionadas`
                     : "Mostrando todas las categorías"}
@@ -287,11 +287,11 @@ function MobileCategoryFilter({
 
                         <div className="flex items-center gap-2 shrink-0">
                           {count !== undefined ? (
-                            <span className="font-mono text-xs font-semibold text-muted-foreground">
+                            <span className="tabular-nums text-xs font-semibold text-muted-foreground">
                               {count}
                             </span>
                           ) : null}
-                          <span className="rounded-sm bg-muted px-1.5 py-0.5 font-mono text-[10px] font-medium tracking-widest text-muted-foreground uppercase">
+                          <span className="rounded-sm bg-muted px-1.5 py-0.5 tabular-nums text-[10px] font-medium tracking-widest text-muted-foreground uppercase">
                             {getCategoryCode(category.id)}
                           </span>
                         </div>
