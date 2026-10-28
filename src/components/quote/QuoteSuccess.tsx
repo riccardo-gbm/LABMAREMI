@@ -69,7 +69,7 @@ function QuoteSuccess({
           transition={{ duration: 0.3, ease: "easeOut", delay: 0.3 }}
           className="mt-6 rounded-lg border bg-secondary/40 px-5 py-3"
         >
-          <p className="mt-1.5 font-mono text-lg tracking-widest text-foreground">
+          <p className="mt-1.5 tabular-nums text-lg tracking-widest text-foreground">
             {referenceCode}
           </p>
         </m.div>
