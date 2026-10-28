@@ -81,29 +81,39 @@ const DESKTOP_RING: RingLayout = {
   focus: 0.5,
   spacing: 1.25,
 }
-// Below lg: a larger share of the screen, raised so the benefit fits under it
-// and clear of the WhatsApp button. Neighbours are kept off-stage at rest.
-const MOBILE_RING: RingLayout = {
-  cardSize: 0.5,
-  maxCardWidth: 0.8,
-  focus: 0.42,
-  spacing: 1.85,
+
+/* Below lg the intro stays pinned at the top and the card fills whatever room
+   is left between it and the benefit - which depends on how the copy wraps -
+   so the card is fitted to a measured slot instead of fixed fractions. */
+const MOBILE_MAX_WIDTH = 0.8
+/** Clear space inside the slot above the card (under the intro's fade) and
+    below it, in px. */
+const SLOT_TOP = 20
+const SLOT_BOTTOM = 10
+const MIN_CARD = 140
+/** Until the slot is first measured. */
+const MOBILE_FALLBACK: RingLayout = {
+  cardSize: 0.45,
+  maxCardWidth: MOBILE_MAX_WIDTH,
+  focus: 0.6,
+  spacing: 2,
 }
 
-/** The card's rendered height in CSS, from the same terms the canvas sizes it
-    by - so the text can be laid against it without measuring the canvas. */
-const cardHeight = ({ cardSize, maxCardWidth }: RingLayout) =>
-  `min(${cardSize * 100}cqh, ${(maxCardWidth / CARD_RATIO) * 100}cqw)`
+const sameRing = (a: RingLayout, b: RingLayout) =>
+  Math.abs(a.cardSize - b.cardSize) < 1e-3 &&
+  Math.abs(a.focus - b.focus) < 1e-3 &&
+  Math.abs(a.spacing - b.spacing) < 1e-3
 
+/** The desktop card's rendered width in CSS, from the same terms the canvas
+    sizes it by - so the text columns can meet it without measuring. */
 const stageVars = {
-  "--ring-card-w": `calc(${cardHeight(DESKTOP_RING)} * ${CARD_RATIO})`,
-  "--ring-text-top": `calc(${MOBILE_RING.focus * 100}cqh + ${cardHeight(MOBILE_RING)} / 2 + 1.5rem)`,
+  "--ring-card-w": `calc(min(${DESKTOP_RING.cardSize * 100}cqh, ${(DESKTOP_RING.maxCardWidth / CARD_RATIO) * 100}cqw) * ${CARD_RATIO})`,
 } as CSSProperties
 
 /** Below lg the benefit sits right under the card, where each incoming card
     passes on its way up - so it shows only while its own card is at, or about
     to settle into, the front. In steps either side of the card. */
-const MOBILE_SHOW_FROM = -0.05
+const MOBILE_SHOW_FROM = -0.02
 const MOBILE_SHOW_UNTIL = 0.3
 
 const clamp = (v: number, lo: number, hi: number) =>
@@ -139,6 +149,41 @@ function Intro() {
   )
 }
 
+/** All four stay mounted in one cell so the box never changes height and
+    screen readers get the full list; only the active one is visible. */
+function Benefits({
+  active,
+  shown,
+  className,
+}: {
+  active: number
+  shown: boolean
+  className?: string
+}) {
+  return (
+    <div className={cn("grid", className)}>
+      {slides.map((slide, i) => (
+        <div
+          key={slide.title}
+          className={cn(
+            "col-start-1 row-start-1 transition duration-400 ease-out motion-reduce:transition-none",
+            i === active && shown
+              ? "translate-y-0 opacity-100"
+              : "translate-y-2 opacity-0",
+          )}
+        >
+          <h3 className="font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl xl:text-2xl">
+            {slide.title}
+          </h3>
+          <p className="mt-2 text-base leading-relaxed text-muted-foreground md:text-lg lg:mt-3 xl:text-m">
+            {slide.line}
+          </p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 /**
  * "¿Quiénes somos?" intro beside a scroll-driven image ring. The stage pins
  * under the header while the page scroll walks the ring from the first
@@ -149,6 +194,7 @@ function Intro() {
 export function AboutBenefitsSection() {
   const trackRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
+  const slotRef = useRef<HTMLDivElement>(null)
   // Fractional position along the ring, in pictures. Written on scroll and
   // read by the canvas every frame, so it never re-renders this component.
   const progress = useRef(0)
@@ -156,12 +202,14 @@ export function AboutBenefitsSection() {
   const [active, setActive] = useState(0)
   /** Whether its benefit is showing; always on lg+, where the text sits beside the card. */
   const [textShown, setTextShown] = useState(true)
+  const [mobileRing, setMobileRing] = useState(MOBILE_FALLBACK)
   const desktop = useSyncExternalStore(subscribeDesktop, readDesktop)
 
   useEffect(() => {
     const track = trackRef.current
     const stage = stageRef.current
-    if (!track || !stage) return
+    const slot = slotRef.current
+    if (!track || !stage || !slot) return
     // Layout is read on resize only, so a scroll event costs a single rect
     // read and no style recalculation.
     let travel = 0
@@ -182,17 +230,41 @@ export function AboutBenefitsSection() {
         desktop || (offset >= MOBILE_SHOW_FROM && offset <= MOBILE_SHOW_UNTIL),
       )
     }
+    /** Sizes the card to the slot between the pinned intro and the benefit. */
+    const fitMobile = () => {
+      const height = stage.clientHeight
+      const width = stage.clientWidth
+      if (desktop || !height || !width) return
+      const room = slot.offsetHeight - SLOT_TOP - SLOT_BOTTOM
+      const card = clamp(room, MIN_CARD, (width * MOBILE_MAX_WIDTH) / CARD_RATIO)
+      // The stage is sticky, so it is the slot's offset parent.
+      const centre = slot.offsetTop + SLOT_TOP + room / 2
+      // At rest the next card must sit wholly below the stage so it never
+      // peeks under the benefit; its tilt adds a little over half a card.
+      const spacing = clamp(((height - centre) / card + 0.6) / 0.98, 1.6, 3)
+      const next = {
+        cardSize: card / height,
+        maxCardWidth: MOBILE_MAX_WIDTH,
+        focus: centre / height,
+        spacing,
+      }
+      setMobileRing((prev) => (sameRing(prev, next) ? prev : next))
+    }
     const measure = () => {
       travel = track.offsetHeight - stage.offsetHeight
       // Where the stage pins - the header's height, read from its own `top`
       // so the two cannot drift apart.
       pinnedAt = parseFloat(getComputedStyle(stage).top) || 0
+      fitMobile()
       update()
     }
     measure()
+    // The slot moves when the intro or benefit rewraps - a font arriving,
+    // a rotation - without the stage itself changing size.
     const resizer = new ResizeObserver(measure)
     resizer.observe(track)
     resizer.observe(stage)
+    resizer.observe(slot)
     // Handled directly rather than deferred to a frame: scroll events already
     // arrive once per frame, ahead of the canvas's own frame callback.
     window.addEventListener("scroll", update, { passive: true })
@@ -202,16 +274,10 @@ export function AboutBenefitsSection() {
     }
   }, [desktop])
 
-  const ring = desktop ? DESKTOP_RING : MOBILE_RING
+  const ring = desktop ? DESKTOP_RING : mobileRing
 
   return (
     <section id="quienes-somos" className="bg-background">
-      {/* Below lg the intro scrolls past normally; the pinned stage only has
-          room for the picture and its benefit. */}
-      <div className="mx-auto w-full max-w-6xl px-4 pt-12 sm:px-6 md:pt-16 lg:hidden">
-        <Intro />
-      </div>
-
       <div
         ref={trackRef}
         style={{
@@ -219,10 +285,10 @@ export function AboutBenefitsSection() {
         }}
       >
         {/* top-16 sits the stage under the sticky header (h-16). A size
-            container, so the text can be placed by the card's own terms. */}
+            container, so the desktop columns can be sized by the card. */}
         <div
           ref={stageRef}
-          className="sticky top-16 h-[calc(100svh-4rem)] overflow-hidden [container-type:size]"
+          className="sticky top-16 flex h-[calc(100svh-4rem)] flex-col overflow-hidden [container-type:size]"
           style={stageVars}
         >
           <Suspense fallback={null}>
@@ -243,38 +309,41 @@ export function AboutBenefitsSection() {
             />
           </Suspense>
 
-          {/* Symmetric columns keep the centre one on the viewport centre,
-              which is where the ring draws its front card; it is exactly the
-              card's width, so the text runs right up to it. */}
-          <div className="pointer-events-none relative mx-auto h-full w-full max-w-[88rem] px-4 sm:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_var(--ring-card-w)_minmax(0,1fr)] lg:items-center lg:gap-x-12 lg:px-8 xl:gap-x-16">
-            <div className="pointer-events-auto hidden lg:block">
+          {/* Below lg: the intro stays pinned above the card for the whole
+              run. It is opaque, so a card leaving upward slides under it the
+              way it would under the header; the fade softens that edge. */}
+          <div className="relative z-10 bg-background px-4 pt-8 sm:px-6 lg:hidden">
+            <div className="mx-auto max-w-6xl">
               <Intro />
             </div>
-            <div className="hidden lg:block" aria-hidden="true" />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-full h-5 bg-gradient-to-b from-background to-transparent"
+            />
+          </div>
+          {/* The room the front card is fitted to. */}
+          <div ref={slotRef} aria-hidden="true" className="min-h-0 flex-1 lg:hidden" />
+          <Benefits
+            active={active}
+            shown={textShown}
+            className="relative px-4 text-center sm:px-6 lg:hidden"
+          />
+          {/* Keeps the benefit clear of the floating WhatsApp button. */}
+          <div aria-hidden="true" className="h-[4.75rem] shrink-0 lg:hidden" />
 
-            {/* All four stay mounted in one cell so the box never changes
-                height and screen readers get the full list. Below lg it hangs
-                just under the card. */}
-            <div className="pointer-events-auto absolute inset-x-4 top-[var(--ring-text-top)] grid text-center sm:inset-x-6 lg:static lg:text-left">
-              {slides.map((slide, i) => (
-                <div
-                  key={slide.title}
-                  className={cn(
-                    "col-start-1 row-start-1 transition duration-400 ease-out motion-reduce:transition-none",
-                    i === active && textShown
-                      ? "translate-y-0 opacity-100"
-                      : "translate-y-2 opacity-0",
-                  )}
-                >
-                  <h3 className="font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl xl:text-2xl">
-                    {slide.title}
-                  </h3>
-                  <p className="mt-2 text-base leading-relaxed text-muted-foreground md:text-lg lg:mt-3 xl:text-m">
-                    {slide.line}
-                  </p>
-                </div>
-              ))}
+          {/* lg+: symmetric columns keep the centre one on the viewport
+              centre, which is where the ring draws its front card; it is
+              exactly the card's width, so the text runs right up to it. */}
+          <div className="pointer-events-none absolute inset-0 mx-auto hidden w-full max-w-[88rem] px-8 lg:grid lg:grid-cols-[minmax(0,1fr)_var(--ring-card-w)_minmax(0,1fr)] lg:items-center lg:gap-x-12 xl:gap-x-16">
+            <div className="pointer-events-auto">
+              <Intro />
             </div>
+            <div aria-hidden="true" />
+            <Benefits
+              active={active}
+              shown={textShown}
+              className="pointer-events-auto text-left"
+            />
           </div>
         </div>
       </div>

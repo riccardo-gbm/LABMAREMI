@@ -4,7 +4,10 @@ import { createRoot } from "react-dom/client"
 import App from "@/App"
 import { ProductDetailPage } from "@/lib/publicRoutes"
 import { prefetchProductDetail } from "@/lib/catalogData"
+import { initGoogleAnalytics } from "@/lib/googleAnalytics"
 import "./index.css"
+
+initGoogleAnalytics()
 
 // When direct-landing on /producto/:slug, pre-warm the route chunk, catalog
 // data query, and product image in parallel at t=0 before React mounts,
