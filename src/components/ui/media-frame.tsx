@@ -81,7 +81,7 @@ function MediaFrameInner({
           while the grid scrolls — to soften a backdrop already 80% covered. The
           extra 10% opacity buys the legibility back for nothing. */}
       {badge ? (
-        <span className="absolute left-3 top-3 rounded-full border border-white/60 bg-white/90 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-primary shadow-sm">
+        <span className="absolute left-3 top-3 rounded-full border border-white/60 bg-white/90 px-3 py-1 tabular-nums text-[10px] uppercase tracking-[0.14em] text-primary shadow-sm">
           {badge}
         </span>
       ) : null}
