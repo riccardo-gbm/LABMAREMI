@@ -32,7 +32,7 @@ const slides = [
   },
   {
     image: "/cat-materiales-limpieza.webp",
-    alt: "Paños de microfibra, mopa, almohadillas, cepillo y esponjas para limpieza profesional",
+    alt: "Carro de limpieza con escurridor, escobas, mopa plana, trapeador de algodón y rollos de limpión industrial",
     title: "Catálogo completo",
     line: "Limpieza, higiene y protección en un proveedor.",
   },
