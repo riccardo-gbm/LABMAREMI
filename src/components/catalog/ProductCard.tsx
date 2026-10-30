@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom"
 
-import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { InteractiveHoverLink } from "@/components/ui/interactive-hover-button"
 import { MediaFrame } from "@/components/ui/media-frame"
@@ -14,8 +13,7 @@ interface ProductCardProps {
 }
 
 /**
- * Datasheet-entry card: icon tile + mono spec code up top, then name,
- * category, description and presentation. Two actions — open the full
+ * Datasheet-entry card: product image up top, then name and description. Two actions — open the full
  * spec sheet, or jump straight to a quote with the product preselected.
  *
  * The whole card is the tap target for the spec sheet (it is the primary
@@ -47,15 +45,7 @@ function ProductCard({ product, priority = false }: ProductCardProps) {
       />
 
       <div className="flex flex-1 flex-col p-5">
-      {product.categoryName ? (
-        <div className="flex items-center justify-between gap-3">
-          <Badge variant="secondary" className="w-fit">
-            {product.categoryName}
-          </Badge>
-        </div>
-      ) : null}
-
-      <h3 className="mt-4 font-display text-lg font-semibold leading-snug tracking-tight text-foreground">
+      <h3 className="font-display text-lg font-semibold leading-snug tracking-tight text-foreground">
         {/* `after:` stretches this link's hit area over the whole card. It
             resolves against Card's `relative`, so this element must not be
             positioned itself. */}

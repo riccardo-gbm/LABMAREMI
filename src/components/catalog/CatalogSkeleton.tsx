@@ -34,11 +34,7 @@ export function CatalogSkeleton() {
               <Card key={i} className="flex h-full w-full flex-col overflow-hidden">
                 <Skeleton className="aspect-[4/3] w-full rounded-none" />
                 <div className="flex flex-1 flex-col p-5">
-                  <div className="flex items-center justify-between gap-3">
-                    <Skeleton className="h-5 w-24 rounded-full" />
-                    <Skeleton className="h-3 w-12" />
-                  </div>
-                  <Skeleton className="mt-4 h-6 w-3/4" />
+                  <Skeleton className="h-6 w-3/4" />
                   <Skeleton className="mt-3 h-14 w-full" />
                   <div className="mt-auto pt-5">
                     <Skeleton className="h-10 w-full" />
